@@ -1,0 +1,1649 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rupiah Miner Indonesia v8.7 - Advanced Arcade Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .pixel-bg {
+            background-color: #090d16;
+            background-image: radial-gradient(#1e293b 1px, transparent 0);
+            background-size: 16px 16px;
+        }
+        .glow-gold { box-shadow: 0 0 15px rgba(234, 179, 8, 0.3); }
+        .glow-red { box-shadow: 0 0 15px rgba(225, 29, 72, 0.3); }
+        .glow-cyan { box-shadow: 0 0 15px rgba(6, 182, 212, 0.3); }
+        .glow-yellow { box-shadow: 0 0 15px rgba(234, 179, 8, 0.4); }
+        .spin-slow { animation: spin 3s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="bg-slate-950 text-white font-sans min-h-screen flex flex-col pixel-bg selection:bg-red-500 selection:text-white">
+
+    <!-- Top Bar Dashboard -->
+    <header class="bg-slate-900/90 backdrop-blur-md border-b border-red-900/50 p-4 sticky top-0 z-20">
+        <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="w-11 h-11 bg-gradient-to-tr from-red-600 to-amber-500 rounded-xl flex items-center justify-center text-white font-black text-2xl shadow-lg glow-red">
+                    <i class="fa-solid fa-rupiah-sign"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 class="font-extrabold text-lg text-red-500 tracking-wide leading-none">Rupiah Miner</h1>
+                        <span id="playerBadge" class="bg-amber-500/20 text-amber-400 border border-amber-500/50 text-[10px] font-bold px-2 py-0.5 rounded-full">Penambang MH/s</span>
+                    </div>
+                    <span class="text-[11px] text-gray-400">Engine v8.7 Pro</span>
+                </div>
+            </div>
+
+            <!-- Stats Bar -->
+            <div class="flex flex-wrap items-center gap-2 sm:gap-3 text-sm">
+                <!-- Meteran Listrik / Baterai -->
+                <div class="bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-700/50 flex items-center space-x-2">
+                    <i id="powerGridIcon" class="fa-solid fa-bolt text-yellow-400 text-base animate-pulse"></i>
+                    <div>
+                        <div class="flex justify-between items-center gap-2 text-[10px]">
+                            <span class="text-gray-400">Daya Baterai</span>
+                            <span id="electricityPercentText" class="font-mono font-bold text-yellow-400">100%</span>
+                        </div>
+                        <div class="w-20 bg-slate-950 rounded-full h-1.5 overflow-hidden mt-0.5 border border-slate-700">
+                            <div id="electricityBar" class="bg-yellow-400 h-full w-full transition-all duration-500"></div>
+                        </div>
+                    </div>
+                    <button onclick="playSound('click'); openPowerModal()" class="ml-1 px-2 py-1 bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-400 border border-yellow-500/50 text-[10px] font-bold rounded-lg transition">+Stasiun</button>
+                </div>
+
+                <button onclick="playSound('click'); openAuthModal()" id="userProfileBtn" class="bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-xl border border-slate-700 text-xs flex items-center space-x-2 transition">
+                    <i class="fa-solid fa-shield-halved text-red-500 text-base"></i>
+                    <span id="userNameDisplay" class="font-bold">Masuk / Daftar</span>
+                </button>
+
+                <!-- Hashrate Total Box -->
+                <div class="bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-700/50">
+                    <span class="text-gray-400 text-[10px] block">Total Hashrate Aktif</span>
+                    <span id="totalPower" class="font-mono font-bold text-emerald-400 text-sm sm:text-base">0 MH/s</span>
+                </div>
+
+                <div class="bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-700/50">
+                    <span class="text-gray-400 text-[10px] block">Total Koin Rupiah</span>
+                    <span id="coinBalance" class="font-mono font-bold text-yellow-400 text-sm sm:text-base">Rp 0.00000</span>
+                </div>
+
+                <button onclick="playSound('click'); openWithdrawModal()" class="px-3.5 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 active:scale-95 text-white font-bold text-xs rounded-xl shadow-lg shadow-emerald-900/40 transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-wallet"></i> Tarik Saldo
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="max-w-7xl mx-auto w-full flex-1 p-2 sm:p-4 flex gap-4">
+        
+        <!-- Left Banner Ad Slot -->
+        <aside class="hidden xl:flex flex-col w-44 space-y-4">
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-3 text-center flex-1 flex flex-col justify-between shadow-lg">
+                <div>
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-[9px] text-amber-400 font-bold uppercase tracking-wider">Sponsor Ad</span>
+                        <span class="text-[8px] bg-slate-800 text-gray-400 px-1.5 py-0.5 rounded">Ads by Google</span>
+                    </div>
+                    <div class="bg-gradient-to-tr from-slate-950 via-blue-950/40 to-slate-950 border border-blue-500/30 rounded-xl p-3 space-y-2.5 shadow-inner">
+                        <div class="w-12 h-12 bg-blue-600/20 border border-blue-500/40 rounded-xl mx-auto flex items-center justify-center text-blue-400 text-xl shadow">
+                            <i class="fa-solid fa-mobile-screen-button"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-black text-xs text-white">iPhone 17 Pro Max</h4>
+                            <p class="text-[9px] text-gray-300 mt-0.5">Titanium Design, Chip A19 Pro, & Kamera Studio 48MP.</p>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="playSound('click'); alert('Mengarahkan ke halaman promo resmi iPhone 17 Pro & Max Indonesia!');" class="w-full py-2 bg-blue-600 hover:bg-blue-500 text-white font-bold text-[10px] rounded-xl transition shadow">
+                    ✨ Cek Promo
+                </button>
+            </div>
+        </aside>
+
+        <!-- Center Dashboard -->
+        <main class="flex-1 grid grid-cols-1 md:grid-cols-3 gap-6">
+
+            <!-- Kolom 1 -->
+            <div class="md:col-span-2 space-y-6">
+                
+                <!-- Quick Event Bar -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <button onclick="playSound('click'); openSpinModal()" class="bg-gradient-to-r from-purple-900/60 to-slate-900 border border-purple-500/40 p-3 rounded-2xl flex items-center space-x-3 hover:border-purple-400 transition text-left glow-cyan">
+                        <div class="w-9 h-9 rounded-xl bg-purple-600/30 text-purple-300 flex items-center justify-center text-lg border border-purple-500/50"><i class="fa-solid fa-dharmachakra animate-spin"></i></div>
+                        <div><h4 class="font-bold text-xs text-purple-300">Lucky Spin</h4><p class="text-[10px] text-gray-400">Putar Hadiah</p></div>
+                    </button>
+
+                    <button onclick="playSound('click'); openAttendanceModal()" class="bg-gradient-to-r from-amber-900/60 to-slate-900 border border-amber-500/40 p-3 rounded-2xl flex items-center space-x-3 hover:border-amber-400 transition text-left glow-gold">
+                        <div class="w-9 h-9 rounded-xl bg-amber-600/30 text-amber-300 flex items-center justify-center text-lg border border-amber-500/50"><i class="fa-solid fa-calendar-days"></i></div>
+                        <div><h4 class="font-bold text-xs text-amber-300">Absen Harian</h4><p id="dailyStatusText" class="text-[10px] text-gray-400">Streak Harian</p></div>
+                    </button>
+
+                    <button onclick="playSound('click'); openAchievementModal()" class="bg-gradient-to-r from-emerald-900/60 to-slate-900 border border-emerald-500/40 p-3 rounded-2xl flex items-center space-x-3 hover:border-emerald-400 transition text-left">
+                        <div class="w-9 h-9 rounded-xl bg-emerald-600/30 text-emerald-300 flex items-center justify-center text-lg border border-emerald-500/50"><i class="fa-solid fa-award"></i></div>
+                        <div><h4 class="font-bold text-xs text-emerald-300">Pencapaian</h4><p class="text-[10px] text-gray-400">Klaim Misi</p></div>
+                    </button>
+
+                    <button onclick="playSound('click'); openReferralModal()" class="bg-gradient-to-r from-red-900/60 to-slate-900 border border-red-500/40 p-3 rounded-2xl flex items-center space-x-3 hover:border-red-400 transition text-left glow-red">
+                        <div class="w-9 h-9 rounded-xl bg-red-600/30 text-red-300 flex items-center justify-center text-lg border border-red-500/50"><i class="fa-solid fa-users"></i></div>
+                        <div><h4 class="font-bold text-xs text-red-300">Undang Teman</h4><p class="text-[10px] text-gray-400">Bonus Cuan</p></div>
+                    </button>
+                </div>
+
+                <!-- Rincian Sumber Hashrate -->
+                <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 shadow-xl">
+                    <div class="flex items-center justify-between mb-3 border-b border-slate-800 pb-2">
+                        <h3 class="font-bold text-xs text-emerald-400 flex items-center gap-2">
+                            <i class="fa-solid fa-chart-pie"></i> Rincian Sumber Kecepatan Hashrate Aktif
+                        </h3>
+                        <span class="text-[10px] text-gray-400">Real-time Engine</span>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
+                        <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800 flex justify-between sm:flex-col sm:items-start gap-1">
+                            <span class="text-gray-400 flex items-center gap-1.5"><i class="fa-solid fa-microchip text-emerald-400"></i> Mesin Rig Fisik</span>
+                            <span id="breakdownRig" class="font-mono font-bold text-emerald-400">0 MH/s</span>
+                        </div>
+                        <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800 flex justify-between sm:flex-col sm:items-start gap-1">
+                            <span class="text-gray-400 flex items-center gap-1.5"><i class="fa-solid fa-gamepad text-purple-400"></i> Game (Non-Permanen)</span>
+                            <span id="breakdownGame" class="font-mono font-bold text-purple-400">0 MH/s</span>
+                        </div>
+                        <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800 flex justify-between sm:flex-col sm:items-start gap-1">
+                            <span class="text-gray-400 flex items-center gap-1.5"><i class="fa-solid fa-gift text-amber-400"></i> Free Hash (1x24j)</span>
+                            <span id="breakdownFree" class="font-mono font-bold text-amber-400">0 MH/s</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ruang Server Nusantara -->
+                <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-xl relative overflow-hidden">
+                    <div class="flex justify-between items-center mb-4 border-b border-slate-800 pb-3">
+                        <h2 class="font-bold text-gray-200 flex items-center gap-2">
+                            <i class="fa-solid fa-server text-red-500"></i> Ruang Server Nusantara
+                        </h2>
+                        <button id="claimFreeHashBtn" onclick="playSound('click'); tryClaimFreeHash()" class="text-xs bg-emerald-950 hover:bg-emerald-900 text-emerald-300 px-3 py-1 rounded-full border border-emerald-800 font-mono font-bold transition shadow">
+                            🎁 Gratis Hashrate: 05:00
+                        </button>
+                    </div>
+
+                    <div class="bg-slate-950/80 rounded-xl p-6 border border-slate-800/80 min-h-[220px] flex items-center justify-center relative">
+                        <div id="powerOutageBanner" class="hidden absolute inset-0 bg-slate-950/90 backdrop-blur-sm z-10 flex flex-col items-center justify-center p-4 text-center rounded-xl border border-red-500/50">
+                            <i class="fa-solid fa-triangle-exclamation text-4xl text-red-500 mb-2 animate-bounce"></i>
+                            <h3 class="font-black text-red-400 text-base">BATERAI HABIS (0%)!</h3>
+                            <p class="text-xs text-gray-300 max-w-xs mt-1 mb-3">Penambangan terhenti sementara. Klaim di Stasiun Baterai untuk melanjutkan.</p>
+                            <button onclick="playSound('click'); openPowerModal()" class="px-4 py-2 bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-bold text-xs rounded-xl shadow-lg transition">⚡ Buka Stasiun Baterai</button>
+                        </div>
+
+                        <div id="minersGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-4 w-full"></div>
+                        
+                        <div id="emptyRoomNotice" class="text-center text-gray-500 py-8 hidden">
+                            <i class="fa-solid fa-microchip text-4xl mb-2 opacity-50"></i>
+                            <p class="text-sm">Rig Fisik Belum Dibeli!</p>
+                            <p class="text-xs text-gray-600 mt-1">Baterai bertahan penuh <span class="text-emerald-500 font-bold">1x24 Jam</span> tanpa rig fisik.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-xl">
+                        <h3 class="font-bold text-sm text-yellow-400 mb-3 flex items-center gap-2"><i class="fa-solid fa-trophy text-amber-400"></i> Leaderboard Server</h3>
+                        <div class="space-y-2 text-xs" id="leaderboardList"></div>
+                    </div>
+                    <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-xl">
+                        <div class="flex justify-between items-center mb-3">
+                            <h3 class="font-bold text-sm text-gray-300"><i class="fa-solid fa-receipt text-yellow-500 mr-2"></i>Log Aktivitas</h3>
+                            <button onclick="resetGameProgress()" class="text-[10px] text-red-400 hover:text-red-300 underline">Reset Data</button>
+                        </div>
+                        <div id="activityLog" class="text-xs font-mono space-y-1.5 max-h-36 overflow-y-auto text-gray-400">
+                            <p class="text-gray-500">[Sistem] Engine v8.7 Active!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kolom 2: Game & Toko -->
+            <div class="space-y-6">
+                <!-- Arcade Hub -->
+                <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-xl">
+                    <div class="mb-4 bg-gradient-to-r from-amber-600/30 to-yellow-600/30 border border-yellow-500/50 p-3 rounded-xl flex items-center justify-between glow-gold">
+                        <div>
+                            <span class="text-[10px] font-bold bg-yellow-500 text-slate-950 px-1.5 py-0.5 rounded">BOOST HASHRATE</span>
+                            <h4 class="font-bold text-xs text-yellow-300 mt-1">Nonton Video (+300 MH/s)</h4>
+                            <p id="adCooldownSubtitle" class="text-[10px] text-gray-300">Cooldown: 30 Menit</p>
+                        </div>
+                        <button id="boostAdBtn" onclick="playSound('click'); watchRewardAd()" class="px-3 py-2 bg-yellow-500 hover:bg-yellow-400 active:scale-95 text-slate-950 font-bold text-xs rounded-lg transition shadow-lg flex items-center gap-1.5 flex-shrink-0">
+                            <i class="fa-solid fa-circle-play text-sm"></i> <span id="boostAdBtnText">Tonton</span>
+                        </button>
+                    </div>
+
+                    <div class="flex justify-between items-center mb-3 border-t border-slate-800 pt-3">
+                        <h2 class="font-bold text-gray-200 flex items-center gap-2 text-sm"><i class="fa-solid fa-gamepad text-emerald-400"></i> 10 Arcade Mini-Games</h2>
+                        <button onclick="playSound('click'); closeActiveGame()" id="backToMenuBtn" class="hidden text-xs bg-red-900/80 hover:bg-red-800 text-red-200 px-2.5 py-1 rounded-lg border border-red-700 transition"><i class="fa-solid fa-xmark mr-1"></i> Keluar</button>
+                    </div>
+
+                    <div id="gameMenuList" class="space-y-1.5 max-h-[380px] overflow-y-auto pr-1 text-xs">
+                        <button onclick="playSound('click'); startArcadeGame('flappy')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-circle-dot text-amber-400 text-base"></i><div><h4 class="font-bold text-gray-200">1. Flappy Ball</h4><p class="text-[9px] text-gray-400">Aktif 24 Jam (+100 MH/s)</p></div></div><span id="lvl_flappy" class="text-[10px] font-bold text-amber-400 bg-amber-950/60 border border-amber-800 px-2 py-0.5 rounded">Lvl 1</span></button>
+                        <button onclick="playSound('click'); startArcadeGame('tetris')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-cubes-stacked text-indigo-400 text-base"></i><div><h4 class="font-bold text-gray-200">2. Classic Tetris</h4><p class="text-[9px] text-gray-400">Aktif 24 Jam (+200 MH/s)</p></div></div><span id="lvl_tetris" class="text-[10px] font-bold text-indigo-400 bg-indigo-950/60 border border-indigo-800 px-2 py-0.5 rounded">Lvl 1</span></button>
+                        <button onclick="playSound('click'); startArcadeGame('racing')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-car-burst text-rose-400 text-base"></i><div><h4 class="font-bold text-gray-200">3. Balap Blok</h4><p class="text-[9px] text-gray-400">Aktif 24 Jam (+300 MH/s)</p></div></div><span id="lvl_racing" class="text-[10px] font-bold text-rose-400 bg-rose-950/60 border border-rose-800 px-2 py-0.5 rounded">Lvl 1</span></button>
+                        <button onclick="playSound('click'); startArcadeGame('snake')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-staff-snake text-emerald-400 text-base"></i><div><h4 class="font-bold text-gray-200">4. Nokia Snake</h4><p class="text-[9px] text-gray-400">Aktif 48 Jam / 2 Hari (+1.000 MH/s)</p></div></div><span id="lvl_snake" class="text-[10px] font-bold text-emerald-400 bg-emerald-950/60 border border-emerald-800 px-2 py-0.5 rounded">Lvl 1</span></button>
+                        <button onclick="playSound('click'); startArcadeGame('tank')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-shield-halved text-cyan-400 text-base"></i><div><h4 class="font-bold text-gray-200">5. Blok Battle (Advanced)</h4><p class="text-[9px] text-gray-400">Aktif 48 Jam / 2 Hari (+2.000 MH/s)</p></div></div><span id="lvl_tank" class="text-[10px] font-bold text-cyan-400 bg-cyan-950/60 border border-cyan-800 px-2 py-0.5 rounded">Lvl 1</span></button>
+                        <button onclick="playSound('click'); startArcadeGame('frogger')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-frog text-lime-400 text-base"></i><div><h4 class="font-bold text-gray-200">6. Ball Crossing (Multi-Row)</h4><p class="text-[9px] text-gray-400">Aktif 72 Jam / 3 Hari (+3.000 MH/s)</p></div></div><span id="lvl_frogger" class="text-[10px] font-bold text-lime-400 bg-lime-950/60 border border-lime-800 px-2 py-0.5 rounded">Lvl 1</span></button>
+                        <button onclick="playSound('click'); startArcadeGame('breakout')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-table-cells text-yellow-400 text-base"></i><div><h4 class="font-bold text-gray-200">7. Breakout Balok (Clear)</h4><p class="text-[9px] text-gray-400">Aktif 72 Jam / 3 Hari (+4.000 MH/s)</p></div></div><span id="lvl_breakout" class="text-[10px] font-bold text-yellow-400 bg-yellow-950/60 border border-yellow-800 px-2 py-0.5 rounded">Lvl 1</span></button>
+                        <button onclick="playSound('click'); startArcadeGame('shooter')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-jet-fighter text-purple-400 text-base"></i><div><h4 class="font-bold text-gray-200">8. Space Alien Shooter</h4><p class="text-[9px] text-gray-400">Aktif 1 Minggu / 168 Jam (+1 TH/s)</p></div></div><span id="lvl_shooter" class="text-[10px] font-bold text-purple-400 bg-purple-950/60 border border-purple-800 px-2 py-0.5 rounded">Lvl 1</span></button>
+                        <button onclick="playSound('click'); startArcadeGame('pong')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-table-tennis-paddle-ball text-pink-400 text-base"></i><div><h4 class="font-bold text-gray-200">9. Ping Pong vs AI</h4><p class="text-[9px] text-gray-400">Aktif 1 Minggu / 168 Jam (+2 TH/s)</p></div></div><span id="lvl_pong" class="text-[10px] font-bold text-pink-400 bg-pink-950/60 border border-pink-800 px-2 py-0.5 rounded">Lvl 1</span></button>
+                        <button onclick="playSound('click'); startArcadeGame('match3')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-border-all text-teal-400 text-base"></i><div><h4 class="font-bold text-gray-200">10. Color Tetris Match-5</h4><p class="text-[9px] text-gray-400">Aktif 1 Minggu / 168 Jam (+5 TH/s)</p></div></div><span id="lvl_match3" class="text-[10px] font-bold text-teal-400 bg-teal-950/60 border border-teal-800 px-2 py-0.5 rounded">Lvl 1</span></button>
+                    </div>
+
+                    <div id="activeGameArea" class="hidden text-center space-y-3 pt-2 relative">
+                        <div class="flex justify-between items-center text-xs bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+                            <span id="gameTitleDisplay" class="font-bold text-yellow-400">Judul Game</span>
+                            <span id="gameScoreDisplay" class="font-mono text-emerald-400 font-bold">Target: 0/10</span>
+                            <span id="gameLevelDisplay" class="font-bold text-purple-400">Level 1</span>
+                        </div>
+                        <div class="relative inline-block mx-auto">
+                            <canvas id="mainGameCanvas" width="280" height="200" class="bg-slate-950 border-2 border-slate-700 rounded-xl shadow-inner cursor-pointer"></canvas>
+                            <div id="gameOverlay" class="absolute inset-0 bg-slate-950/90 backdrop-blur-sm rounded-xl flex flex-col items-center justify-center p-4 hidden z-10">
+                                <h3 id="overlayResultTitle" class="text-lg font-black mb-1">GAME OVER</h3>
+                                <p id="overlayResultSub" class="text-xs text-gray-300 mb-4">Target tidak tercapai.</p>
+                                <div class="flex gap-2">
+                                    <button id="overlayActionBtn" onclick="playSound('click'); retryOrNextLevel()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl transition shadow-lg">🚀 Level Selanjutnya</button>
+                                    <button onclick="playSound('click'); closeActiveGame()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-gray-300 text-xs rounded-xl">Menu</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="gameControlsContainer" class="flex justify-center gap-2"></div>
+                        <p id="gameMessageDisplay" class="text-xs text-amber-400 font-semibold h-4"></p>
+                    </div>
+                </div>
+
+                <!-- Toko Rig Mining Nusantara -->
+                <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-xl">
+                    <h2 class="font-bold text-gray-200 flex items-center gap-2 mb-3">
+                        <i class="fa-solid fa-store text-yellow-400"></i> Toko Rig Mining Nusantara
+                    </h2>
+                    <div class="space-y-2.5 max-h-[360px] overflow-y-auto pr-1">
+                        <!-- Rig DPR -->
+                        <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800 flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-14 h-14 flex-shrink-0">
+                                    <svg class="w-full h-full drop-shadow" viewBox="0 0 100 100"><rect x="5" y="20" width="90" height="60" rx="8" fill="#022c22" stroke="#10b981" stroke-width="2"/><rect x="10" y="25" width="80" height="35" rx="4" fill="#064e3b"/><circle cx="28" cy="42" r="10" fill="#022c22" stroke="#34d399" stroke-width="1"/><circle cx="50" cy="42" r="10" fill="#022c22" stroke="#34d399" stroke-width="1"/><circle cx="72" cy="42" r="10" fill="#022c22" stroke="#34d399" stroke-width="1"/><circle cx="28" cy="42" r="3" fill="#10b981" class="animate-pulse"/><circle cx="50" cy="42" r="3" fill="#10b981" class="animate-pulse"/><circle cx="72" cy="42" r="3" fill="#10b981" class="animate-pulse"/><rect x="25" y="66" width="50" height="10" rx="2" fill="#10b981"/><text x="50" y="74" font-size="8" fill="#022c22" font-family="monospace" font-weight="900" text-anchor="middle">RIG DPR</text></svg>
+                                </div>
+                                <div><h4 class="font-bold text-xs text-emerald-400">Rig DPR</h4><p class="text-[9px] text-gray-400">+50 MH/s Fisik</p><p class="text-xs text-emerald-300 font-bold mt-0.5">Rp 5.000</p></div>
+                            </div>
+                            <button onclick="playSound('click'); buyMiner('Rig DPR', 5000, 50)" class="px-3 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg transition">Beli</button>
+                        </div>
+                        <!-- Rig MPR -->
+                        <div class="bg-slate-950 p-2.5 rounded-xl border border-slate-800 flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-14 h-14 flex-shrink-0">
+                                    <svg class="w-full h-full drop-shadow" viewBox="0 0 100 100"><rect x="10" y="10" width="80" height="80" rx="5" fill="#172554" stroke="#3b82f6" stroke-width="2"/><rect x="15" y="15" width="70" height="15" rx="2" fill="#1e3a8a"/><rect x="15" y="35" width="70" height="15" rx="2" fill="#1e3a8a"/><rect x="15" y="55" width="70" height="15" rx="2" fill="#1e3a8a"/><circle cx="22" cy="22.5" r="2" fill="#60a5fa" class="animate-ping"/><circle cx="22" cy="42.5" r="2" fill="#60a5fa" class="animate-pulse"/><circle cx="22" cy="62.5" r="2" fill="#60a5fa" class="animate-ping"/><rect x="15" y="75" width="70" height="12" rx="2" fill="#3b82f6"/><text x="50" y="84" font-size="8" fill="#172554" font-family="monospace" font-weight="900" text-anchor="middle">RIG MPR</text></svg>
+                                </div>
+                                <div><h4 class="font-bold text-xs text-blue-400">Rig MPR</h4><p class="text-[9px] text-gray-400">+200 MH/s Fisik</p><p class="text-xs text-emerald-300 font-bold mt-0.5">Rp 15.000</p></div>
+                            </div>
+                            <button onclick="playSound('click'); buyMiner('Rig MPR', 15000, 200)" class="px-3 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-lg transition">Beli</button>
+                        </div>
+                        <!-- Rig GARUDA -->
+                        <div class="bg-slate-950 p-2.5 rounded-xl border border-amber-500/60 flex items-center justify-between glow-gold">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-14 h-14 flex-shrink-0">
+                                    <svg class="w-full h-full drop-shadow" viewBox="0 0 100 100"><path d="M10 50 Q 5 30 25 15 Q 15 35 30 40 Z" fill="#d97706"/><path d="M90 50 Q 95 30 75 15 Q 85 35 70 40 Z" fill="#d97706"/><rect x="25" y="20" width="50" height="70" rx="6" fill="#451a03" stroke="#f59e0b" stroke-width="2"/><rect x="30" y="25" width="40" height="25" rx="3" fill="#78350f"/><circle cx="50" cy="37" r="9" fill="#451a03" stroke="#fbbf24" stroke-width="2"/><path d="M50 28 L50 46 M41 37 L59 37 M44 31 L56 43 M44 43 L56 31" stroke="#fef3c7" stroke-width="1" class="spin-slow" style="transform-origin: 50px 37px;"/><rect x="15" y="65" width="70" height="15" rx="4" fill="#f59e0b"/><text x="50" y="75" font-size="8" fill="#451a03" font-family="monospace" font-weight="900" text-anchor="middle">RIG GARUDA</text></svg>
+                                </div>
+                                <div><h4 class="font-bold text-xs text-amber-400">Rig GARUDA</h4><p class="text-[9px] text-gray-300">+1.000 MH/s (1 GH/s)</p><p class="text-xs text-emerald-300 font-bold mt-0.5">Rp 20.000</p></div>
+                            </div>
+                            <button onclick="playSound('click'); buyMiner('Rig GARUDA', 20000, 1000)" class="px-3 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold rounded-lg transition">Beli</button>
+                        </div>
+                        <!-- Rig MERAH PUTIH -->
+                        <div class="bg-slate-950 p-2.5 rounded-xl border border-red-900/50 flex items-center justify-between">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-14 h-14 flex-shrink-0">
+                                    <svg class="w-full h-full drop-shadow" viewBox="0 0 100 100"><rect x="15" y="10" width="70" height="80" rx="8" fill="#0f172a" stroke="#cbd5e1" stroke-width="2"/><rect x="20" y="15" width="60" height="30" rx="4" fill="#991b1b" stroke="#ef4444" stroke-width="1"/><rect x="20" y="50" width="60" height="30" rx="4" fill="#e2e8f0" stroke="#ffffff" stroke-width="1"/><circle cx="50" cy="30" r="10" fill="#450a0a" class="animate-spin" style="transform-origin: 50px 30px; stroke-dasharray: 4 4; stroke: #ef4444;"/><circle cx="50" cy="65" r="10" fill="#94a3b8" class="animate-spin" style="transform-origin: 50px 65px; stroke-dasharray: 4 4; stroke: #94a3b8; animation-direction: reverse;"/><rect x="10" y="44" width="80" height="12" rx="3" fill="#f8fafc" stroke="#dc2626" stroke-width="2"/><text x="50" y="52" font-size="7.5" fill="#dc2626" font-family="monospace" font-weight="900" text-anchor="middle">MERAH PUTIH</text></svg>
+                                </div>
+                                <div><h4 class="font-bold text-xs text-red-500">Rig MERAH PUTIH</h4><p class="text-[9px] text-gray-400">+2.500 MH/s (2.5 GH/s)</p><p class="text-xs text-emerald-300 font-bold mt-0.5">Rp 35.000</p></div>
+                            </div>
+                            <button onclick="playSound('click'); buyMiner('Rig MERAH PUTIH', 35000, 2500)" class="px-3 py-2 bg-red-600 hover:bg-red-500 text-white text-xs font-bold rounded-lg transition">Beli</button>
+                        </div>
+                        <!-- Rig RAKYAT SEJAHTERA -->
+                        <div class="bg-slate-950 p-2.5 rounded-xl border border-yellow-500/60 flex items-center justify-between glow-gold">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-14 h-14 flex-shrink-0">
+                                    <svg class="w-full h-full drop-shadow" viewBox="0 0 100 100"><polygon points="50,5 95,25 95,75 50,95 5,75 5,25" fill="#1c1917" stroke="#fbbf24" stroke-width="3"/><polygon points="50,15 80,30 80,70 50,85 20,70 20,30" fill="#422006"/><circle cx="50" cy="50" r="15" fill="#f59e0b" class="animate-pulse"/><circle cx="50" cy="50" r="8" fill="#fffbeb"/><rect x="10" y="80" width="80" height="12" rx="3" fill="#fbbf24"/><text x="50" y="89" font-size="7" fill="#1c1917" font-family="monospace" font-weight="900" text-anchor="middle">RAKYAT SEJAHTERA</text></svg>
+                                </div>
+                                <div><h4 class="font-bold text-xs text-yellow-300">Rig RAKYAT SEJAHTERA</h4><p class="text-[9px] text-gray-300">+10.000 MH/s (10 GH/s)</p><p class="text-xs text-emerald-300 font-bold mt-0.5">Rp 50.000</p></div>
+                            </div>
+                            <button onclick="playSound('click'); buyMiner('Rig RAKYAT SEJAHTERA', 50000, 10000)" class="px-3 py-2 bg-gradient-to-r from-amber-500 to-yellow-400 hover:from-amber-400 hover:to-yellow-300 text-slate-950 text-xs font-black rounded-lg transition shadow-lg">Beli</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+        <!-- Right Banner Ad Slot -->
+        <aside class="hidden xl:flex flex-col w-44 space-y-4">
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-3 text-center flex-1 flex flex-col justify-between shadow-lg">
+                <div>
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-[9px] text-amber-400 font-bold uppercase tracking-wider">Sponsor Ad</span>
+                        <span class="text-[8px] bg-slate-800 text-gray-400 px-1.5 py-0.5 rounded">Ads by Google</span>
+                    </div>
+                    <div class="bg-gradient-to-tr from-slate-950 via-purple-950/40 to-slate-950 border border-purple-500/30 rounded-xl p-3 space-y-2.5 shadow-inner">
+                        <div class="w-12 h-12 bg-purple-600/20 border border-purple-500/40 rounded-xl mx-auto flex items-center justify-center text-purple-400 text-xl shadow">
+                            <i class="fa-solid fa-gamepad"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-black text-xs text-white">Gaming Pro Gear</h4>
+                            <p class="text-[9px] text-gray-300 mt-0.5">Headset & Keyboard Mechanical RGB Low Latency.</p>
+                        </div>
+                    </div>
+                </div>
+                <button onclick="playSound('click'); alert('Membuka toko partner Gaming Pro Gear!');" class="w-full py-2 bg-purple-600 hover:bg-purple-500 text-white font-bold text-[10px] rounded-xl transition shadow">
+                    🎮 Lihat Penawaran
+                </button>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Modals -->
+
+    <!-- Modal Offline Earnings Report -->
+    <div id="offlineModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-emerald-500/50 rounded-2xl max-w-sm w-full p-6 shadow-2xl relative text-center space-y-4 glow-gold">
+            <div class="w-12 h-12 bg-emerald-950 border border-emerald-500 text-emerald-400 rounded-2xl flex items-center justify-center mx-auto text-xl shadow-lg"><i class="fa-solid fa-moon"></i></div>
+            <h3 class="font-bold text-base text-white">Selamat Datang Kembali!</h3>
+            <p class="text-xs text-gray-400">Saat kamu offline, server penambanganmu bekerja otomatis.</p>
+            <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-2 text-xs">
+                <div class="flex justify-between"><span class="text-gray-400">Waktu Offline:</span><span id="offlineTimeText" class="font-mono text-white font-bold">0 Jam 0 Menit</span></div>
+                <div class="flex justify-between"><span class="text-gray-400">Koin Didapat:</span><span id="offlineCoinText" class="font-mono text-yellow-400 font-bold">Rp 0</span></div>
+            </div>
+            <button onclick="playSound('click'); closeOfflineModal()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 font-bold text-white text-xs rounded-xl transition shadow-lg">AMBIL PENDAPATAN AFK</button>
+        </div>
+    </div>
+
+    <!-- Modal Achievements -->
+    <div id="achievementModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-emerald-500/50 rounded-2xl max-w-md w-full p-6 shadow-2xl relative space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                <h3 class="font-bold text-base text-white flex items-center gap-2"><i class="fa-solid fa-award text-emerald-400"></i> Pencapaian Server</h3>
+                <button onclick="playSound('click'); closeAchievementModal()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            <div id="achievementsList" class="space-y-2.5 max-h-[350px] overflow-y-auto pr-1 text-xs"></div>
+        </div>
+    </div>
+    
+    <!-- Modal Absen -->
+    <div id="attendanceModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-amber-500/50 rounded-2xl max-w-md w-full p-6 shadow-2xl relative space-y-4 glow-gold">
+            <button onclick="playSound('click'); closeAttendanceModal()" class="absolute right-4 top-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <div class="text-center">
+                <div class="w-12 h-12 bg-amber-950 border border-amber-500 text-amber-400 rounded-2xl flex items-center justify-center mx-auto text-xl shadow-lg mb-2"><i class="fa-solid fa-calendar-check"></i></div>
+                <h3 class="font-bold text-base text-white">Kalender Absen Harian</h3>
+                <p class="text-xs text-gray-400 mt-0.5">Klaim bonus harian (Campuran Hashrate & Baterai)</p>
+            </div>
+            <div id="attendanceGrid" class="grid grid-cols-4 sm:grid-cols-7 gap-2 my-2"></div>
+            <button id="claimAttendanceBtn" onclick="playSound('click'); claimDailyAttendance()" class="w-full py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs rounded-xl transition shadow-lg">KLAIM ABSEN HARIAN</button>
+        </div>
+    </div>
+
+    <!-- Modal Listrik & Stasiun Baterai -->
+    <div id="powerModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-yellow-500/50 rounded-2xl max-w-sm w-full p-6 shadow-2xl relative space-y-4 glow-yellow">
+            <button onclick="playSound('click'); closePowerModal()" class="absolute right-4 top-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <div class="w-12 h-12 bg-yellow-950 border border-yellow-500 text-yellow-400 rounded-2xl flex items-center justify-center mx-auto text-xl shadow-lg"><i class="fa-solid fa-bolt"></i></div>
+            <div class="text-center"><h3 class="font-bold text-base text-white">Stasiun Baterai & Panel Surya</h3></div>
+            
+            <div class="space-y-2.5 text-xs max-h-[320px] overflow-y-auto pr-1">
+                <!-- Klaim Baterai di Stasiun -->
+                <div class="bg-slate-950 p-3 rounded-xl border border-yellow-500/40 flex items-center justify-between">
+                    <div><h4 class="font-bold text-yellow-300">Klaim Stasiun Baterai</h4><p class="text-[9px] text-gray-400">Isi ulang daya baterai secara manual</p></div>
+                    <button onclick="playSound('click'); claimStationBattery()" class="px-3 py-1.5 bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-bold text-xs rounded-lg transition shadow">Klaim 100%</button>
+                </div>
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between"><div><h4 class="font-bold text-emerald-400">Token Standar (+50%)</h4><p class="text-[10px] text-gray-400">Rp 2.500</p></div><button onclick="playSound('click'); buyElectricity('coin', 2500, 50)" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-lg transition">Beli</button></div>
+                <div class="bg-slate-950 p-3 rounded-xl border border-amber-500/50 flex items-center justify-between"><div><h4 class="font-bold text-amber-300">Token Sultan (+100% Full)</h4><p class="text-[10px] text-gray-400">Rp 5.000</p></div><button onclick="playSound('click'); buyElectricity('coin', 5000, 100)" class="px-3 py-1.5 bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-950 font-black text-xs rounded-lg transition shadow-lg">Beli Full</button></div>
+                
+                <!-- Upgrade Panel Surya & Efisiensi (Permanen) -->
+                <div class="border-t border-slate-800 pt-2 space-y-2">
+                    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between">
+                        <div><h4 id="solarLevelText" class="font-bold text-cyan-400">Panel Surya Otomatis (Lvl 0)</h4><p class="text-[9px] text-gray-400">Isi baterai pasif +0.02%/dtk (Permanen)</p></div>
+                        <button onclick="playSound('click'); upgradeSolarPanel()" id="solarUpgradeBtn" class="px-3 py-1.5 bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs rounded-lg transition">Rp 10.000</button>
+                    </div>
+                    <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between">
+                        <div><h4 id="drainLevelText" class="font-bold text-purple-400">Efisiensi Kapasitor (Lvl 1)</h4><p class="text-[9px] text-gray-400">Hemat pemakaian baterai 15% (Permanen)</p></div>
+                        <button onclick="playSound('click'); upgradeBatteryEfficiency()" id="drainUpgradeBtn" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs rounded-lg transition">Rp 15.000</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Spin -->
+    <div id="spinModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-purple-500/50 rounded-2xl max-w-sm w-full p-6 shadow-2xl text-center space-y-4 relative glow-cyan">
+            <button onclick="playSound('click'); closeSpinModal()" class="absolute right-4 top-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <div class="w-10 h-10 bg-purple-950 border border-purple-500 text-purple-400 rounded-2xl flex items-center justify-center mx-auto text-lg shadow-lg"><i class="fa-solid fa-dharmachakra"></i></div>
+            <div class="relative w-56 h-56 mx-auto my-2">
+                <div class="absolute -top-2 left-1/2 -translate-x-1/2 z-20 w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-t-[18px] border-t-amber-400 drop-shadow"></div>
+                <canvas id="spinWheelCanvas" width="220" height="220" class="mx-auto rounded-full shadow-2xl border-4 border-slate-800"></canvas>
+            </div>
+            <div class="p-2.5 bg-slate-950 border border-purple-900/60 rounded-xl"><div id="spinResultText" class="text-sm font-bold font-mono text-purple-300">Hadiah: Hashrate & Baterai!</div></div>
+            <button id="spinActionBtn" onclick="playSound('click'); startWheelSpinAnimation()" class="w-full py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 font-bold text-white text-xs rounded-xl transition shadow-lg">PUTAR RODA SEKARANG</button>
+        </div>
+    </div>
+
+    <!-- Modal Iklan Sponsor (10 Detik) -->
+    <div id="adModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-yellow-500/50 rounded-2xl max-w-sm w-full p-5 shadow-2xl relative text-center space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-2">
+                <span class="text-[10px] bg-yellow-500 text-slate-950 font-bold px-2 py-0.5 rounded">IKLAN SPONSOR (Wajib 10 Detik)</span>
+                <span id="adTimerText" class="text-xs font-mono font-bold text-yellow-400">Selesai dalam: 10s</span>
+            </div>
+            <div class="bg-slate-950 rounded-xl h-44 flex flex-col items-center justify-center relative overflow-hidden border border-slate-800 p-4 space-y-2">
+                <div class="w-12 h-12 bg-blue-600/20 rounded-2xl flex items-center justify-center text-blue-400 text-2xl border border-blue-500/30">
+                    <i class="fa-solid fa-mobile-screen-button"></i>
+                </div>
+                <h3 class="font-black text-xs text-white">Promo Spesial: iPhone 17 Pro Max</h3>
+                <p class="text-[10px] text-gray-400">Saksikan video sponsor ini sampai selesai untuk mendapatkan reward gratis hashrate.</p>
+                <div class="absolute bottom-0 left-0 right-0 h-1.5 bg-slate-800">
+                    <div id="adProgressBar" class="h-full bg-yellow-500 w-0 transition-all duration-1000"></div>
+                </div>
+            </div>
+            <button id="claimAdBtn" disabled class="w-full py-2.5 bg-gray-800 text-gray-500 font-bold text-xs rounded-xl cursor-not-allowed">Menonton iklan (10s)...</button>
+        </div>
+    </div>
+
+    <!-- Modal PIN -->
+    <div id="pinModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-emerald-500/50 rounded-2xl max-w-sm w-full p-6 shadow-2xl text-center space-y-4 relative">
+            <button onclick="playSound('click'); closePinModal()" class="absolute right-4 top-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <div class="w-12 h-12 bg-emerald-950 border border-emerald-500 text-emerald-400 rounded-2xl flex items-center justify-center mx-auto text-xl shadow-lg"><i class="fa-solid fa-lock"></i></div>
+            <div><h3 class="font-bold text-base text-white">Masukkan PIN Transaksi</h3></div>
+            <div><input type="password" id="pinInput" maxlength="6" placeholder="******" class="w-48 text-center text-2xl font-mono tracking-widest p-3 bg-slate-950 border border-slate-700 rounded-xl focus:border-emerald-500 focus:outline-none text-emerald-400 font-bold"></div>
+            <button onclick="playSound('click'); confirmPinAction()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 font-bold text-white text-xs rounded-xl transition shadow-lg">Konfirmasi & Kirim WD</button>
+        </div>
+    </div>
+
+    <!-- Modal Referral -->
+    <div id="referralModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-red-500/40 rounded-2xl max-w-md w-full p-6 shadow-2xl relative space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                <h3 class="font-bold text-base text-white flex items-center gap-2"><i class="fa-solid fa-users text-red-500"></i> Program Referral & Undangan</h3>
+                <button onclick="playSound('click'); closeReferralModal()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            </div>
+            
+            <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 text-center space-y-2">
+                <span class="text-[10px] text-gray-400 block">Kode Referral Kamu:</span>
+                <div class="flex items-center justify-center space-x-2">
+                    <span id="myRefCodeDisplay" class="font-mono font-black text-xl text-yellow-400 tracking-wider">CUAN-XXXX</span>
+                    <button onclick="playSound('click'); copyRefCode()" class="p-2 bg-slate-800 hover:bg-slate-700 text-gray-300 rounded-lg text-xs"><i class="fa-solid fa-copy"></i></button>
+                </div>
+                <p class="text-[10px] text-emerald-400">Dapatkan <b>Rp 1.000 Koin Rupiah + 100 MH/s</b> setiap teman mendaftar!</p>
+            </div>
+
+            <!-- Input Klaim Kode Teman -->
+            <div class="space-y-2 border-t border-slate-800 pt-3">
+                <label class="text-xs text-gray-300 font-semibold block">Punya Kode Referral Teman?</label>
+                <div class="flex gap-2">
+                    <input type="text" id="inputFriendRef" placeholder="Contoh: CUAN-8492" class="flex-1 p-2.5 bg-slate-950 border border-slate-800 rounded-xl focus:border-red-500 focus:outline-none text-white text-xs font-mono uppercase">
+                    <button onclick="playSound('click'); claimFriendRef()" class="px-4 py-2.5 bg-red-600 hover:bg-red-500 font-bold text-xs text-white rounded-xl transition">Klaim</button>
+                </div>
+            </div>
+
+            <!-- Daftar Teman Terundang -->
+            <div class="border-t border-slate-800 pt-3 space-y-2">
+                <div class="flex justify-between items-center text-xs">
+                    <span class="font-bold text-gray-300">Daftar Teman Diundang:</span>
+                    <span id="totalInvitedCount" class="text-yellow-400 font-mono font-bold">0 Orang</span>
+                </div>
+                <div id="invitedFriendsList" class="space-y-1.5 max-h-36 overflow-y-auto text-xs pr-1">
+                    <p class="text-gray-500 text-center py-2 text-[11px]">Belum ada teman yang terundang.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Auth -->
+    <div id="authModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-sm w-full p-6 shadow-2xl relative">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3 mb-4"><h3 class="font-bold text-base text-white flex items-center gap-2"><i class="fa-solid fa-user-plus text-red-500"></i> Pendaftaran Akun Pemain</h3><button onclick="playSound('click'); closeAuthModal()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button></div>
+            <div class="space-y-3 text-xs">
+                <div><label class="text-gray-400 block mb-1">Nama Lengkap / Username</label><input type="text" id="regNameInput" placeholder="Contoh: Sultan Cuan" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white"></div>
+                <div><label class="text-gray-400 block mb-1">Nomor WhatsApp / HP</label><input type="text" id="regPhoneInput" placeholder="Contoh: 081234567890" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white"></div>
+                <div><label class="text-gray-400 block mb-1">Buat PIN 6-Digit (2FA)</label><input type="password" maxlength="6" id="regPinInput" placeholder="Contoh: 123456" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white font-mono tracking-widest"></div>
+                <button onclick="playSound('click'); saveAccount()" class="w-full py-3 bg-red-600 hover:bg-red-500 font-bold text-white rounded-xl transition shadow-lg mt-2">Simpan & Daftarkan Akun</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Withdraw -->
+    <div id="withdrawModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-emerald-500/40 rounded-2xl max-w-sm w-full p-6 shadow-2xl relative">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3 mb-4"><h3 class="font-bold text-base text-white flex items-center gap-2"><i class="fa-solid fa-money-bill-transfer text-emerald-400"></i> Penarikan Saldo Cuan</h3><button onclick="playSound('click'); closeWithdrawModal()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button></div>
+            <div class="space-y-3.5 text-xs">
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex justify-between items-center"><span class="text-gray-400">Saldo Tersedia:</span><span id="wdBalanceDisplay" class="font-mono font-bold text-yellow-400 text-sm">Rp 0</span></div>
+                <div><label class="text-gray-400 block mb-1">Metode Penarikan</label><select id="wdMethodSelect" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white"><option value="DANA">DANA E-Wallet</option><option value="GoPay">GoPay</option><option value="OVO">OVO</option><option value="ShopeePay">ShopeePay</option><option value="QRIS">QRIS Instant Transfer</option></select></div>
+                <div><label class="text-gray-400 block mb-1">Nomor Tujuan</label><input type="text" id="wdNumberInput" placeholder="081234567890" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white"></div>
+                <div><label class="text-gray-400 block mb-1">Nominal (Rp)</label><input type="number" id="wdAmountInput" placeholder="Min Rp 50.000" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white font-mono"></div>
+                <button onclick="playSound('click'); processWithdraw()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 font-bold text-white rounded-xl transition shadow-lg">Lanjut Verifikasi PIN (2FA)</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- FULL JAVASCRIPT ENGINE v8.7 -->
+    <script>
+        // --- WEB AUDIO API 8-BIT SOUND UTILITY ---
+        let audioCtx = null;
+        function playSound(type) {
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                let osc = audioCtx.createOscillator();
+                let gain = audioCtx.createGain();
+                osc.connect(gain); gain.connect(audioCtx.destination);
+                
+                if (type === 'click') {
+                    osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.03, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.04);
+                    osc.start(); osc.stop(audioCtx.currentTime + 0.04);
+                } else if (type === 'coin') {
+                    osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
+                    osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.08); // A5
+                    gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.2);
+                    osc.start(); osc.stop(audioCtx.currentTime + 0.2);
+                } else if (type === 'win') {
+                    osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+                    osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1);
+                    osc.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.2);
+                    osc.frequency.setValueAtTime(1046.50, audioCtx.currentTime + 0.3);
+                    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.45);
+                    osc.start(); osc.stop(audioCtx.currentTime + 0.45);
+                }
+            } catch(e) {}
+        }
+
+        let userData = { 
+            name: "", phone: "", pin: "", isRegistered: false, myRefCode: "", claimedRef: false, 
+            lastAttendanceDate: "", attendanceStreak: 0, lastSpinDate: "", lastDailyResetDate: "",
+            lastSaveTimestamp: Date.now()
+        };
+        let coinBalance = 0, freeHashTimerSec = 300, minersPurchased = [], activeGameLoop = null, currentArcadeKey = null;
+        let electricityLevel = 100;
+        let lastBoostAdTime = 0;
+
+        // Upgrade Levels (Permanen)
+        let solarPanelLevel = 0; 
+        let batteryEfficiencyLevel = 1;
+
+        let freePowerLogs = []; 
+        let gamePowerLogs = []; 
+        let invitedFriends = []; 
+        
+        // Misi / Achievements (Maksimal Koin Reward Rp 1.000)
+        let achievements = [
+            { id: 'mh_1k', title: 'Penambang GH/s', desc: 'Capai total hashrate 1.000 MH/s', target: 1000, type: 'hash', rewardVal: 500, rewardType: 'coin', claimed: false },
+            { id: 'rig_1', title: 'Bos Rig Nusantara', desc: 'Beli minimal 1 buah Rig Fisik', target: 1, type: 'rig', rewardVal: 500, rewardType: 'coin', claimed: false },
+            { id: 'game_3', title: 'Gamer Aktif', desc: 'Mainkan & menangkan 3 mini-games', target: 3, type: 'games', rewardVal: 1000, rewardType: 'coin', claimed: false },
+            { id: 'sultan_50k', title: 'Sultan Rupiah', desc: 'Kumpulkan saldo Rp 50.000', target: 50000, type: 'coin', rewardVal: 1000, rewardType: 'coin', claimed: false }
+        ];
+        let gamesWonCount = 0;
+
+        let gameLevels = { flappy: 1, tetris: 1, racing: 1, snake: 1, tank: 1, frogger: 1, breakout: 1, shooter: 1, pong: 1, match3: 1 };
+        
+        const attendanceRewards = [
+            { type: 'hash', val: 100, label: "+100 MH/s" },
+            { type: 'battery', val: 25, label: "Baterai 25%" },
+            { type: 'hash', val: 350, label: "+350 MH/s" },
+            { type: 'battery', val: 50, label: "Baterai 50%" },
+            { type: 'hash', val: 750, label: "+750 MH/s" },
+            { type: 'battery', val: 100, label: "Baterai 100%" },
+            { type: 'hash', val: 2000, label: "+2.000 MH/s" }
+        ];
+
+        const minerIconTemplates = {
+            'Rig DPR': `<svg class="w-full h-full drop-shadow" viewBox="0 0 100 100"><rect x="5" y="20" width="90" height="60" rx="8" fill="#022c22" stroke="#10b981" stroke-width="2"/><rect x="10" y="25" width="80" height="35" rx="4" fill="#064e3b"/><circle cx="28" cy="42" r="10" fill="#022c22" stroke="#34d399" stroke-width="1"/><circle cx="50" cy="42" r="10" fill="#022c22" stroke="#34d399" stroke-width="1"/><circle cx="72" cy="42" r="10" fill="#022c22" stroke="#34d399" stroke-width="1"/><circle cx="28" cy="42" r="3" fill="#10b981" class="animate-pulse"/><circle cx="50" cy="42" r="3" fill="#10b981" class="animate-pulse"/><circle cx="72" cy="42" r="3" fill="#10b981" class="animate-pulse"/><rect x="25" y="66" width="50" height="10" rx="2" fill="#10b981"/><text x="50" y="74" font-size="8" fill="#022c22" font-family="monospace" font-weight="900" text-anchor="middle">RIG DPR</text></svg>`,
+            'Rig MPR': `<svg class="w-full h-full drop-shadow" viewBox="0 0 100 100"><rect x="10" y="10" width="80" height="80" rx="5" fill="#172554" stroke="#3b82f6" stroke-width="2"/><rect x="15" y="15" width="70" height="15" rx="2" fill="#1e3a8a"/><rect x="15" y="35" width="70" height="15" rx="2" fill="#1e3a8a"/><rect x="15" y="55" width="70" height="15" rx="2" fill="#1e3a8a"/><circle cx="22" cy="22.5" r="2" fill="#60a5fa" class="animate-ping"/><circle cx="22" cy="42.5" r="2" fill="#60a5fa" class="animate-pulse"/><circle cx="22" cy="62.5" r="2" fill="#60a5fa" class="animate-ping"/><rect x="15" y="75" width="70" height="12" rx="2" fill="#3b82f6"/><text x="50" y="84" font-size="8" fill="#172554" font-family="monospace" font-weight="900" text-anchor="middle">RIG MPR</text></svg>`,
+            'Rig GARUDA': `<svg class="w-full h-full drop-shadow" viewBox="0 0 100 100"><path d="M10 50 Q 5 30 25 15 Q 15 35 30 40 Z" fill="#d97706"/><path d="M90 50 Q 95 30 75 15 Q 85 35 70 40 Z" fill="#d97706"/><rect x="25" y="20" width="50" height="70" rx="6" fill="#451a03" stroke="#f59e0b" stroke-width="2"/><rect x="30" y="25" width="40" height="25" rx="3" fill="#78350f"/><circle cx="50" cy="37" r="9" fill="#451a03" stroke="#fbbf24" stroke-width="2"/><path d="M50 28 L50 46 M41 37 L59 37 M44 31 L56 43 M44 43 L56 31" stroke="#fef3c7" stroke-width="1" class="spin-slow" style="transform-origin: 50px 37px;"/><rect x="15" y="65" width="70" height="15" rx="4" fill="#f59e0b"/><text x="50" y="75" font-size="8" fill="#451a03" font-family="monospace" font-weight="900" text-anchor="middle">RIG GARUDA</text></svg>`,
+            'Rig MERAH PUTIH': `<svg class="w-full h-full drop-shadow" viewBox="0 0 100 100"><rect x="15" y="10" width="70" height="80" rx="8" fill="#0f172a" stroke="#cbd5e1" stroke-width="2"/><rect x="20" y="15" width="60" height="30" rx="4" fill="#991b1b" stroke="#ef4444" stroke-width="1"/><rect x="20" y="50" width="60" height="30" rx="4" fill="#e2e8f0" stroke="#ffffff" stroke-width="1"/><circle cx="50" cy="30" r="10" fill="#450a0a" class="animate-spin" style="transform-origin: 50px 30px; stroke-dasharray: 4 4; stroke: #ef4444;"/><circle cx="50" cy="65" r="10" fill="#94a3b8" class="animate-spin" style="transform-origin: 50px 65px; stroke-dasharray: 4 4; stroke: #94a3b8; animation-direction: reverse;"/><rect x="10" y="44" width="80" height="12" rx="3" fill="#f8fafc" stroke="#dc2626" stroke-width="2"/><text x="50" y="52" font-size="7.5" fill="#dc2626" font-family="monospace" font-weight="900" text-anchor="middle">MERAH PUTIH</text></svg>`,
+            'Rig RAKYAT SEJAHTERA': `<svg class="w-full h-full drop-shadow" viewBox="0 0 100 100"><polygon points="50,5 95,25 95,75 50,95 5,75 5,25" fill="#1c1917" stroke="#fbbf24" stroke-width="3"/><polygon points="50,15 80,30 80,70 50,85 20,70 20,30" fill="#422006"/><circle cx="50" cy="50" r="15" fill="#f59e0b" class="animate-pulse"/><circle cx="50" cy="50" r="8" fill="#fffbeb"/><rect x="10" y="80" width="80" height="12" rx="3" fill="#fbbf24"/><text x="50" y="89" font-size="7" fill="#1c1917" font-family="monospace" font-weight="900" text-anchor="middle">RAKYAT SEJAHTERA</text></svg>`
+        };
+
+        function getRigPowerTotal() { return minersPurchased.reduce((sum, m) => sum + m.powerBonus, 0); }
+        function getFreePowerTotal() {
+            const now = Date.now();
+            const limit24h = 24 * 60 * 60 * 1000;
+            freePowerLogs = freePowerLogs.filter(item => (now - item.timestamp) < limit24h);
+            return freePowerLogs.reduce((sum, item) => sum + item.amount, 0);
+        }
+        function getGamePowerTotal() {
+            const now = Date.now();
+            gamePowerLogs = gamePowerLogs.filter(item => (now - item.timestamp) < item.durationMs);
+            return gamePowerLogs.reduce((sum, item) => sum + item.amount, 0);
+        }
+        function getTotalPower() { return getRigPowerTotal() + getGamePowerTotal() + getFreePowerTotal(); }
+
+        function addFreePower(amount) { freePowerLogs.push({ amount: amount, timestamp: Date.now() }); saveGameData(); }
+        function addGamePower(amount, durationMs) { 
+            gamePowerLogs.push({ amount: amount, timestamp: Date.now(), durationMs: durationMs }); 
+            gamesWonCount++;
+            saveGameData(); 
+        }
+
+        function formatHashrate(mh) {
+            if (mh >= 1000000000) return (mh / 1000000000).toFixed(2) + " PH/s";
+            if (mh >= 1000000) return (mh / 1000000).toFixed(2) + " TH/s";
+            if (mh >= 1000) return (mh / 1000).toFixed(2) + " GH/s";
+            return mh.toLocaleString('id-ID') + " MH/s";
+        }
+
+        function updateDirectBreakdownUI() {
+            document.getElementById('breakdownRig').innerText = formatHashrate(getRigPowerTotal());
+            document.getElementById('breakdownGame').innerText = formatHashrate(getGamePowerTotal());
+            document.getElementById('breakdownFree').innerText = formatHashrate(getFreePowerTotal());
+        }
+
+        function saveGameData() {
+            userData.lastSaveTimestamp = Date.now();
+            const dataToSave = { 
+                userData, coinBalance, freePowerLogs, gamePowerLogs, invitedFriends, 
+                minersPurchased, gameLevels, electricityLevel, lastBoostAdTime, 
+                solarPanelLevel, batteryEfficiencyLevel, achievements, gamesWonCount 
+            };
+            localStorage.setItem('RupiahMinerProgress_v87', JSON.stringify(dataToSave));
+        }
+
+        function loadGameData() {
+            const savedData = localStorage.getItem('RupiahMinerProgress_v87');
+            if (savedData) {
+                try {
+                    const parsed = JSON.parse(savedData);
+                    userData = parsed.userData || userData;
+                    coinBalance = parsed.coinBalance || 0;
+                    freePowerLogs = parsed.freePowerLogs || [];
+                    gamePowerLogs = parsed.gamePowerLogs || [];
+                    invitedFriends = parsed.invitedFriends || [];
+                    minersPurchased = parsed.minersPurchased || [];
+                    gameLevels = parsed.gameLevels || gameLevels;
+                    electricityLevel = parsed.electricityLevel !== undefined ? parsed.electricityLevel : 100;
+                    lastBoostAdTime = parsed.lastBoostAdTime || 0;
+                    solarPanelLevel = parsed.solarPanelLevel || 0;
+                    batteryEfficiencyLevel = parsed.batteryEfficiencyLevel || 1;
+                    achievements = parsed.achievements || achievements;
+                    gamesWonCount = parsed.gamesWonCount || 0;
+
+                    if (!userData.myRefCode) userData.myRefCode = "CUAN-" + Math.floor(1000 + Math.random() * 9000);
+                    if (userData.isRegistered) {
+                        document.getElementById('userNameDisplay').innerText = userData.name;
+                        document.getElementById('wdNumberInput').value = userData.phone;
+                    }
+
+                    // Kalkulasi Offline Mining
+                    const now = Date.now();
+                    const elapsedSec = Math.floor((now - (userData.lastSaveTimestamp || now)) / 1000);
+                    if (elapsedSec > 15 && getTotalPower() > 0 && electricityLevel > 0) {
+                        const hasRigs = minersPurchased.length > 0;
+                        const baseDrain = hasRigs ? (0.008 + (getRigPowerTotal() / 2000) * 0.005) : (100 / 86400);
+                        const drainRatePerSec = baseDrain * (1 - (batteryEfficiencyLevel - 1) * 0.15);
+                        const solarRegenPerSec = solarPanelLevel * 0.002;
+                        const netDrainPerSec = Math.max(0.0001, drainRatePerSec - solarRegenPerSec);
+                        
+                        const activeSec = Math.min(elapsedSec, electricityLevel / netDrainPerSec);
+                        const offlineCoin = (getTotalPower() / 1000) * 0.00001 * activeSec;
+                        
+                        coinBalance += offlineCoin;
+                        electricityLevel = Math.max(0, electricityLevel - (elapsedSec * netDrainPerSec));
+                        
+                        showOfflineEarnings(elapsedSec, offlineCoin);
+                    }
+                } catch(e) { console.error(e); }
+            } else {
+                userData.myRefCode = "CUAN-" + Math.floor(1000 + Math.random() * 9000);
+                saveGameData();
+            }
+
+            checkMidnightGameReset(); checkAttendanceStreakReset(); updateUI(); renderMiners(); updateLevelBadges(); checkDailyStatus(); renderLeaderboard(); drawWheel(0); renderInvitedFriends(); updatePowerUpgradesUI();
+        }
+
+        function showOfflineEarnings(sec, coin) {
+            const hours = Math.floor(sec / 3600), mins = Math.floor((sec % 3600) / 60);
+            document.getElementById('offlineTimeText').innerText = `${hours} Jam ${mins} Menit`;
+            document.getElementById('offlineCoinText').innerText = `Rp ${coin.toFixed(4)}`;
+            document.getElementById('offlineModal').classList.remove('hidden');
+            playSound('win');
+        }
+        function closeOfflineModal() { document.getElementById('offlineModal').classList.add('hidden'); }
+
+        function resetGameProgress() { if (confirm("Reset semua data?")) { localStorage.removeItem('RupiahMinerProgress_v87'); location.reload(); } }
+        function addLog(msg) {
+            const logBox = document.getElementById('activityLog');
+            const p = document.createElement('p'); p.innerText = `[${new Date().toLocaleTimeString('id-ID')}] ${msg}`;
+            logBox.appendChild(p); logBox.scrollTop = logBox.scrollHeight;
+        }
+
+        // ENGINE LOOP
+        function initGameLoop() {
+            setInterval(() => {
+                const totalP = getTotalPower();
+                const hasRigs = minersPurchased.length > 0;
+
+                if (totalP > 0 && electricityLevel > 0) {
+                    let drainRatePerSec = hasRigs ? (0.008 + (getRigPowerTotal() / 2000) * 0.005) : (100 / 86400);
+                    drainRatePerSec *= (1 - (batteryEfficiencyLevel - 1) * 0.15);
+                    const solarRegenPerSec = solarPanelLevel * 0.002;
+                    const netDrain = Math.max(0, drainRatePerSec - solarRegenPerSec);
+                    
+                    electricityLevel = Math.max(0, Math.min(100, electricityLevel - netDrain));
+                }
+
+                if (electricityLevel > 0 && totalP > 0) {
+                    const coinEarnedPerSec = (totalP / 1000) * 0.00001;
+                    coinBalance += coinEarnedPerSec;
+                    if (Math.random() < 0.2) playSound('coin');
+                }
+
+                const banner = document.getElementById('powerOutageBanner');
+                if (electricityLevel <= 0) { banner.classList.remove('hidden'); } else { banner.classList.add('hidden'); freeHashTimerSec--; }
+
+                if (freeHashTimerSec <= 0) {
+                    document.getElementById('claimFreeHashBtn').classList.add('animate-bounce');
+                    document.getElementById('claimFreeHashBtn').innerText = "🎁 KLAIM GRATIS SEKARANG!";
+                } else {
+                    const mins = Math.floor(freeHashTimerSec / 60), secs = freeHashTimerSec % 60;
+                    document.getElementById('claimFreeHashBtn').classList.remove('animate-bounce');
+                    document.getElementById('claimFreeHashBtn').innerText = electricityLevel > 0 ? 
+                        `🎁 Gratis Hashrate: ${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}` : `PAUSED (Baterai Habis)`;
+                }
+
+                updateUI();
+                saveGameData();
+            }, 1000);
+        }
+
+        function tryClaimFreeHash() {
+            if (freeHashTimerSec > 0) {
+                alert(`Tunggu ${Math.floor(freeHashTimerSec/60)}m ${freeHashTimerSec%60}s lagi untuk klaim Free Hashrate berikutnya!`);
+                return;
+            }
+            openAdModalForAction(10, () => {
+                const freeBonus = 100;
+                addFreePower(freeBonus);
+                freeHashTimerSec = 300; 
+                updateUI(); saveGameData();
+                playSound('win');
+                alert(`Berhasil! +${freeBonus} MH/s ditambahkan ke Free Hash (Aktif 1x24 jam).`);
+                addLog(`[FREE HASHRATE] Berhasil klaim +100 MH/s.`);
+            });
+        }
+
+        function updateUI() {
+            document.getElementById('totalPower').innerText = formatHashrate(getTotalPower());
+            document.getElementById('coinBalance').innerText = `Rp ${coinBalance.toFixed(5)}`;
+            updateDirectBreakdownUI();
+            
+            const roundedElectricity = Math.round(electricityLevel);
+            document.getElementById('electricityPercentText').innerText = `${roundedElectricity}%`;
+            document.getElementById('electricityBar').style.width = `${roundedElectricity}%`;
+
+            const icon = document.getElementById('powerGridIcon'), bar = document.getElementById('electricityBar');
+            if (roundedElectricity <= 20) { bar.className = "bg-red-500 h-full transition-all duration-500"; icon.className = "fa-solid fa-bolt text-red-500 text-base animate-ping"; } 
+            else if (roundedElectricity <= 50) { bar.className = "bg-amber-400 h-full transition-all duration-500"; icon.className = "fa-solid fa-bolt text-amber-400 text-base animate-pulse"; } 
+            else { bar.className = "bg-yellow-400 h-full transition-all duration-500"; icon.className = "fa-solid fa-bolt text-yellow-400 text-base animate-pulse"; }
+
+            updatePlayerLevel();
+        }
+
+        function updatePlayerLevel() {
+            const badge = document.getElementById('playerBadge'), totalP = getTotalPower();
+            if (totalP >= 1000000) { badge.innerText = "King Server TH/s"; badge.className = "bg-purple-500/20 text-purple-400 border border-purple-500/50 text-[10px] font-bold px-2 py-0.5 rounded-full"; }
+            else if (totalP >= 1000) { badge.innerText = "Sultan GH/s"; badge.className = "bg-amber-500/20 text-amber-400 border border-amber-500/50 text-[10px] font-bold px-2 py-0.5 rounded-full"; }
+            else { badge.innerText = "Penambang MH/s"; badge.className = "bg-red-500/20 text-red-400 border border-red-500/50 text-[10px] font-bold px-2 py-0.5 rounded-full"; }
+        }
+
+        function renderLeaderboard() {
+            const list = document.getElementById('leaderboardList');
+            const topPlayers = [ { name: "Sultan Jakarta", power: "2.45 GH/s", avatar: "🥇" }, { name: "Raja Cuan Bali", power: "1.80 GH/s", avatar: "🥈" }, { name: userData.name || "Kamu (Pemain)", power: formatHashrate(getTotalPower()), avatar: "🎗️" } ];
+            list.innerHTML = "";
+            topPlayers.forEach(p => {
+                const item = document.createElement('div');
+                item.className = "p-2 bg-slate-950 rounded-xl border border-slate-800 flex justify-between items-center";
+                item.innerHTML = `<div class="flex items-center space-x-2"><span>${p.avatar}</span><span class="font-bold text-gray-200">${p.name}</span></div><span class="font-mono text-emerald-400 font-bold">${p.power}</span>`;
+                list.appendChild(item);
+            });
+        }
+
+        function buyMiner(name, price, powerBonus) {
+            if (coinBalance < price) { alert("Saldo tidak cukup!"); return; }
+            coinBalance -= price; minersPurchased.push({ name, powerBonus });
+            playSound('win');
+            updateUI(); renderMiners(); saveGameData();
+            addLog(`Membeli Rig Fisik ${name} (+${formatHashrate(powerBonus)})`);
+        }
+
+        function renderMiners() {
+            const grid = document.getElementById('minersGrid'), notice = document.getElementById('emptyRoomNotice');
+            grid.innerHTML = '';
+            if (minersPurchased.length > 0) {
+                notice.classList.add('hidden');
+                minersPurchased.forEach(miner => {
+                    const card = document.createElement('div');
+                    card.className = "bg-slate-900 border border-slate-800 p-2.5 rounded-xl text-center shadow-lg flex flex-col justify-between items-center h-28 relative";
+                    card.innerHTML = `<div class="h-14 w-14 flex items-center justify-center my-auto">${minerIconTemplates[miner.name]}</div><div><span class="text-[9px] text-emerald-400 font-mono">+${formatHashrate(miner.powerBonus)}</span></div>`;
+                    grid.appendChild(card);
+                });
+            } else {
+                notice.classList.remove('hidden');
+            }
+        }
+
+        // UPGRADE BATERAI & PANEL SURYA (Permanen)
+        function updatePowerUpgradesUI() {
+            const solarCost = (solarPanelLevel + 1) * 10000;
+            const drainCost = batteryEfficiencyLevel >= 3 ? "MAX" : `Rp ${(batteryEfficiencyLevel * 15000).toLocaleString('id-ID')}`;
+            
+            document.getElementById('solarLevelText').innerText = `Panel Surya Otomatis (Lvl ${solarPanelLevel})`;
+            document.getElementById('solarUpgradeBtn').innerText = solarPanelLevel >= 5 ? "MAX" : `Rp ${solarCost.toLocaleString('id-ID')}`;
+            
+            document.getElementById('drainLevelText').innerText = `Efisiensi Kapasitor (Lvl ${batteryEfficiencyLevel})`;
+            document.getElementById('drainUpgradeBtn').innerText = drainCost;
+        }
+
+        function upgradeSolarPanel() {
+            const cost = (solarPanelLevel + 1) * 10000;
+            if (solarPanelLevel >= 5) { alert("Panel Surya sudah level maksimal!"); return; }
+            if (coinBalance < cost) { alert("Saldo tidak cukup untuk upgrade Panel Surya!"); return; }
+            coinBalance -= cost; solarPanelLevel++;
+            playSound('win');
+            updatePowerUpgradesUI(); saveGameData();
+            alert(`Berhasil upgrade Panel Surya ke Level ${solarPanelLevel}! (Permanen)`);
+            addLog(`[UPGRADE] Panel Surya Lvl ${solarPanelLevel} permanen dibeli.`);
+        }
+
+        function upgradeBatteryEfficiency() {
+            const cost = batteryEfficiencyLevel * 15000;
+            if (batteryEfficiencyLevel >= 3) { alert("Efisiensi Kapasitor sudah level maksimal!"); return; }
+            if (coinBalance < cost) { alert("Saldo tidak cukup untuk upgrade Kapasitor!"); return; }
+            coinBalance -= cost; batteryEfficiencyLevel++;
+            playSound('win');
+            updatePowerUpgradesUI(); saveGameData();
+            alert(`Berhasil upgrade Efisiensi Kapasitor ke Level ${batteryEfficiencyLevel}! (Permanen)`);
+            addLog(`[UPGRADE] Efisiensi Kapasitor Lvl ${batteryEfficiencyLevel} permanen dibeli.`);
+        }
+
+        // ACHIEVEMENTS SYSTEM (Max Koin Rp 1.000)
+        function openAchievementModal() { renderAchievementsList(); document.getElementById('achievementModal').classList.remove('hidden'); }
+        function closeAchievementModal() { document.getElementById('achievementModal').classList.add('hidden'); }
+
+        function renderAchievementsList() {
+            const list = document.getElementById('achievementsList');
+            list.innerHTML = "";
+            achievements.forEach(ach => {
+                let currentVal = 0;
+                if (ach.type === 'hash') currentVal = getTotalPower();
+                if (ach.type === 'rig') currentVal = minersPurchased.length;
+                if (ach.type === 'games') currentVal = gamesWonCount;
+                if (ach.type === 'coin') currentVal = coinBalance;
+
+                const isCompleted = currentVal >= ach.target;
+                const progressPct = Math.min(100, Math.floor((currentVal / ach.target) * 100));
+
+                const item = document.createElement('div');
+                item.className = "bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2";
+                item.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h4 class="font-bold text-white">${ach.title}</h4>
+                            <p class="text-[10px] text-gray-400">${ach.desc}</p>
+                        </div>
+                        <span class="text-[10px] font-mono px-2 py-0.5 rounded ${ach.claimed ? 'bg-emerald-950 text-emerald-400' : isCompleted ? 'bg-amber-500 text-slate-950 font-bold' : 'bg-slate-800 text-gray-400'}">
+                            ${ach.claimed ? 'KLAIM' : isCompleted ? 'SIAP KLAIM' : `${progressPct}%`}
+                        </span>
+                    </div>
+                    <div class="w-full bg-slate-900 rounded-full h-1.5 overflow-hidden">
+                        <div class="bg-emerald-500 h-full" style="width: ${progressPct}%"></div>
+                    </div>
+                    <div class="flex justify-between items-center pt-1">
+                        <span class="text-[9px] text-emerald-400 font-bold">Reward (Permanen): Rp ${ach.rewardVal.toLocaleString()}</span>
+                        ${!ach.claimed && isCompleted ? `<button onclick="claimAchievement('${ach.id}')" class="px-3 py-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-[10px] rounded-lg transition">Klaim</button>` : ''}
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function claimAchievement(id) {
+            const ach = achievements.find(a => a.id === id);
+            if (!ach || ach.claimed) return;
+            ach.claimed = true;
+
+            coinBalance += ach.rewardVal;
+
+            playSound('win');
+            updateUI(); saveGameData(); renderAchievementsList();
+            alert(`Pencapaian "${ach.title}" berhasil diklaim! +Rp ${ach.rewardVal.toLocaleString()}`);
+            addLog(`[ACHIEVEMENT] Klaim misi ${ach.title} (+Rp ${ach.rewardVal}).`);
+        }
+
+        // REFERRAL & REWARD SYSTEM
+        function openReferralModal() { 
+            document.getElementById('referralModal').classList.remove('hidden'); 
+            document.getElementById('myRefCodeDisplay').innerText = userData.myRefCode;
+            renderInvitedFriends();
+        }
+        function closeReferralModal() { document.getElementById('referralModal').classList.add('hidden'); }
+        function copyRefCode() { navigator.clipboard.writeText(userData.myRefCode); alert("Kode referral disalin!"); }
+        
+        function claimFriendRef() {
+            if (userData.claimedRef) { alert("Kamu sudah pernah klaim kode referral teman!"); return; }
+            const code = document.getElementById('inputFriendRef').value.trim().toUpperCase();
+            if (code === userData.myRefCode) { alert("Tidak bisa klaim kode sendiri!"); return; }
+            if (code.length < 5) { alert("Kode referral tidak valid!"); return; }
+
+            userData.claimedRef = true;
+            addFreePower(100); 
+            coinBalance += 1000; 
+            invitedFriends.push({ username: `Teman_${code.replace('CUAN-', '')}`, date: new Date().toLocaleDateString('id-ID') });
+
+            playSound('win');
+            updateUI(); saveGameData(); renderInvitedFriends();
+            alert("Berhasil! Mendapat +Rp 1.000 Koin Rupiah + 100 MH/s Free!");
+            addLog(`[REFERRAL] Berhasil klaim kode ${code}.`);
+        }
+
+        function renderInvitedFriends() {
+            const list = document.getElementById('invitedFriendsList');
+            document.getElementById('totalInvitedCount').innerText = `${invitedFriends.length} Orang`;
+            if (invitedFriends.length === 0) {
+                list.innerHTML = `<p class="text-gray-500 text-center py-2 text-[11px]">Belum ada teman yang terundang.</p>`;
+                return;
+            }
+            list.innerHTML = "";
+            invitedFriends.forEach((friend) => {
+                const row = document.createElement('div');
+                row.className = "p-2 bg-slate-950 rounded-lg border border-slate-800 flex justify-between items-center";
+                row.innerHTML = `<div class="flex items-center gap-2"><i class="fa-solid fa-user-check text-emerald-400"></i><span class="font-bold text-gray-200">${friend.username}</span></div><div class="text-[10px] text-emerald-300 font-mono">+Rp 1.000 | ${friend.date}</div>`;
+                list.appendChild(row);
+            });
+        }
+
+        // AD MODAL UTILITY (10 Detik)
+        function openAdModalForAction(durationSec, onCompleteCallback) {
+            const adModal = document.getElementById('adModal');
+            const timerText = document.getElementById('adTimerText');
+            const progressBar = document.getElementById('adProgressBar');
+            const claimBtn = document.getElementById('claimAdBtn');
+
+            adModal.classList.remove('hidden');
+            claimBtn.disabled = true;
+            claimBtn.className = "w-full py-2.5 bg-gray-800 text-gray-500 font-bold text-xs rounded-xl cursor-not-allowed";
+            claimBtn.innerText = `Menonton iklan (${durationSec}s)...`;
+
+            let timeLeft = durationSec;
+            timerText.innerText = `Selesai dalam: ${timeLeft}s`;
+            progressBar.style.width = "0%";
+
+            let adInterval = setInterval(() => {
+                timeLeft--;
+                timerText.innerText = `Selesai dalam: ${timeLeft}s`;
+                progressBar.style.width = `${((durationSec - timeLeft) / durationSec) * 100}%`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(adInterval);
+                    timerText.innerText = "Selesai! Silakan lanjutkan.";
+                    claimBtn.disabled = false;
+                    claimBtn.className = "w-full py-2.5 bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-bold text-xs rounded-xl transition shadow-lg";
+                    claimBtn.innerText = "KLAIM HADIAH SEKARANG";
+
+                    claimBtn.onclick = () => {
+                        adModal.classList.add('hidden');
+                        if (onCompleteCallback) onCompleteCallback();
+                    };
+                }
+            }, 1000);
+        }
+
+        function watchRewardAd() {
+            const now = Date.now(), cooldownMs = 30 * 60 * 1000;
+            if (now - lastBoostAdTime < cooldownMs) {
+                const remainingSecs = Math.ceil((cooldownMs - (now - lastBoostAdTime)) / 1000);
+                const rmMin = Math.floor(remainingSecs / 60), rmSec = remainingSecs % 60;
+                alert(`Boost iklan masih cooldown! Tunggu ${rmMin}m ${rmSec}s lagi.`);
+                return;
+            }
+            openAdModalForAction(10, () => {
+                addFreePower(300);
+                lastBoostAdTime = Date.now();
+                updateUI(); saveGameData();
+                playSound('win');
+                alert("Berhasil! +300 MH/s ditambahkan dari Boost Video Iklan.");
+                addLog("[BOOST] +300 MH/s ditambahkan dari iklan sponsor.");
+            });
+        }
+
+        function openPowerModal() { 
+            updatePowerUpgradesUI();
+            document.getElementById('powerModal').classList.remove('hidden'); 
+        }
+        function closePowerModal() { document.getElementById('powerModal').classList.add('hidden'); }
+        
+        function claimStationBattery() {
+            electricityLevel = 100;
+            playSound('win');
+            updateUI(); saveGameData(); closePowerModal();
+            alert("Baterai berhasil diklaim dan terisi penuh (100%) di Stasiun Baterai!");
+            addLog("[STASIUN BATERAI] Baterai diklaim penuh 100%.");
+        }
+
+        function buyElectricity(type, price, boostAmount) {
+            if (coinBalance < price) { alert("Saldo tidak cukup!"); return; }
+            coinBalance -= price; electricityLevel = Math.min(100, electricityLevel + boostAmount); 
+            playSound('win');
+            addLog(`Membeli token baterai +${boostAmount}%.`);
+            updateUI(); saveGameData(); closePowerModal();
+        }
+
+        function checkAttendanceStreakReset() {
+            if (!userData.lastAttendanceDate) return;
+            const diffDays = Math.floor(Math.abs(new Date() - new Date(userData.lastAttendanceDate)) / (1000 * 60 * 60 * 24));
+            if (diffDays > 1) { userData.attendanceStreak = 0; saveGameData(); addLog("[ABSEN] Streak terputus! Kembali ke Hari 1."); }
+        }
+        
+        function openAttendanceModal() { renderAttendanceGrid(); document.getElementById('attendanceModal').classList.remove('hidden'); }
+        function closeAttendanceModal() { document.getElementById('attendanceModal').classList.add('hidden'); }
+        
+        function renderAttendanceGrid() {
+            const grid = document.getElementById('attendanceGrid'); grid.innerHTML = "";
+            const isAlreadyClaimed = userData.lastAttendanceDate === new Date().toDateString();
+            for (let i = 0; i < 7; i++) {
+                const reward = attendanceRewards[i];
+                const isClaimedDay = i < userData.attendanceStreak, isCurrentActiveDay = i === userData.attendanceStreak && !isAlreadyClaimed;
+                let borderClass = "border-slate-800 bg-slate-950/80";
+                if (isClaimedDay) borderClass = "border-emerald-500/80 bg-emerald-950/40 text-emerald-400";
+                if (isCurrentActiveDay) borderClass = "border-amber-400 bg-amber-950/60 text-amber-300 animate-pulse glow-gold";
+                let dayCard = document.createElement('div');
+                dayCard.className = `p-2 rounded-xl border text-center flex flex-col justify-between items-center h-20 ${borderClass}`;
+                dayCard.innerHTML = `<span class="text-[9px] font-bold uppercase text-gray-400">Hari ${i + 1}</span><div class="my-auto font-mono text-[10px] font-black">${reward.label}</div><span class="text-[8px] text-gray-500 font-mono">${reward.type === 'battery' ? 'Baterai' : 'Free Hash'}</span>`;
+                grid.appendChild(dayCard);
+            }
+            const btn = document.getElementById('claimAttendanceBtn');
+            if (isAlreadyClaimed) { btn.disabled = true; btn.innerText = "SUDAH KLAIM HARI INI"; btn.className = "w-full py-3 bg-gray-800 text-gray-500 font-bold text-xs rounded-xl cursor-not-allowed"; } 
+            else { 
+                const currentReward = attendanceRewards[userData.attendanceStreak % 7];
+                btn.disabled = false; btn.innerText = `KLAIM HARIAN (${currentReward.label})`; btn.className = "w-full py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs rounded-xl transition shadow-lg"; 
+            }
+        }
+
+        function claimDailyAttendance() {
+            const today = new Date().toDateString();
+            if (userData.lastAttendanceDate === today) return;
+            const reward = attendanceRewards[userData.attendanceStreak % 7];
+            
+            if (reward.type === 'hash') { addFreePower(reward.val); } 
+            else if (reward.type === 'battery') { electricityLevel = Math.min(100, electricityLevel + reward.val); }
+            
+            userData.attendanceStreak = (userData.attendanceStreak + 1) % 7; userData.lastAttendanceDate = today;
+            playSound('win');
+            updateUI(); saveGameData(); renderAttendanceGrid(); checkDailyStatus();
+            closeAttendanceModal();
+            alert(`Absen Berhasil! Reward: ${reward.label}.`);
+            addLog(`[ABSEN HARIAN] Hari ${userData.attendanceStreak}! Reward: ${reward.label}.`);
+        }
+
+        function checkDailyStatus() {
+            const today = new Date().toDateString(), status = document.getElementById('dailyStatusText');
+            if (userData.lastAttendanceDate === today) { status.innerText = "Sudah Absen"; status.className = "text-[10px] text-emerald-400 font-semibold"; } else { status.innerText = "Siap Absen"; status.className = "text-[10px] text-amber-400 font-semibold"; }
+            if (userData.lastSpinDate === today) { const sBtn = document.getElementById('spinActionBtn'); sBtn.innerText = "SUDAH KLAIM"; sBtn.disabled = true; sBtn.className = "w-full py-3 bg-gray-800 text-gray-500 font-bold text-xs rounded-xl cursor-not-allowed"; }
+        }
+
+        // AUTH & WITHDRAW
+        function openAuthModal() { document.getElementById('authModal').classList.remove('hidden'); }
+        function closeAuthModal() { document.getElementById('authModal').classList.add('hidden'); }
+        function saveAccount() {
+            const name = document.getElementById('regNameInput').value.trim(), phone = document.getElementById('regPhoneInput').value.trim(), pin = document.getElementById('regPinInput').value.trim();
+            if (!name || !phone || !pin || pin.length !== 6) { alert("Isi data & PIN 6 digit!"); return; }
+            userData.name = name; userData.phone = phone; userData.pin = pin; userData.isRegistered = true; saveGameData(); closeAuthModal(); renderLeaderboard();
+        }
+        function openWithdrawModal() { document.getElementById('wdBalanceDisplay').innerText = `Rp ${coinBalance.toFixed(2)}`; document.getElementById('withdrawModal').classList.remove('hidden'); }
+        function closeWithdrawModal() { document.getElementById('withdrawModal').classList.add('hidden'); }
+        function processWithdraw() {
+            const amount = parseInt(document.getElementById('wdAmountInput').value);
+            if (!userData.isRegistered) { alert("Daftar akun dulu!"); openAuthModal(); return; }
+            if (isNaN(amount) || amount < 50000 || coinBalance < amount + 2000) { alert("Saldo tidak cukup / Minimal Rp 50.000!"); return; }
+            document.getElementById('pinModal').classList.remove('hidden');
+        }
+        function closePinModal() { document.getElementById('pinModal').classList.add('hidden'); }
+        function confirmPinAction() {
+            if (document.getElementById('pinInput').value.trim() !== userData.pin) { alert("PIN Salah!"); return; }
+            coinBalance -= 52000; updateUI(); saveGameData(); closePinModal(); closeWithdrawModal(); alert("Pengajuan WD Berhasil Diproses!");
+        }
+
+        // LUCKY SPIN WHEEL
+        const wheelSectors = [ 
+            { label: "+100 MH/s", type: 'hash', val: 100, color: "#9333ea" }, 
+            { label: "Baterai 25%", type: 'battery', val: 25, color: "#2563eb" }, 
+            { label: "+250 MH/s", type: 'hash', val: 250, color: "#059669" }, 
+            { label: "Baterai 50%", type: 'battery', val: 50, color: "#d97706" }, 
+            { label: "+500 MH/s", type: 'hash', val: 500, color: "#dc2626" }, 
+            { label: "Baterai 100%", type: 'battery', val: 100, color: "#0284c7" }, 
+            { label: "+150 MH/s", type: 'hash', val: 150, color: "#7c3aed" }, 
+            { label: "Baterai 35%", type: 'battery', val: 35, color: "#16a34a" } 
+        ];
+        let currentWheelAngle = 0, isSpinning = false;
+        
+        function openSpinModal() { document.getElementById('spinModal').classList.remove('hidden'); drawWheel(currentWheelAngle); }
+        function closeSpinModal() { if (!isSpinning) document.getElementById('spinModal').classList.add('hidden'); }
+        
+        function drawWheel(angle) {
+            const cvs = document.getElementById('spinWheelCanvas'); if (!cvs) return;
+            const ctx = cvs.getContext('2d'), numSectors = wheelSectors.length, arc = (Math.PI * 2) / numSectors;
+            const cx = cvs.width / 2, cy = cvs.height / 2, radius = cvs.width / 2 - 5;
+            ctx.clearRect(0, 0, cvs.width, cvs.height);
+            for (let i = 0; i < numSectors; i++) {
+                const startA = angle + i * arc, endA = startA + arc;
+                ctx.beginPath(); ctx.fillStyle = wheelSectors[i].color; ctx.moveTo(cx, cy); ctx.arc(cx, cy, radius, startA, endA); ctx.fill();
+                ctx.strokeStyle = "#0f172a"; ctx.lineWidth = 2; ctx.stroke();
+                ctx.save(); ctx.translate(cx, cy); ctx.rotate(startA + arc / 2); ctx.textAlign = "right"; ctx.fillStyle = "#ffffff"; ctx.font = "bold 10px sans-serif"; ctx.fillText(wheelSectors[i].label, radius - 12, 4); ctx.restore();
+            }
+            ctx.beginPath(); ctx.arc(cx, cy, 18, 0, Math.PI * 2); ctx.fillStyle = "#0f172a"; ctx.fill(); ctx.strokeStyle = "#fbbf24"; ctx.lineWidth = 3; ctx.stroke();
+        }
+
+        function startWheelSpinAnimation() {
+            const today = new Date().toDateString();
+            if (userData.lastSpinDate === today) { alert("Sudah memutar spin hari ini!"); return; }
+            if (isSpinning) return;
+            
+            isSpinning = true; 
+            document.getElementById('spinActionBtn').disabled = true; 
+            document.getElementById('spinResultText').innerText = "Memutar Roda...";
+            
+            const targetSectorIdx = Math.floor(Math.random() * wheelSectors.length), arc = (Math.PI * 2) / wheelSectors.length, targetAngle = (Math.PI * 3 / 2) - (targetSectorIdx * arc + arc / 2) + (Math.PI * 2 * 5);
+            let startTimestamp = null, duration = 4000;
+            
+            function animateSpin(timestamp) {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1), easeOut = 1 - Math.pow(1 - progress, 3);
+                currentWheelAngle = easeOut * targetAngle; drawWheel(currentWheelAngle);
+                if (progress < 1) { requestAnimationFrame(animateSpin); } 
+                else {
+                    isSpinning = false; userData.lastSpinDate = today;
+                    const winningSector = wheelSectors[targetSectorIdx]; 
+                    
+                    let rewardMsg = "";
+                    if (winningSector.type === 'hash') {
+                        addFreePower(winningSector.val);
+                        rewardMsg = `+${winningSector.val} MH/s (Free Hash)`;
+                    } else if (winningSector.type === 'battery') {
+                        const spaceLeft = 100 - electricityLevel;
+                        if (spaceLeft >= winningSector.val) {
+                            electricityLevel += winningSector.val;
+                            rewardMsg = `Daya Baterai +${winningSector.val}%`;
+                        } else {
+                            electricityLevel = 100;
+                            const excessBattery = winningSector.val - spaceLeft;
+                            const convertedHash = excessBattery * 10;
+                            addFreePower(convertedHash);
+                            rewardMsg = `Baterai Penuh + Konversi Sisa ${excessBattery}% jadi +${convertedHash} MH/s!`;
+                        }
+                    }
+                    
+                    document.getElementById('spinResultText').innerText = `SELAMAT! ${rewardMsg}`; 
+                    document.getElementById('spinActionBtn').innerText = "SUDAH KLAIM HARI INI";
+                    playSound('win');
+                    updateUI(); saveGameData(); 
+                    alert(`Lucky Spin Berhasil! ${rewardMsg}`);
+                    addLog(`[LUCKY SPIN] ${rewardMsg}.`);
+                }
+            }
+            requestAnimationFrame(animateSpin);
+        }
+
+        // ARCADE MINI GAMES SYSTEM
+        function checkMidnightGameReset() {
+            const today = new Date().toDateString();
+            if (userData.lastDailyResetDate !== today) {
+                Object.keys(gameLevels).forEach(k => { gameLevels[k] = 1; });
+                userData.lastDailyResetDate = today; saveGameData(); addLog("[RESET HARIAN] Level mini-game reset ke Level 1.");
+            }
+        }
+        function updateLevelBadges() { Object.keys(gameLevels).forEach(k => { const el = document.getElementById(`lvl_${k}`); if (el) el.innerText = `Lvl ${gameLevels[k]}`; }); }
+        
+        function getGameRewardDetails(gameKey, lvl) {
+            let basePower = 0, durationHours = 24;
+            // Reward scaled more aggressively with level difficulty
+            if (['flappy', 'tetris', 'racing'].includes(gameKey)) { basePower = lvl * 150; durationHours = 24; }
+            else if (['snake', 'tank'].includes(gameKey)) { basePower = lvl * 800; durationHours = 48; }
+            else if (['frogger', 'breakout'].includes(gameKey)) { basePower = lvl * 1500; durationHours = 72; }
+            else { basePower = lvl * 6000; durationHours = 168; }
+            return { amount: basePower, durationMs: durationHours * 60 * 60 * 1000, hours: durationHours };
+        }
+        
+        function startArcadeGame(gameKey) {
+            currentArcadeKey = gameKey;
+            document.getElementById('gameMenuList').classList.add('hidden'); document.getElementById('activeGameArea').classList.remove('hidden'); document.getElementById('backToMenuBtn').classList.remove('hidden'); document.getElementById('gameOverlay').classList.add('hidden');
+            const lvl = gameLevels[gameKey] || 1; document.getElementById('gameLevelDisplay').innerText = `Level ${lvl}`; document.getElementById('gameMessageDisplay').innerText = "Gim Dimulai!";
+            if (activeGameLoop) clearInterval(activeGameLoop);
+            const cvs = document.getElementById('mainGameCanvas'), ctx = cvs.getContext('2d'), controls = document.getElementById('gameControlsContainer'); controls.innerHTML = "";
+            
+            if (gameKey === 'flappy') runFlappyBall(cvs, ctx, lvl);
+            if (gameKey === 'tetris') runClassicTetris(cvs, ctx, lvl, controls);
+            if (gameKey === 'racing') runCarRacing(cvs, ctx, lvl, controls);
+            if (gameKey === 'snake') runNokiaSnake(cvs, ctx, lvl, controls);
+            if (gameKey === 'tank') runTankBattle(cvs, ctx, lvl, controls);
+            if (gameKey === 'frogger') runFroggerCrossing(cvs, ctx, lvl, controls);
+            if (gameKey === 'breakout') runBreakout(cvs, ctx, lvl, controls);
+            if (gameKey === 'shooter') runSpaceShooter(cvs, ctx, lvl, controls);
+            if (gameKey === 'pong') runPingPong(cvs, ctx, lvl, controls);
+            if (gameKey === 'match3') runMatch3Color(cvs, ctx, lvl, controls);
+        }
+        function closeActiveGame() { if (activeGameLoop) clearInterval(activeGameLoop); document.getElementById('mainGameCanvas').onclick = null; document.getElementById('gameOverlay').classList.add('hidden'); document.getElementById('activeGameArea').classList.add('hidden'); document.getElementById('backToMenuBtn').classList.add('hidden'); document.getElementById('gameMenuList').classList.remove('hidden'); }
+        function showResultOverlay(win, title, sub) {
+            if (activeGameLoop) clearInterval(activeGameLoop);
+            const overlay = document.getElementById('gameOverlay'), t = document.getElementById('overlayResultTitle'), s = document.getElementById('overlayResultSub'), btn = document.getElementById('overlayActionBtn');
+            overlay.classList.remove('hidden'); t.innerText = title; s.innerText = sub;
+            if (win) { t.className = "text-lg font-black mb-1 text-emerald-400"; btn.innerText = "🚀 Level Selanjutnya"; btn.className = "px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl transition shadow-lg"; } 
+            else { t.className = "text-lg font-black mb-1 text-rose-500"; btn.innerText = "🔄 Ulangi Level"; btn.className = "px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs rounded-xl transition shadow-lg"; }
+        }
+        function retryOrNextLevel() { document.getElementById('gameOverlay').classList.add('hidden'); startArcadeGame(currentArcadeKey); }
+        
+        function awardGameWin(gameKey) {
+            const lvl = gameLevels[gameKey] || 1;
+            const reward = getGameRewardDetails(gameKey, lvl);
+            addGamePower(reward.amount, reward.durationMs);
+            
+            if (gameLevels[gameKey] < 10) gameLevels[gameKey]++;
+            playSound('win');
+            updateUI(); updateLevelBadges(); saveGameData(); 
+            showResultOverlay(true, "LEVEL COMPLETE!", `Bonus Game +${formatHashrate(reward.amount)} aktif ${reward.hours / 24} Hari.`); 
+            addLog(`[GAME WIN] ${gameKey.toUpperCase()} Lvl ${lvl}! +${formatHashrate(reward.amount)}.`);
+        }
+
+        // ARCADE GAMES LOGIC (UPDATED v8.7)
+        function runFlappyBall(cvs, ctx, lvl) {
+            document.getElementById('gameTitleDisplay').innerText = "1. Flappy Ball"; document.getElementById('gameScoreDisplay').innerText = "Target: 0/10";
+            let ballY = 100, vel = 0, pipes = [], score = 0, speed = 2 + lvl * 0.35; pipes.push({ x: 280, top: 50, bottom: 60 });
+            cvs.onclick = () => { vel = -4.5; };
+            activeGameLoop = setInterval(() => {
+                vel += 0.3; ballY += vel;
+                ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, cvs.width, cvs.height);
+                ctx.fillStyle = '#f59e0b'; ctx.beginPath(); ctx.arc(40, ballY, 8, 0, Math.PI * 2); ctx.fill();
+                pipes.forEach(p => {
+                    p.x -= speed;
+                    ctx.fillStyle = '#10b981'; ctx.fillRect(p.x, 0, 22, p.top); ctx.fillRect(p.x, cvs.height - p.bottom, 22, p.bottom);
+                    if (Math.abs(p.x - 40) < speed / 2) { score++; document.getElementById('gameScoreDisplay').innerText = `Target: ${score}/10`; }
+                    if (p.x < 48 && p.x + 22 > 32 && (ballY - 8 < p.top || ballY + 8 > cvs.height - p.bottom)) showResultOverlay(false, "GAME OVER", "Menabrak pipa!");
+                });
+                if (pipes.length > 0 && pipes[0].x < -22) pipes.shift();
+                if (pipes.length === 0 || pipes[pipes.length - 1].x < 140) { let topH = Math.floor(Math.random() * 60) + 20; pipes.push({ x: 280, top: topH, bottom: cvs.height - topH - 55 }); }
+                if (ballY > cvs.height || ballY < 0) showResultOverlay(false, "GAME OVER", "Bola keluar arena!");
+                if (score >= 10) awardGameWin('flappy');
+            }, 30);
+        }
+        function runClassicTetris(cvs, ctx, lvl, controls) {
+            document.getElementById('gameTitleDisplay').innerText = "2. Classic Tetris"; document.getElementById('gameScoreDisplay').innerText = "Target: 0/10";
+            let score = 0, speed = Math.max(80, 350 - lvl * 25);
+            controls.innerHTML = `<button onclick="window.tetrisMove(-1)" class="px-3 py-1 bg-slate-800 rounded text-xs">◀ Kiri</button><button onclick="window.tetrisRotate()" class="px-3 py-1 bg-indigo-600 rounded text-xs">🔄 Putar</button><button onclick="window.tetrisMove(1)" class="px-3 py-1 bg-slate-800 rounded text-xs">Kanan ▶</button>`;
+            const cols = 10, rows = 14, size = 12, offsetX = 80; let grid = Array(rows).fill().map(() => Array(cols).fill(0));
+            const shapes = [[[1,1,1,1]], [[1,1],[1,1]], [[0,1,0],[1,1,1]], [[1,0,0],[1,1,1]], [[0,0,1],[1,1,1]], [[0,1,1],[1,1,0]]];
+            let piece = spawnPiece(); function spawnPiece() { return { x: 3, y: 0, shape: shapes[Math.floor(Math.random() * shapes.length)] }; }
+            function checkCollision(px, py, shape) { for (let r = 0; r < shape.length; r++) { for (let c = 0; c < shape[r].length; c++) { if (shape[r][c]) { let newX = px + c, newY = py + r; if (newX < 0 || newX >= cols || newY >= rows || (newY >= 0 && grid[newY][newX])) return true; } } } return false; }
+            window.tetrisMove = (dir) => { if (!checkCollision(piece.x + dir, piece.y, piece.shape)) piece.x += dir; };
+            window.tetrisRotate = () => { const rotated = piece.shape[0].map((_, i) => piece.shape.map(row => row[i]).reverse()); if (!checkCollision(piece.x, piece.y, rotated)) piece.shape = rotated; };
+            activeGameLoop = setInterval(() => {
+                if (!checkCollision(piece.x, piece.y + 1, piece.shape)) { piece.y++; } else {
+                    for (let r = 0; r < piece.shape.length; r++) { for (let c = 0; c < piece.shape[r].length; c++) { if (piece.shape[r][c] && piece.y + r >= 0) grid[piece.y + r][piece.x + c] = 1; } }
+                    for (let r = rows - 1; r >= 0; r--) { if (grid[r].every(v => v === 1)) { grid.splice(r, 1); grid.unshift(Array(cols).fill(0)); score++; document.getElementById('gameScoreDisplay').innerText = `Target: ${score}/10`; r++; } }
+                    piece = spawnPiece(); if (checkCollision(piece.x, piece.y, piece.shape)) showResultOverlay(false, "GAME OVER", "Tumpukan penuh!");
+                }
+                ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, cvs.width, cvs.height); ctx.strokeStyle = '#1e293b'; ctx.strokeRect(offsetX, 10, cols * size, rows * size);
+                for (let r = 0; r < rows; r++) { for (let c = 0; c < cols; c++) { if (grid[r][c]) { ctx.fillStyle = '#6366f1'; ctx.fillRect(offsetX + c * size, 10 + r * size, size - 1, size - 1); } } }
+                ctx.fillStyle = '#818cf8'; for (let r = 0; r < piece.shape.length; r++) { for (let c = 0; c < piece.shape[r].length; c++) { if (piece.shape[r][c]) ctx.fillRect(offsetX + (piece.x + c) * size, 10 + (piece.y + r) * size, size - 1, size - 1); } }
+                if (score >= 10) awardGameWin('tetris');
+            }, speed);
+        }
+        function runCarRacing(cvs, ctx, lvl, controls) {
+            document.getElementById('gameTitleDisplay').innerText = "3. Balap Blok"; document.getElementById('gameScoreDisplay').innerText = "Target: 0/10";
+            let carX = 1, obstacles = [], score = 0, speed = 2.8 + lvl * 0.7;
+            controls.innerHTML = `<button onclick="window.moveRaceCar(-1)" class="px-4 py-1.5 bg-slate-800 rounded text-xs">◀ Kiri</button><button onclick="window.moveRaceCar(1)" class="px-4 py-1.5 bg-slate-800 rounded text-xs">Kanan ▶</button>`;
+            window.moveRaceCar = (d) => { carX = Math.max(0, Math.min(2, carX + d)); }; let laneX = [60, 125, 190];
+            activeGameLoop = setInterval(() => {
+                ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, cvs.width, cvs.height); ctx.fillStyle = '#334155'; ctx.fillRect(40, 0, 8, 200); ctx.fillRect(232, 0, 8, 200);
+                ctx.fillStyle = '#38bdf8'; ctx.fillRect(laneX[carX], 150, 30, 35);
+                if (Math.random() < (0.04 + lvl * 0.012) && (obstacles.length === 0 || obstacles[obstacles.length - 1].y > 50)) { obstacles.push({ lane: Math.floor(Math.random() * 3), y: -35 }); }
+                obstacles.forEach((o, i) => { o.y += speed; ctx.fillStyle = '#f43f5e'; ctx.fillRect(laneX[o.lane], o.y, 30, 30); if (o.y > 120 && o.y < 185 && o.lane === carX) showResultOverlay(false, "GAME OVER", "Menabrak musuh!"); if (o.y > 200) { obstacles.splice(i, 1); score++; document.getElementById('gameScoreDisplay').innerText = `Target: ${score}/10`; } });
+                if (score >= 10) awardGameWin('racing');
+            }, 30);
+        }
+        function runNokiaSnake(cvs, ctx, lvl, controls) {
+            document.getElementById('gameTitleDisplay').innerText = "4. Nokia Snake"; document.getElementById('gameScoreDisplay').innerText = "Target: 0/10";
+            let snake = [{x: 5, y: 5}], dir = {x: 1, y: 0}, food = {x: 12, y: 8}, score = 0;
+            controls.innerHTML = `<button onclick="window.snakeDir(0,-1)" class="px-2 py-1 bg-slate-800 rounded">▲</button><button onclick="window.snakeDir(-1,0)" class="px-2 py-1 bg-slate-800 rounded">◀</button><button onclick="window.snakeDir(1,0)" class="px-2 py-1 bg-slate-800 rounded">▶</button><button onclick="window.snakeDir(0,1)" class="px-2 py-1 bg-slate-800 rounded">▼</button>`;
+            window.snakeDir = (x, y) => { dir = {x, y}; };
+            activeGameLoop = setInterval(() => {
+                let head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
+                if (head.x < 0 || head.x >= 28 || head.y < 0 || head.y >= 20) { showResultOverlay(false, "GAME OVER", "Menabrak tembok!"); return; }
+                snake.unshift(head);
+                if (head.x === food.x && head.y === food.y) { score++; document.getElementById('gameScoreDisplay').innerText = `Target: ${score}/10`; food = { x: Math.floor(Math.random() * 26), y: Math.floor(Math.random() * 18) }; } else snake.pop();
+                ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, cvs.width, cvs.height); ctx.fillStyle = '#10b981'; snake.forEach(s => ctx.fillRect(s.x * 10, s.y * 10, 9, 9)); ctx.fillStyle = '#ef4444'; ctx.fillRect(food.x * 10, food.y * 10, 9, 9);
+                if (score >= 10) awardGameWin('snake');
+            }, Math.max(50, 140 - lvl * 10));
+        }
+
+        // --- REVISED 1: BLOK BATTLE (Advanced AI: Move Left/Right, Forward/Backward & Shoot) ---
+        function runTankBattle(cvs, ctx, lvl, controls) {
+            document.getElementById('gameTitleDisplay').innerText = "5. Blok Battle (Advanced)"; 
+            let targetScore = lvl * 4;
+            document.getElementById('gameScoreDisplay').innerText = `Target: 0/${targetScore} Musuh`;
+            let playerX = 120, bullets = [], enemyBullets = [], enemies = [], score = 0;
+            controls.innerHTML = `<button onclick="window.moveTank(-15)" class="px-3 py-1 bg-slate-800 rounded text-xs">◀</button><button onclick="window.shootTank()" class="px-3 py-1 bg-red-600 rounded text-xs font-bold">🚀 TEMBAK</button><button onclick="window.moveTank(15)" class="px-3 py-1 bg-slate-800 rounded text-xs">▶</button>`;
+            window.moveTank = (d) => { playerX = Math.max(10, Math.min(250, playerX + d)); }; 
+            window.shootTank = () => { bullets.push({x: playerX + 10, y: 170}); };
+            
+            function spawnEnemyWave() {
+                let count = Math.min(4, 1 + Math.floor(lvl / 2));
+                for(let i=0; i<count; i++) {
+                    enemies.push({ x: 20 + i * 65, y: 15 + Math.random()*20, dirX: 1, speedX: 1.2 + lvl * 0.3, vy: 0.05 + lvl * 0.015 });
+                }
+            }
+            spawnEnemyWave();
+
+            activeGameLoop = setInterval(() => {
+                ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, cvs.width, cvs.height); 
+                // Draw player
+                ctx.fillStyle = '#06b6d4'; ctx.fillRect(playerX, 175, 25, 20);
+
+                // Update & draw enemies (moving sideways and approaching forward/backward)
+                enemies.forEach((e, ei) => {
+                    e.x += e.dirX * e.speedX; 
+                    e.y += e.vy; 
+                    if (e.x > 255 || e.x < 5) e.dirX = -e.dirX;
+                    
+                    // Enemy shooting laser downward
+                    if (Math.random() < 0.02 + lvl * 0.005) {
+                        enemyBullets.push({ x: e.x + 10, y: e.y + 15 });
+                    }
+
+                    ctx.fillStyle = '#e11d48'; ctx.fillRect(e.x, e.y, 24, 20);
+
+                    // Check if enemy reaches player zone
+                    if (e.y > 155) showResultOverlay(false, "GAME OVER", "Musuh mencapai garis pertahanan!");
+                });
+
+                // Player bullets
+                bullets.forEach((b, bi) => {
+                    b.y -= 7; ctx.fillStyle = '#f59e0b'; ctx.fillRect(b.x, b.y, 4, 8);
+                    enemies.forEach((e, ei) => { 
+                        if (Math.abs(b.x - e.x) < 24 && Math.abs(b.y - e.y) < 20) { 
+                            enemies.splice(ei, 1); 
+                            bullets.splice(bi, 1); 
+                            score++; 
+                            document.getElementById('gameScoreDisplay').innerText = `Target: ${score}/${targetScore} Musuh`; 
+                            if(enemies.length === 0) spawnEnemyWave();
+                        } 
+                    });
+                });
+
+                // Enemy bullets hitting player
+                enemyBullets.forEach((eb, ebi) => {
+                    eb.y += 4; ctx.fillStyle = '#ef4444'; ctx.fillRect(eb.x, eb.y, 4, 8);
+                    if (Math.abs(eb.x - (playerX + 12)) < 15 && eb.y > 170 && eb.y < 195) {
+                        showResultOverlay(false, "GAME OVER", "Tankmu tertembak musuh!");
+                    }
+                });
+
+                if (score >= targetScore) awardGameWin('tank');
+            }, 30);
+        }
+
+        // --- REVISED 2: BALL CROSSING (Multi-Row Obstacles per Level) ---
+        function runFroggerCrossing(cvs, ctx, lvl, controls) {
+            document.getElementById('gameTitleDisplay').innerText = "6. Ball Crossing (Multi-Row)"; 
+            let targetScore = 5 + lvl * 2;
+            document.getElementById('gameScoreDisplay').innerText = `Target: 0/${targetScore} Seberang`;
+            let ballY = 180, ballX = 130, score = 0;
+            controls.innerHTML = `<button onclick="window.moveBallDir(0,-1)" class="px-4 py-1 bg-lime-600 rounded font-bold text-xs">▲ Maju</button><button onclick="window.moveBallDir(-1,0)" class="px-3 py-1 bg-slate-800 rounded text-xs">◀</button><button onclick="window.moveBallDir(1,0)" class="px-3 py-1 bg-slate-800 rounded text-xs">▶</button><button onclick="window.moveBallDir(0,1)" class="px-3 py-1 bg-slate-800 rounded text-xs">▼ Mundur</button>`;
+            
+            window.moveBallDir = (dx, dy) => {
+                ballX = Math.max(10, Math.min(270, ballX + dx * 15));
+                ballY = Math.max(10, Math.min(185, ballY + dy * 20));
+                if (ballY <= 15) {
+                    score++; 
+                    document.getElementById('gameScoreDisplay').innerText = `Target: ${score}/${targetScore} Seberang`; 
+                    ballY = 180;
+                }
+            };
+
+            // Number of rows increases with level (Level 1 = 2 rows, max 6 rows)
+            let rowCount = Math.min(6, 2 + Math.floor(lvl / 2));
+            let rows = [];
+            for (let i = 0; i < rowCount; i++) {
+                let yPos = 35 + i * 25;
+                let blocksInRow = [];
+                let countPerLine = 2 + (i % 2);
+                for (let j = 0; j < countPerLine; j++) {
+                    blocksInRow.push({ x: j * (280 / countPerLine), y: yPos, dir: (i % 2 === 0 ? 1 : -1), speed: (1.5 + lvl * 0.4) + (i * 0.2) });
+                }
+                rows.push(blocksInRow);
+            }
+
+            activeGameLoop = setInterval(() => {
+                ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, cvs.width, cvs.height); 
+                
+                // Draw finish line at top
+                ctx.fillStyle = '#10b981'; ctx.fillRect(0, 10, cvs.width, 5);
+
+                // Draw ball
+                ctx.fillStyle = '#a3e635'; ctx.beginPath(); ctx.arc(ballX, ballY, 7, 0, Math.PI*2); ctx.fill();
+
+                // Update & draw obstacle rows
+                rows.forEach((row) => {
+                    row.forEach(b => {
+                        b.x += b.speed * b.dir; 
+                        if (b.x > 280) b.x = -50; 
+                        if (b.x < -50) b.x = 280;
+
+                        ctx.fillStyle = '#f43f5e'; ctx.fillRect(b.x, b.y, 45, 16);
+
+                        if (Math.abs(ballY - b.y) < 12 && ballX > b.x && ballX < b.x + 45) {
+                            showResultOverlay(false, "GAME OVER", "Tertabrak rintangan balok!");
+                        }
+                    });
+                });
+
+                if (score >= targetScore) awardGameWin('frogger');
+            }, 30);
+        }
+
+        // --- REVISED 3: BREAKOUT BALOK (Clear Entire Board Target) ---
+        function runBreakout(cvs, ctx, lvl, controls) {
+            document.getElementById('gameTitleDisplay').innerText = "7. Breakout Balok (Clear Board)"; 
+            let paddleX = 110, ballX = 140, ballY = 140;
+            let ballSpeed = 2.5 + lvl * 0.5;
+            let dx = ballSpeed * (Math.random() < 0.5 ? 1 : -1), dy = -ballSpeed; 
+            
+            controls.innerHTML = `<button onclick="window.moveBreakoutPaddle(-20)" class="px-4 py-1 bg-slate-800 rounded text-xs">◀ Kiri</button><button onclick="window.moveBreakoutPaddle(20)" class="px-4 py-1 bg-slate-800 rounded text-xs">Kanan ▶</button>`;
+            window.moveBreakoutPaddle = (d) => { paddleX = Math.max(0, Math.min(220, paddleX + d)); };
+            cvs.onclick = (e) => { paddleX = Math.max(0, Math.min(220, e.offsetX - 30)); };
+
+            let brickRows = Math.min(5, 2 + Math.floor(lvl / 2));
+            let brickCols = 6;
+            let bricks = []; 
+            for (let r = 0; r < brickRows; r++) {
+                for (let c = 0; c < brickCols; c++) {
+                    bricks.push({ x: c * 42 + 15, y: r * 16 + 15, active: true });
+                }
+            }
+            let totalBricks = bricks.length;
+            document.getElementById('gameScoreDisplay').innerText = `Sisa: ${totalBricks}/${totalBricks} Balok`;
+
+            activeGameLoop = setInterval(() => {
+                ballX += dx; ballY += dy;
+                if (ballX < 5 || ballX > 275) dx = -dx; 
+                if (ballY < 5) dy = -dy;
+                if (ballY > 170 && ballY < 182 && ballX > paddleX && ballX < paddleX + 60) dy = -Math.abs(dy);
+
+                let activeCount = 0;
+                bricks.forEach(b => { 
+                    if (b.active) {
+                        activeCount++;
+                        if (ballX > b.x && ballX < b.x + 38 && ballY > b.y && ballY < b.y + 12) { 
+                            b.active = false; 
+                            dy = -dy; 
+                        }
+                    }
+                });
+
+                document.getElementById('gameScoreDisplay').innerText = `Sisa: ${activeCount}/${totalBricks} Balok`;
+
+                ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, cvs.width, cvs.height); 
+                ctx.fillStyle = '#eab308'; ctx.fillRect(paddleX, 180, 60, 10); 
+                ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(ballX, ballY, 5, 0, Math.PI*2); ctx.fill();
+                
+                bricks.forEach(b => { 
+                    if (b.active) { 
+                        ctx.fillStyle = '#38bdf8'; 
+                        ctx.fillRect(b.x, b.y, 38, 12); 
+                    } 
+                });
+
+                if (ballY > 200) showResultOverlay(false, "GAME OVER", "Bola jatuh!"); 
+                if (activeCount === 0) awardGameWin('breakout');
+            }, 30);
+        }
+
+        // --- REVISED 4: BLOK SHOOTER (Space Shooter vs Alien Fleet) ---
+        function runSpaceShooter(cvs, ctx, lvl, controls) {
+            document.getElementById('gameTitleDisplay').innerText = "8. Space Alien Shooter"; 
+            let targetScore = 3 + lvl * 3;
+            document.getElementById('gameScoreDisplay').innerText = `Target: 0/${targetScore} Alien`;
+            let shipX = 120, bullets = [], enemyBullets = [], aliens = [], score = 0;
+            
+            controls.innerHTML = `<button onclick="window.moveShip(-15)" class="px-3 py-1 bg-slate-800 rounded text-xs">◀</button><button onclick="window.shootShip()" class="px-3 py-1 bg-purple-600 font-bold rounded text-xs">💥 TEMBAK</button><button onclick="window.moveShip(15)" class="px-3 py-1 bg-slate-800 rounded text-xs">▶</button>`;
+            window.moveShip = (d) => { shipX = Math.max(10, Math.min(250, shipX + d)); }; 
+            window.shootShip = () => { bullets.push({x: shipX + 8, y: 170}); };
+
+            function spawnAlienWave() {
+                aliens = [];
+                let count = Math.min(6, 3 + Math.floor(lvl / 2));
+                for (let i = 0; i < count; i++) {
+                    aliens.push({ x: 25 + i * 40, y: 20 + (i % 2) * 18, dir: 1, speed: 1.0 + lvl * 0.3 });
+                }
+            }
+            spawnAlienWave();
+
+            activeGameLoop = setInterval(() => {
+                ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, cvs.width, cvs.height); 
+                
+                // Draw player ship
+                ctx.fillStyle = '#a855f7'; ctx.fillRect(shipX, 175, 20, 15);
+                ctx.fillStyle = '#38bdf8'; ctx.fillRect(shipX + 8, 170, 4, 6);
+
+                // Update & draw alien fleet
+                aliens.forEach((a, ai) => {
+                    a.x += a.speed * a.dir;
+                    if (a.x > 255 || a.x < 10) {
+                        a.dir = -a.dir;
+                        a.y += 8; // Drop down when hitting wall
+                    }
+
+                    // Alien firing lasers back
+                    if (Math.random() < 0.015 + lvl * 0.005) {
+                        enemyBullets.push({ x: a.x + 8, y: a.y + 15 });
+                    }
+
+                    ctx.fillStyle = '#f43f5e'; 
+                    ctx.fillRect(a.x, a.y, 18, 14);
+                    ctx.fillStyle = '#fbbf24';
+                    ctx.fillRect(a.x + 4, a.y + 4, 10, 4);
+
+                    if (a.y > 155) showResultOverlay(false, "GAME OVER", "Invasi alien mencapai bumi!");
+                });
+
+                // Player bullets
+                bullets.forEach((b, bi) => {
+                    b.y -= 8; ctx.fillStyle = '#38bdf8'; ctx.fillRect(b.x, b.y, 3, 8);
+                    aliens.forEach((a, ai) => { 
+                        if (Math.abs(b.x - a.x) < 18 && Math.abs(b.y - a.y) < 14) { 
+                            aliens.splice(ai, 1); 
+                            bullets.splice(bi, 1); 
+                            score++; 
+                            document.getElementById('gameScoreDisplay').innerText = `Target: ${score}/${targetScore} Alien`; 
+                            if (aliens.length === 0) spawnAlienWave();
+                        } 
+                    });
+                });
+
+                // Enemy lasers hitting player
+                enemyBullets.forEach((eb, ebi) => {
+                    eb.y += 5; ctx.fillStyle = '#ef4444'; ctx.fillRect(eb.x, eb.y, 3, 8);
+                    if (Math.abs(eb.x - (shipX + 10)) < 15 && eb.y > 170 && eb.y < 190) {
+                        showResultOverlay(false, "GAME OVER", "Pesawatmu hancur diserang alien!");
+                    }
+                });
+
+                if (score >= targetScore) awardGameWin('shooter');
+            }, 30);
+        }
+
+        function runPingPong(cvs, ctx, lvl, controls) {
+            document.getElementById('gameTitleDisplay').innerText = "9. Ping Pong vs AI"; let targetGoals = lvl; document.getElementById('gameScoreDisplay').innerText = `Gol: 0/${targetGoals}`;
+            let pX = 110, aiX = 110, bX = 140, bY = 100, ballSpeed = 3.5 + lvl * 0.6, dx = ballSpeed * (Math.random() < 0.5 ? 1 : -1), dy = ballSpeed, playerGoals = 0;
+            cvs.onclick = (e) => { pX = Math.max(0, Math.min(230, e.offsetX - 25)); };
+            activeGameLoop = setInterval(() => {
+                bX += dx; bY += dy;
+                let aiAgility = Math.min(0.98, 0.15 + lvl * 0.08); aiX += (bX - (aiX + 25)) * aiAgility; aiX = Math.max(0, Math.min(230, aiX));
+                if (bX < 5 || bX > 275) dx = -dx;
+                if (bY < 20 && bY > 10 && bX > aiX - 5 && bX < aiX + 55) { dy = Math.abs(dy); dx = ((bX - (aiX + 25)) / 25) * (ballSpeed + 1); }
+                if (bY > 170 && bY < 180 && bX > pX - 5 && bX < pX + 55) { dy = -Math.abs(dy); dx = ((bX - (pX + 25)) / 25) * (ballSpeed + 1); }
+                ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, cvs.width, cvs.height); ctx.fillStyle = '#ec4899'; ctx.fillRect(pX, 180, 50, 8); ctx.fillStyle = '#ef4444'; ctx.fillRect(aiX, 10, 50, 8); ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(bX, bY, 5, 0, Math.PI*2); ctx.fill();
+                if (bY > 200) { showResultOverlay(false, "GAME OVER", "Pemain Kebobolan Gol!"); }
+                if (bY < 0) {
+                    playerGoals++; document.getElementById('gameScoreDisplay').innerText = `Gol: ${playerGoals}/${targetGoals}`;
+                    if (playerGoals >= targetGoals) { awardGameWin('pong'); } else { bX = 140; bY = 100; dy = ballSpeed; dx = ballSpeed * (Math.random() < 0.5 ? 1 : -1); }
+                }
+            }, 30);
+        }
+        function runMatch3Color(cvs, ctx, lvl, controls) {
+            document.getElementById('gameTitleDisplay').innerText = "10. Color Tetris Match-5"; document.getElementById('gameScoreDisplay').innerText = "Target: 0/10";
+            let score = 0, speed = Math.max(70, 320 - lvl * 25);
+            controls.innerHTML = `<button onclick="window.colorTetrisMove(-1)" class="px-3 py-1 bg-slate-800 rounded text-xs">◀ Kiri</button><button onclick="window.colorTetrisRotate()" class="px-3 py-1 bg-teal-600 rounded text-xs font-bold">🔄 Putar</button><button onclick="window.colorTetrisMove(1)" class="px-3 py-1 bg-slate-800 rounded text-xs">Kanan ▶</button>`;
+            const cols = 10, rows = 14, size = 12, offsetX = 80; let grid = Array(rows).fill().map(() => Array(cols).fill(null));
+            const colorShapes = [ { shape: [[1,1,1,1]], color: '#06b6d4' }, { shape: [[1,1],[1,1]], color: '#eab308' }, { shape: [[0,1,0],[1,1,1]], color: '#a855f7' } ];
+            let piece = spawnColorPiece(); function spawnColorPiece() { const p = colorShapes[Math.floor(Math.random() * colorShapes.length)]; return { x: 3, y: 0, shape: p.shape, color: p.color }; }
+            function checkCollision(px, py, shape) { for (let r = 0; r < shape.length; r++) { for (let c = 0; c < shape[r].length; c++) { if (shape[r][c]) { let newX = px + c, newY = py + r; if (newX < 0 || newX >= cols || newY >= rows || (newY >= 0 && grid[newY][newX])) return true; } } } return false; }
+            window.colorTetrisMove = (dir) => { if (!checkCollision(piece.x + dir, piece.y, piece.shape)) piece.x += dir; };
+            window.colorTetrisRotate = () => { const rotated = piece.shape[0].map((_, i) => piece.shape.map(row => row[i]).reverse()); if (!checkCollision(piece.x, piece.y, rotated)) piece.shape = rotated; };
+            function checkMatch5Color() {
+                let matchesFound = false;
+                for (let r = 0; r < rows; r++) {
+                    let matchStreak = 1;
+                    for (let c = 0; c < cols - 1; c++) {
+                        if (grid[r][c] && grid[r][c] === grid[r][c + 1]) {
+                            matchStreak++;
+                            if (matchStreak >= 5) {
+                                for (let k = c + 1; k > c + 1 - matchStreak; k--) grid[r][k] = null;
+                                matchesFound = true; score++; document.getElementById('gameScoreDisplay').innerText = `Target: ${score}/10`;
+                            }
+                        } else { matchStreak = 1; }
+                    }
+                }
+                return matchesFound;
+            }
+            activeGameLoop = setInterval(() => {
+                if (!checkCollision(piece.x, piece.y + 1, piece.shape)) { piece.y++; } else {
+                    for (let r = 0; r < piece.shape.length; r++) { for (let c = 0; c < piece.shape[r].length; c++) { if (piece.shape[r][c] && piece.y + r >= 0) grid[piece.y + r][piece.x + c] = piece.color; } }
+                    checkMatch5Color(); piece = spawnColorPiece(); if (checkCollision(piece.x, piece.y, piece.shape)) showResultOverlay(false, "GAME OVER", "Arena Penuh!");
+                }
+                ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, cvs.width, cvs.height); ctx.strokeStyle = '#1e293b'; ctx.strokeRect(offsetX, 10, cols * size, rows * size);
+                for (let r = 0; r < rows; r++) { for (let c = 0; c < cols; c++) { if (grid[r][c]) { ctx.fillStyle = grid[r][c]; ctx.fillRect(offsetX + c * size, 10 + r * size, size - 1, size - 1); } } }
+                ctx.fillStyle = piece.color; for (let r = 0; r < piece.shape.length; r++) { for (let c = 0; c < piece.shape[r].length; c++) { if (piece.shape[r][c]) ctx.fillRect(offsetX + (piece.x + c) * size, 10 + (piece.y + r) * size, size - 1, size - 1); } }
+                if (score >= 10) awardGameWin('match3');
+            }, speed);
+        }
+
+        window.onload = () => { loadGameData(); initGameLoop(); };
+    </script>
+</body>
+</html>

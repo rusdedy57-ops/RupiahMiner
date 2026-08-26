@@ -2,8 +2,8 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rupiah Miner Indonesia v8.7 - Advanced Arcade Edition</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Rupiah Miner Indonesia v8.8 - Touchscreen Responsive Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -18,6 +18,8 @@
         .glow-yellow { box-shadow: 0 0 15px rgba(234, 179, 8, 0.4); }
         .spin-slow { animation: spin 3s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
+        /* Mencegah seleksi teks saat swiping di HP */
+        canvas { touch-action: none; -webkit-user-select: none; user-select: none; }
     </style>
 </head>
 <body class="bg-slate-950 text-white font-sans min-h-screen flex flex-col pixel-bg selection:bg-red-500 selection:text-white">
@@ -34,7 +36,7 @@
                         <h1 class="font-extrabold text-lg text-red-500 tracking-wide leading-none">Rupiah Miner</h1>
                         <span id="playerBadge" class="bg-amber-500/20 text-amber-400 border border-amber-500/50 text-[10px] font-bold px-2 py-0.5 rounded-full">Penambang MH/s</span>
                     </div>
-                    <span class="text-[11px] text-gray-400">Engine v8.7 Pro</span>
+                    <span class="text-[11px] text-gray-400">Engine v8.8 Touch Pro</span>
                 </div>
             </div>
 
@@ -198,7 +200,7 @@
                             <button onclick="resetGameProgress()" class="text-[10px] text-red-400 hover:text-red-300 underline">Reset Data</button>
                         </div>
                         <div id="activityLog" class="text-xs font-mono space-y-1.5 max-h-36 overflow-y-auto text-gray-400">
-                            <p class="text-gray-500">[Sistem] Engine v8.7 Active!</p>
+                            <p class="text-gray-500">[Sistem] Engine v8.8 Touch Active!</p>
                         </div>
                     </div>
                 </div>
@@ -225,16 +227,16 @@
                     </div>
 
                     <div id="gameMenuList" class="space-y-1.5 max-h-[380px] overflow-y-auto pr-1 text-xs">
-                        <button onclick="playSound('click'); startArcadeGame('flappy')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-circle-dot text-amber-400 text-base"></i><div><h4 class="font-bold text-gray-200">1. Flappy Ball</h4><p class="text-[9px] text-gray-400">Aktif 24 Jam (+100 MH/s)</p></div></div><span id="lvl_flappy" class="text-[10px] font-bold text-amber-400 bg-amber-950/60 border border-amber-800 px-2 py-0.5 rounded">Lvl 1</span></button>
-                        <button onclick="playSound('click'); startArcadeGame('tetris')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-cubes-stacked text-indigo-400 text-base"></i><div><h4 class="font-bold text-gray-200">2. Classic Tetris</h4><p class="text-[9px] text-gray-400">Aktif 24 Jam (+200 MH/s)</p></div></div><span id="lvl_tetris" class="text-[10px] font-bold text-indigo-400 bg-indigo-950/60 border border-indigo-800 px-2 py-0.5 rounded">Lvl 1</span></button>
-                        <button onclick="playSound('click'); startArcadeGame('racing')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-car-burst text-rose-400 text-base"></i><div><h4 class="font-bold text-gray-200">3. Balap Blok</h4><p class="text-[9px] text-gray-400">Aktif 24 Jam (+300 MH/s)</p></div></div><span id="lvl_racing" class="text-[10px] font-bold text-rose-400 bg-rose-950/60 border border-rose-800 px-2 py-0.5 rounded">Lvl 1</span></button>
-                        <button onclick="playSound('click'); startArcadeGame('snake')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-staff-snake text-emerald-400 text-base"></i><div><h4 class="font-bold text-gray-200">4. Nokia Snake</h4><p class="text-[9px] text-gray-400">Aktif 48 Jam / 2 Hari (+1.000 MH/s)</p></div></div><span id="lvl_snake" class="text-[10px] font-bold text-emerald-400 bg-emerald-950/60 border border-emerald-800 px-2 py-0.5 rounded">Lvl 1</span></button>
-                        <button onclick="playSound('click'); startArcadeGame('tank')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-shield-halved text-cyan-400 text-base"></i><div><h4 class="font-bold text-gray-200">5. Blok Battle (Advanced)</h4><p class="text-[9px] text-gray-400">Aktif 48 Jam / 2 Hari (+2.000 MH/s)</p></div></div><span id="lvl_tank" class="text-[10px] font-bold text-cyan-400 bg-cyan-950/60 border border-cyan-800 px-2 py-0.5 rounded">Lvl 1</span></button>
-                        <button onclick="playSound('click'); startArcadeGame('frogger')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-frog text-lime-400 text-base"></i><div><h4 class="font-bold text-gray-200">6. Ball Crossing (Multi-Row)</h4><p class="text-[9px] text-gray-400">Aktif 72 Jam / 3 Hari (+3.000 MH/s)</p></div></div><span id="lvl_frogger" class="text-[10px] font-bold text-lime-400 bg-lime-950/60 border border-lime-800 px-2 py-0.5 rounded">Lvl 1</span></button>
-                        <button onclick="playSound('click'); startArcadeGame('breakout')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-table-cells text-yellow-400 text-base"></i><div><h4 class="font-bold text-gray-200">7. Breakout Balok (Clear)</h4><p class="text-[9px] text-gray-400">Aktif 72 Jam / 3 Hari (+4.000 MH/s)</p></div></div><span id="lvl_breakout" class="text-[10px] font-bold text-yellow-400 bg-yellow-950/60 border border-yellow-800 px-2 py-0.5 rounded">Lvl 1</span></button>
-                        <button onclick="playSound('click'); startArcadeGame('shooter')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-jet-fighter text-purple-400 text-base"></i><div><h4 class="font-bold text-gray-200">8. Space Alien Shooter</h4><p class="text-[9px] text-gray-400">Aktif 1 Minggu / 168 Jam (+1 TH/s)</p></div></div><span id="lvl_shooter" class="text-[10px] font-bold text-purple-400 bg-purple-950/60 border border-purple-800 px-2 py-0.5 rounded">Lvl 1</span></button>
-                        <button onclick="playSound('click'); startArcadeGame('pong')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-table-tennis-paddle-ball text-pink-400 text-base"></i><div><h4 class="font-bold text-gray-200">9. Ping Pong vs AI</h4><p class="text-[9px] text-gray-400">Aktif 1 Minggu / 168 Jam (+2 TH/s)</p></div></div><span id="lvl_pong" class="text-[10px] font-bold text-pink-400 bg-pink-950/60 border border-pink-800 px-2 py-0.5 rounded">Lvl 1</span></button>
-                        <button onclick="playSound('click'); startArcadeGame('match3')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-border-all text-teal-400 text-base"></i><div><h4 class="font-bold text-gray-200">10. Color Tetris Match-5</h4><p class="text-[9px] text-gray-400">Aktif 1 Minggu / 168 Jam (+5 TH/s)</p></div></div><span id="lvl_match3" class="text-[10px] font-bold text-teal-400 bg-teal-950/60 border border-teal-800 px-2 py-0.5 rounded">Lvl 1</span></button>
+                        <button onclick="playSound('click'); startArcadeGame('flappy')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-circle-dot text-amber-400 text-base"></i><div><h4 class="font-bold text-gray-200">1. Flappy Ball</h4><p class="text-[9px] text-gray-400">Sentuh Layar (+100 MH/s)</p></div></div><span id="lvl_flappy" class="text-[10px] font-bold text-amber-400 bg-amber-950/60 border border-amber-800 px-2 py-0.5 rounded">Lvl 1</span></button>
+                        <button onclick="playSound('click'); startArcadeGame('tetris')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-cubes-stacked text-indigo-400 text-base"></i><div><h4 class="font-bold text-gray-200">2. Classic Tetris</h4><p class="text-[9px] text-gray-400">Usap / Tap Layar (+200 MH/s)</p></div></div><span id="lvl_tetris" class="text-[10px] font-bold text-indigo-400 bg-indigo-950/60 border border-indigo-800 px-2 py-0.5 rounded">Lvl 1</span></button>
+                        <button onclick="playSound('click'); startArcadeGame('racing')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-car-burst text-rose-400 text-base"></i><div><h4 class="font-bold text-gray-200">3. Balap Blok</h4><p class="text-[9px] text-gray-400">Usap Kiri/Kanan (+300 MH/s)</p></div></div><span id="lvl_racing" class="text-[10px] font-bold text-rose-400 bg-rose-950/60 border border-rose-800 px-2 py-0.5 rounded">Lvl 1</span></button>
+                        <button onclick="playSound('click'); startArcadeGame('snake')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-staff-snake text-emerald-400 text-base"></i><div><h4 class="font-bold text-gray-200">4. Nokia Snake</h4><p class="text-[9px] text-gray-400">Usap 4 Arah (+1.000 MH/s)</p></div></div><span id="lvl_snake" class="text-[10px] font-bold text-emerald-400 bg-emerald-950/60 border border-emerald-800 px-2 py-0.5 rounded">Lvl 1</span></button>
+                        <button onclick="playSound('click'); startArcadeGame('tank')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-shield-halved text-cyan-400 text-base"></i><div><h4 class="font-bold text-gray-200">5. Blok Battle</h4><p class="text-[9px] text-gray-400">Sentuh & Geser (+2.000 MH/s)</p></div></div><span id="lvl_tank" class="text-[10px] font-bold text-cyan-400 bg-cyan-950/60 border border-cyan-800 px-2 py-0.5 rounded">Lvl 1</span></button>
+                        <button onclick="playSound('click'); startArcadeGame('frogger')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-frog text-lime-400 text-base"></i><div><h4 class="font-bold text-gray-200">6. Ball Crossing</h4><p class="text-[9px] text-gray-400">Usap Maju/Mundur (+3.000 MH/s)</p></div></div><span id="lvl_frogger" class="text-[10px] font-bold text-lime-400 bg-lime-950/60 border border-lime-800 px-2 py-0.5 rounded">Lvl 1</span></button>
+                        <button onclick="playSound('click'); startArcadeGame('breakout')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-table-cells text-yellow-400 text-base"></i><div><h4 class="font-bold text-gray-200">7. Breakout Balok</h4><p class="text-[9px] text-gray-400">Geser Jari di Layar (+4.000 MH/s)</p></div></div><span id="lvl_breakout" class="text-[10px] font-bold text-yellow-400 bg-yellow-950/60 border border-yellow-800 px-2 py-0.5 rounded">Lvl 1</span></button>
+                        <button onclick="playSound('click'); startArcadeGame('shooter')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-jet-fighter text-purple-400 text-base"></i><div><h4 class="font-bold text-gray-200">8. Space Alien Shooter</h4><p class="text-[9px] text-gray-400">Geser Jari / Auto Fire (+1 TH/s)</p></div></div><span id="lvl_shooter" class="text-[10px] font-bold text-purple-400 bg-purple-950/60 border border-purple-800 px-2 py-0.5 rounded">Lvl 1</span></button>
+                        <button onclick="playSound('click'); startArcadeGame('pong')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-table-tennis-paddle-ball text-pink-400 text-base"></i><div><h4 class="font-bold text-gray-200">9. Ping Pong vs AI</h4><p class="text-[9px] text-gray-400">Geser Jari di Layar (+2 TH/s)</p></div></div><span id="lvl_pong" class="text-[10px] font-bold text-pink-400 bg-pink-950/60 border border-pink-800 px-2 py-0.5 rounded">Lvl 1</span></button>
+                        <button onclick="playSound('click'); startArcadeGame('match3')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-border-all text-teal-400 text-base"></i><div><h4 class="font-bold text-gray-200">10. Color Tetris Match-5</h4><p class="text-[9px] text-gray-400">Usap / Tap Layar (+5 TH/s)</p></div></div><span id="lvl_match3" class="text-[10px] font-bold text-teal-400 bg-teal-950/60 border border-teal-800 px-2 py-0.5 rounded">Lvl 1</span></button>
                     </div>
 
                     <div id="activeGameArea" class="hidden text-center space-y-3 pt-2 relative">
@@ -254,7 +256,10 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="gameControlsContainer" class="flex justify-center gap-2"></div>
+                        <div id="touchGuideNotice" class="text-[10px] text-cyan-400 font-bold bg-slate-950 p-2 rounded-xl border border-cyan-900/50">
+                            💡 Usap (Swipe) / Sentuh Layar Game untuk Mengontrol
+                        </div>
+                        <div id="gameControlsContainer" class="flex justify-center gap-2 hidden"></div>
                         <p id="gameMessageDisplay" class="text-xs text-amber-400 font-semibold h-4"></p>
                     </div>
                 </div>
@@ -531,7 +536,7 @@
     </div>
 
 
-    <!-- FULL JAVASCRIPT ENGINE v8.7 -->
+    <!-- FULL JAVASCRIPT ENGINE v8.8 -->
     <script>
         // --- WEB AUDIO API 8-BIT SOUND UTILITY ---
         let audioCtx = null;
@@ -549,8 +554,8 @@
                     gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.04);
                     osc.start(); osc.stop(audioCtx.currentTime + 0.04);
                 } else if (type === 'coin') {
-                    osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
-                    osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.08); // A5
+                    osc.frequency.setValueAtTime(587.33, audioCtx.currentTime);
+                    osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.08);
                     gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
                     gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.2);
                     osc.start(); osc.stop(audioCtx.currentTime + 0.2);
@@ -575,7 +580,6 @@
         let electricityLevel = 100;
         let lastBoostAdTime = 0;
 
-        // Upgrade Levels (Permanen)
         let solarPanelLevel = 0; 
         let batteryEfficiencyLevel = 1;
 
@@ -583,7 +587,6 @@
         let gamePowerLogs = []; 
         let invitedFriends = []; 
         
-        // Misi / Achievements (Maksimal Koin Reward Rp 1.000)
         let achievements = [
             { id: 'mh_1k', title: 'Penambang GH/s', desc: 'Capai total hashrate 1.000 MH/s', target: 1000, type: 'hash', rewardVal: 500, rewardType: 'coin', claimed: false },
             { id: 'rig_1', title: 'Bos Rig Nusantara', desc: 'Beli minimal 1 buah Rig Fisik', target: 1, type: 'rig', rewardVal: 500, rewardType: 'coin', claimed: false },
@@ -653,11 +656,11 @@
                 minersPurchased, gameLevels, electricityLevel, lastBoostAdTime, 
                 solarPanelLevel, batteryEfficiencyLevel, achievements, gamesWonCount 
             };
-            localStorage.setItem('RupiahMinerProgress_v87', JSON.stringify(dataToSave));
+            localStorage.setItem('RupiahMinerProgress_v88', JSON.stringify(dataToSave));
         }
 
         function loadGameData() {
-            const savedData = localStorage.getItem('RupiahMinerProgress_v87');
+            const savedData = localStorage.getItem('RupiahMinerProgress_v88');
             if (savedData) {
                 try {
                     const parsed = JSON.parse(savedData);
@@ -681,7 +684,6 @@
                         document.getElementById('wdNumberInput').value = userData.phone;
                     }
 
-                    // Kalkulasi Offline Mining
                     const now = Date.now();
                     const elapsedSec = Math.floor((now - (userData.lastSaveTimestamp || now)) / 1000);
                     if (elapsedSec > 15 && getTotalPower() > 0 && electricityLevel > 0) {
@@ -717,7 +719,7 @@
         }
         function closeOfflineModal() { document.getElementById('offlineModal').classList.add('hidden'); }
 
-        function resetGameProgress() { if (confirm("Reset semua data?")) { localStorage.removeItem('RupiahMinerProgress_v87'); location.reload(); } }
+        function resetGameProgress() { if (confirm("Reset semua data?")) { localStorage.removeItem('RupiahMinerProgress_v88'); location.reload(); } }
         function addLog(msg) {
             const logBox = document.getElementById('activityLog');
             const p = document.createElement('p'); p.innerText = `[${new Date().toLocaleTimeString('id-ID')}] ${msg}`;
@@ -839,7 +841,6 @@
             }
         }
 
-        // UPGRADE BATERAI & PANEL SURYA (Permanen)
         function updatePowerUpgradesUI() {
             const solarCost = (solarPanelLevel + 1) * 10000;
             const drainCost = batteryEfficiencyLevel >= 3 ? "MAX" : `Rp ${(batteryEfficiencyLevel * 15000).toLocaleString('id-ID')}`;
@@ -873,7 +874,6 @@
             addLog(`[UPGRADE] Efisiensi Kapasitor Lvl ${batteryEfficiencyLevel} permanen dibeli.`);
         }
 
-        // ACHIEVEMENTS SYSTEM (Max Koin Rp 1.000)
         function openAchievementModal() { renderAchievementsList(); document.getElementById('achievementModal').classList.remove('hidden'); }
         function closeAchievementModal() { document.getElementById('achievementModal').classList.add('hidden'); }
 
@@ -918,7 +918,6 @@
             const ach = achievements.find(a => a.id === id);
             if (!ach || ach.claimed) return;
             ach.claimed = true;
-
             coinBalance += ach.rewardVal;
 
             playSound('win');
@@ -927,7 +926,6 @@
             addLog(`[ACHIEVEMENT] Klaim misi ${ach.title} (+Rp ${ach.rewardVal}).`);
         }
 
-        // REFERRAL & REWARD SYSTEM
         function openReferralModal() { 
             document.getElementById('referralModal').classList.remove('hidden'); 
             document.getElementById('myRefCodeDisplay').innerText = userData.myRefCode;
@@ -969,7 +967,6 @@
             });
         }
 
-        // AD MODAL UTILITY (10 Detik)
         function openAdModalForAction(durationSec, onCompleteCallback) {
             const adModal = document.getElementById('adModal');
             const timerText = document.getElementById('adTimerText');
@@ -1200,7 +1197,7 @@
             requestAnimationFrame(animateSpin);
         }
 
-        // ARCADE MINI GAMES SYSTEM
+        // ARCADE MINI GAMES SYSTEM & TOUCH GESTURE ENGINE v8.8
         function checkMidnightGameReset() {
             const today = new Date().toDateString();
             if (userData.lastDailyResetDate !== today) {
@@ -1212,12 +1209,46 @@
         
         function getGameRewardDetails(gameKey, lvl) {
             let basePower = 0, durationHours = 24;
-            // Reward scaled more aggressively with level difficulty
             if (['flappy', 'tetris', 'racing'].includes(gameKey)) { basePower = lvl * 150; durationHours = 24; }
             else if (['snake', 'tank'].includes(gameKey)) { basePower = lvl * 800; durationHours = 48; }
             else if (['frogger', 'breakout'].includes(gameKey)) { basePower = lvl * 1500; durationHours = 72; }
             else { basePower = lvl * 6000; durationHours = 168; }
             return { amount: basePower, durationMs: durationHours * 60 * 60 * 1000, hours: durationHours };
+        }
+
+        // UNIVERSAL TOUCH / SWIPE CONTROLLER FOR CANVAS
+        let touchStartX = 0, touchStartY = 0;
+        function setupTouchGestures(canvas, onSwipeCallback, onTapCallback, onDragMoveCallback) {
+            canvas.ontouchstart = (e) => {
+                e.preventDefault();
+                touchStartX = e.touches[0].clientX;
+                touchStartY = e.touches[0].clientY;
+                if (onTapCallback) onTapCallback(touchStartX, touchStartY);
+            };
+            canvas.ontouchmove = (e) => {
+                e.preventDefault();
+                if (onDragMoveCallback) {
+                    const rect = canvas.getBoundingClientRect();
+                    const touchX = e.touches[0].clientX - rect.left;
+                    onDragMoveCallback(touchX);
+                }
+            };
+            canvas.ontouchend = (e) => {
+                e.preventDefault();
+                if (!onSwipeCallback) return;
+                const touchEndX = e.changedTouches[0].clientX;
+                const touchEndY = e.changedTouches[0].clientY;
+                const dx = touchEndX - touchStartX;
+                const dy = touchEndY - touchStartY;
+                
+                if (Math.abs(dx) > 20 || Math.abs(dy) > 20) {
+                    if (Math.abs(dx) > Math.abs(dy)) {
+                        if (dx > 0) onSwipeCallback('RIGHT'); else onSwipeCallback('LEFT');
+                    } else {
+                        if (dy > 0) onSwipeCallback('DOWN'); else onSwipeCallback('UP');
+                    }
+                }
+            };
         }
         
         function startArcadeGame(gameKey) {
@@ -1227,17 +1258,21 @@
             if (activeGameLoop) clearInterval(activeGameLoop);
             const cvs = document.getElementById('mainGameCanvas'), ctx = cvs.getContext('2d'), controls = document.getElementById('gameControlsContainer'); controls.innerHTML = "";
             
+            // Clear previous touch handlers
+            cvs.ontouchstart = null; cvs.ontouchmove = null; cvs.ontouchend = null; cvs.onclick = null;
+
             if (gameKey === 'flappy') runFlappyBall(cvs, ctx, lvl);
-            if (gameKey === 'tetris') runClassicTetris(cvs, ctx, lvl, controls);
-            if (gameKey === 'racing') runCarRacing(cvs, ctx, lvl, controls);
-            if (gameKey === 'snake') runNokiaSnake(cvs, ctx, lvl, controls);
-            if (gameKey === 'tank') runTankBattle(cvs, ctx, lvl, controls);
-            if (gameKey === 'frogger') runFroggerCrossing(cvs, ctx, lvl, controls);
-            if (gameKey === 'breakout') runBreakout(cvs, ctx, lvl, controls);
-            if (gameKey === 'shooter') runSpaceShooter(cvs, ctx, lvl, controls);
-            if (gameKey === 'pong') runPingPong(cvs, ctx, lvl, controls);
-            if (gameKey === 'match3') runMatch3Color(cvs, ctx, lvl, controls);
+            if (gameKey === 'tetris') runClassicTetris(cvs, ctx, lvl);
+            if (gameKey === 'racing') runCarRacing(cvs, ctx, lvl);
+            if (gameKey === 'snake') runNokiaSnake(cvs, ctx, lvl);
+            if (gameKey === 'tank') runTankBattle(cvs, ctx, lvl);
+            if (gameKey === 'frogger') runFroggerCrossing(cvs, ctx, lvl);
+            if (gameKey === 'breakout') runBreakout(cvs, ctx, lvl);
+            if (gameKey === 'shooter') runSpaceShooter(cvs, ctx, lvl);
+            if (gameKey === 'pong') runPingPong(cvs, ctx, lvl);
+            if (gameKey === 'match3') runMatch3Color(cvs, ctx, lvl);
         }
+
         function closeActiveGame() { if (activeGameLoop) clearInterval(activeGameLoop); document.getElementById('mainGameCanvas').onclick = null; document.getElementById('gameOverlay').classList.add('hidden'); document.getElementById('activeGameArea').classList.add('hidden'); document.getElementById('backToMenuBtn').classList.add('hidden'); document.getElementById('gameMenuList').classList.remove('hidden'); }
         function showResultOverlay(win, title, sub) {
             if (activeGameLoop) clearInterval(activeGameLoop);
@@ -1260,11 +1295,15 @@
             addLog(`[GAME WIN] ${gameKey.toUpperCase()} Lvl ${lvl}! +${formatHashrate(reward.amount)}.`);
         }
 
-        // ARCADE GAMES LOGIC (UPDATED v8.7)
+        // TOUCH-OPTIMIZED MINI GAMES
         function runFlappyBall(cvs, ctx, lvl) {
             document.getElementById('gameTitleDisplay').innerText = "1. Flappy Ball"; document.getElementById('gameScoreDisplay').innerText = "Target: 0/10";
             let ballY = 100, vel = 0, pipes = [], score = 0, speed = 2 + lvl * 0.35; pipes.push({ x: 280, top: 50, bottom: 60 });
-            cvs.onclick = () => { vel = -4.5; };
+            
+            const jumpAction = () => { vel = -4.5; };
+            cvs.onclick = jumpAction;
+            cvs.ontouchstart = (e) => { e.preventDefault(); jumpAction(); };
+
             activeGameLoop = setInterval(() => {
                 vel += 0.3; ballY += vel;
                 ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, cvs.width, cvs.height);
@@ -1281,16 +1320,24 @@
                 if (score >= 10) awardGameWin('flappy');
             }, 30);
         }
-        function runClassicTetris(cvs, ctx, lvl, controls) {
+
+        function runClassicTetris(cvs, ctx, lvl) {
             document.getElementById('gameTitleDisplay').innerText = "2. Classic Tetris"; document.getElementById('gameScoreDisplay').innerText = "Target: 0/10";
             let score = 0, speed = Math.max(80, 350 - lvl * 25);
-            controls.innerHTML = `<button onclick="window.tetrisMove(-1)" class="px-3 py-1 bg-slate-800 rounded text-xs">◀ Kiri</button><button onclick="window.tetrisRotate()" class="px-3 py-1 bg-indigo-600 rounded text-xs">🔄 Putar</button><button onclick="window.tetrisMove(1)" class="px-3 py-1 bg-slate-800 rounded text-xs">Kanan ▶</button>`;
             const cols = 10, rows = 14, size = 12, offsetX = 80; let grid = Array(rows).fill().map(() => Array(cols).fill(0));
             const shapes = [[[1,1,1,1]], [[1,1],[1,1]], [[0,1,0],[1,1,1]], [[1,0,0],[1,1,1]], [[0,0,1],[1,1,1]], [[0,1,1],[1,1,0]]];
             let piece = spawnPiece(); function spawnPiece() { return { x: 3, y: 0, shape: shapes[Math.floor(Math.random() * shapes.length)] }; }
             function checkCollision(px, py, shape) { for (let r = 0; r < shape.length; r++) { for (let c = 0; c < shape[r].length; c++) { if (shape[r][c]) { let newX = px + c, newY = py + r; if (newX < 0 || newX >= cols || newY >= rows || (newY >= 0 && grid[newY][newX])) return true; } } } return false; }
-            window.tetrisMove = (dir) => { if (!checkCollision(piece.x + dir, piece.y, piece.shape)) piece.x += dir; };
-            window.tetrisRotate = () => { const rotated = piece.shape[0].map((_, i) => piece.shape.map(row => row[i]).reverse()); if (!checkCollision(piece.x, piece.y, rotated)) piece.shape = rotated; };
+            
+            setupTouchGestures(cvs, (dir) => {
+                if (dir === 'LEFT' && !checkCollision(piece.x - 1, piece.y, piece.shape)) piece.x--;
+                if (dir === 'RIGHT' && !checkCollision(piece.x + 1, piece.y, piece.shape)) piece.x++;
+                if (dir === 'DOWN' && !checkCollision(piece.x, piece.y + 1, piece.shape)) piece.y++;
+            }, () => {
+                const rotated = piece.shape[0].map((_, i) => piece.shape.map(row => row[i]).reverse());
+                if (!checkCollision(piece.x, piece.y, rotated)) piece.shape = rotated;
+            });
+
             activeGameLoop = setInterval(() => {
                 if (!checkCollision(piece.x, piece.y + 1, piece.shape)) { piece.y++; } else {
                     for (let r = 0; r < piece.shape.length; r++) { for (let c = 0; c < piece.shape[r].length; c++) { if (piece.shape[r][c] && piece.y + r >= 0) grid[piece.y + r][piece.x + c] = 1; } }
@@ -1303,11 +1350,20 @@
                 if (score >= 10) awardGameWin('tetris');
             }, speed);
         }
-        function runCarRacing(cvs, ctx, lvl, controls) {
+
+        function runCarRacing(cvs, ctx, lvl) {
             document.getElementById('gameTitleDisplay').innerText = "3. Balap Blok"; document.getElementById('gameScoreDisplay').innerText = "Target: 0/10";
-            let carX = 1, obstacles = [], score = 0, speed = 2.8 + lvl * 0.7;
-            controls.innerHTML = `<button onclick="window.moveRaceCar(-1)" class="px-4 py-1.5 bg-slate-800 rounded text-xs">◀ Kiri</button><button onclick="window.moveRaceCar(1)" class="px-4 py-1.5 bg-slate-800 rounded text-xs">Kanan ▶</button>`;
-            window.moveRaceCar = (d) => { carX = Math.max(0, Math.min(2, carX + d)); }; let laneX = [60, 125, 190];
+            let carX = 1, obstacles = [], score = 0, speed = 2.8 + lvl * 0.7; let laneX = [60, 125, 190];
+            
+            setupTouchGestures(cvs, (dir) => {
+                if (dir === 'LEFT') carX = Math.max(0, carX - 1);
+                if (dir === 'RIGHT') carX = Math.min(2, carX + 1);
+            }, (tx) => {
+                const rect = cvs.getBoundingClientRect();
+                const relX = tx - rect.left;
+                if (relX < 90) carX = 0; else if (relX < 180) carX = 1; else carX = 2;
+            });
+
             activeGameLoop = setInterval(() => {
                 ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, cvs.width, cvs.height); ctx.fillStyle = '#334155'; ctx.fillRect(40, 0, 8, 200); ctx.fillRect(232, 0, 8, 200);
                 ctx.fillStyle = '#38bdf8'; ctx.fillRect(laneX[carX], 150, 30, 35);
@@ -1316,11 +1372,18 @@
                 if (score >= 10) awardGameWin('racing');
             }, 30);
         }
-        function runNokiaSnake(cvs, ctx, lvl, controls) {
+
+        function runNokiaSnake(cvs, ctx, lvl) {
             document.getElementById('gameTitleDisplay').innerText = "4. Nokia Snake"; document.getElementById('gameScoreDisplay').innerText = "Target: 0/10";
             let snake = [{x: 5, y: 5}], dir = {x: 1, y: 0}, food = {x: 12, y: 8}, score = 0;
-            controls.innerHTML = `<button onclick="window.snakeDir(0,-1)" class="px-2 py-1 bg-slate-800 rounded">▲</button><button onclick="window.snakeDir(-1,0)" class="px-2 py-1 bg-slate-800 rounded">◀</button><button onclick="window.snakeDir(1,0)" class="px-2 py-1 bg-slate-800 rounded">▶</button><button onclick="window.snakeDir(0,1)" class="px-2 py-1 bg-slate-800 rounded">▼</button>`;
-            window.snakeDir = (x, y) => { dir = {x, y}; };
+            
+            setupTouchGestures(cvs, (swipe) => {
+                if (swipe === 'UP' && dir.y === 0) dir = {x: 0, y: -1};
+                if (swipe === 'DOWN' && dir.y === 0) dir = {x: 0, y: 1};
+                if (swipe === 'LEFT' && dir.x === 0) dir = {x: -1, y: 0};
+                if (swipe === 'RIGHT' && dir.x === 0) dir = {x: 1, y: 0};
+            });
+
             activeGameLoop = setInterval(() => {
                 let head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
                 if (head.x < 0 || head.x >= 28 || head.y < 0 || head.y >= 20) { showResultOverlay(false, "GAME OVER", "Menabrak tembok!"); return; }
@@ -1331,16 +1394,17 @@
             }, Math.max(50, 140 - lvl * 10));
         }
 
-        // --- REVISED 1: BLOK BATTLE (Advanced AI: Move Left/Right, Forward/Backward & Shoot) ---
-        function runTankBattle(cvs, ctx, lvl, controls) {
-            document.getElementById('gameTitleDisplay').innerText = "5. Blok Battle (Advanced)"; 
+        function runTankBattle(cvs, ctx, lvl) {
+            document.getElementById('gameTitleDisplay').innerText = "5. Blok Battle"; 
             let targetScore = lvl * 4;
             document.getElementById('gameScoreDisplay').innerText = `Target: 0/${targetScore} Musuh`;
             let playerX = 120, bullets = [], enemyBullets = [], enemies = [], score = 0;
-            controls.innerHTML = `<button onclick="window.moveTank(-15)" class="px-3 py-1 bg-slate-800 rounded text-xs">◀</button><button onclick="window.shootTank()" class="px-3 py-1 bg-red-600 rounded text-xs font-bold">🚀 TEMBAK</button><button onclick="window.moveTank(15)" class="px-3 py-1 bg-slate-800 rounded text-xs">▶</button>`;
-            window.moveTank = (d) => { playerX = Math.max(10, Math.min(250, playerX + d)); }; 
-            window.shootTank = () => { bullets.push({x: playerX + 10, y: 170}); };
             
+            setupTouchGestures(cvs, null, () => { bullets.push({x: playerX + 10, y: 170}); }, (touchX) => {
+                playerX = Math.max(10, Math.min(250, touchX - 12));
+            });
+            cvs.onclick = () => { bullets.push({x: playerX + 10, y: 170}); };
+
             function spawnEnemyWave() {
                 let count = Math.min(4, 1 + Math.floor(lvl / 2));
                 for(let i=0; i<count; i++) {
@@ -1351,104 +1415,68 @@
 
             activeGameLoop = setInterval(() => {
                 ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, cvs.width, cvs.height); 
-                // Draw player
                 ctx.fillStyle = '#06b6d4'; ctx.fillRect(playerX, 175, 25, 20);
 
-                // Update & draw enemies (moving sideways and approaching forward/backward)
-                enemies.forEach((e, ei) => {
-                    e.x += e.dirX * e.speedX; 
-                    e.y += e.vy; 
+                enemies.forEach((e) => {
+                    e.x += e.dirX * e.speedX; e.y += e.vy; 
                     if (e.x > 255 || e.x < 5) e.dirX = -e.dirX;
-                    
-                    // Enemy shooting laser downward
-                    if (Math.random() < 0.02 + lvl * 0.005) {
-                        enemyBullets.push({ x: e.x + 10, y: e.y + 15 });
-                    }
-
+                    if (Math.random() < 0.02 + lvl * 0.005) enemyBullets.push({ x: e.x + 10, y: e.y + 15 });
                     ctx.fillStyle = '#e11d48'; ctx.fillRect(e.x, e.y, 24, 20);
-
-                    // Check if enemy reaches player zone
                     if (e.y > 155) showResultOverlay(false, "GAME OVER", "Musuh mencapai garis pertahanan!");
                 });
 
-                // Player bullets
                 bullets.forEach((b, bi) => {
                     b.y -= 7; ctx.fillStyle = '#f59e0b'; ctx.fillRect(b.x, b.y, 4, 8);
                     enemies.forEach((e, ei) => { 
                         if (Math.abs(b.x - e.x) < 24 && Math.abs(b.y - e.y) < 20) { 
-                            enemies.splice(ei, 1); 
-                            bullets.splice(bi, 1); 
-                            score++; 
+                            enemies.splice(ei, 1); bullets.splice(bi, 1); score++; 
                             document.getElementById('gameScoreDisplay').innerText = `Target: ${score}/${targetScore} Musuh`; 
                             if(enemies.length === 0) spawnEnemyWave();
                         } 
                     });
                 });
 
-                // Enemy bullets hitting player
-                enemyBullets.forEach((eb, ebi) => {
+                enemyBullets.forEach((eb) => {
                     eb.y += 4; ctx.fillStyle = '#ef4444'; ctx.fillRect(eb.x, eb.y, 4, 8);
-                    if (Math.abs(eb.x - (playerX + 12)) < 15 && eb.y > 170 && eb.y < 195) {
-                        showResultOverlay(false, "GAME OVER", "Tankmu tertembak musuh!");
-                    }
+                    if (Math.abs(eb.x - (playerX + 12)) < 15 && eb.y > 170 && eb.y < 195) showResultOverlay(false, "GAME OVER", "Tankmu tertembak musuh!");
                 });
 
                 if (score >= targetScore) awardGameWin('tank');
             }, 30);
         }
 
-        // --- REVISED 2: BALL CROSSING (Multi-Row Obstacles per Level) ---
-        function runFroggerCrossing(cvs, ctx, lvl, controls) {
-            document.getElementById('gameTitleDisplay').innerText = "6. Ball Crossing (Multi-Row)"; 
+        function runFroggerCrossing(cvs, ctx, lvl) {
+            document.getElementById('gameTitleDisplay').innerText = "6. Ball Crossing"; 
             let targetScore = 5 + lvl * 2;
             document.getElementById('gameScoreDisplay').innerText = `Target: 0/${targetScore} Seberang`;
             let ballY = 180, ballX = 130, score = 0;
-            controls.innerHTML = `<button onclick="window.moveBallDir(0,-1)" class="px-4 py-1 bg-lime-600 rounded font-bold text-xs">▲ Maju</button><button onclick="window.moveBallDir(-1,0)" class="px-3 py-1 bg-slate-800 rounded text-xs">◀</button><button onclick="window.moveBallDir(1,0)" class="px-3 py-1 bg-slate-800 rounded text-xs">▶</button><button onclick="window.moveBallDir(0,1)" class="px-3 py-1 bg-slate-800 rounded text-xs">▼ Mundur</button>`;
             
-            window.moveBallDir = (dx, dy) => {
-                ballX = Math.max(10, Math.min(270, ballX + dx * 15));
-                ballY = Math.max(10, Math.min(185, ballY + dy * 20));
-                if (ballY <= 15) {
-                    score++; 
-                    document.getElementById('gameScoreDisplay').innerText = `Target: ${score}/${targetScore} Seberang`; 
-                    ballY = 180;
-                }
-            };
+            setupTouchGestures(cvs, (swipe) => {
+                if (swipe === 'UP') ballY = Math.max(10, ballY - 20);
+                if (swipe === 'DOWN') ballY = Math.min(185, ballY + 20);
+                if (swipe === 'LEFT') ballX = Math.max(10, ballX - 15);
+                if (swipe === 'RIGHT') ballX = Math.min(270, ballX + 15);
+                if (ballY <= 15) { score++; document.getElementById('gameScoreDisplay').innerText = `Target: ${score}/${targetScore} Seberang`; ballY = 180; }
+            });
+            cvs.onclick = () => { ballY -= 20; if (ballY <= 15) { score++; document.getElementById('gameScoreDisplay').innerText = `Target: ${score}/${targetScore} Seberang`; ballY = 180; } };
 
-            // Number of rows increases with level (Level 1 = 2 rows, max 6 rows)
-            let rowCount = Math.min(6, 2 + Math.floor(lvl / 2));
-            let rows = [];
+            let rowCount = Math.min(6, 2 + Math.floor(lvl / 2)), rows = [];
             for (let i = 0; i < rowCount; i++) {
-                let yPos = 35 + i * 25;
-                let blocksInRow = [];
-                let countPerLine = 2 + (i % 2);
-                for (let j = 0; j < countPerLine; j++) {
-                    blocksInRow.push({ x: j * (280 / countPerLine), y: yPos, dir: (i % 2 === 0 ? 1 : -1), speed: (1.5 + lvl * 0.4) + (i * 0.2) });
-                }
+                let yPos = 35 + i * 25, blocksInRow = [], countPerLine = 2 + (i % 2);
+                for (let j = 0; j < countPerLine; j++) blocksInRow.push({ x: j * (280 / countPerLine), y: yPos, dir: (i % 2 === 0 ? 1 : -1), speed: (1.5 + lvl * 0.4) + (i * 0.2) });
                 rows.push(blocksInRow);
             }
 
             activeGameLoop = setInterval(() => {
                 ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, cvs.width, cvs.height); 
-                
-                // Draw finish line at top
                 ctx.fillStyle = '#10b981'; ctx.fillRect(0, 10, cvs.width, 5);
-
-                // Draw ball
                 ctx.fillStyle = '#a3e635'; ctx.beginPath(); ctx.arc(ballX, ballY, 7, 0, Math.PI*2); ctx.fill();
 
-                // Update & draw obstacle rows
                 rows.forEach((row) => {
                     row.forEach(b => {
-                        b.x += b.speed * b.dir; 
-                        if (b.x > 280) b.x = -50; 
-                        if (b.x < -50) b.x = 280;
-
+                        b.x += b.speed * b.dir; if (b.x > 280) b.x = -50; if (b.x < -50) b.x = 280;
                         ctx.fillStyle = '#f43f5e'; ctx.fillRect(b.x, b.y, 45, 16);
-
-                        if (Math.abs(ballY - b.y) < 12 && ballX > b.x && ballX < b.x + 45) {
-                            showResultOverlay(false, "GAME OVER", "Tertabrak rintangan balok!");
-                        }
+                        if (Math.abs(ballY - b.y) < 12 && ballX > b.x && ballX < b.x + 45) showResultOverlay(false, "GAME OVER", "Tertabrak rintangan balok!");
                     });
                 });
 
@@ -1456,141 +1484,102 @@
             }, 30);
         }
 
-        // --- REVISED 3: BREAKOUT BALOK (Clear Entire Board Target) ---
-        function runBreakout(cvs, ctx, lvl, controls) {
-            document.getElementById('gameTitleDisplay').innerText = "7. Breakout Balok (Clear Board)"; 
-            let paddleX = 110, ballX = 140, ballY = 140;
-            let ballSpeed = 2.5 + lvl * 0.5;
+        function runBreakout(cvs, ctx, lvl) {
+            document.getElementById('gameTitleDisplay').innerText = "7. Breakout Balok"; 
+            let paddleX = 110, ballX = 140, ballY = 140, ballSpeed = 2.5 + lvl * 0.5;
             let dx = ballSpeed * (Math.random() < 0.5 ? 1 : -1), dy = -ballSpeed; 
             
-            controls.innerHTML = `<button onclick="window.moveBreakoutPaddle(-20)" class="px-4 py-1 bg-slate-800 rounded text-xs">◀ Kiri</button><button onclick="window.moveBreakoutPaddle(20)" class="px-4 py-1 bg-slate-800 rounded text-xs">Kanan ▶</button>`;
-            window.moveBreakoutPaddle = (d) => { paddleX = Math.max(0, Math.min(220, paddleX + d)); };
+            setupTouchGestures(cvs, null, null, (touchX) => { paddleX = Math.max(0, Math.min(220, touchX - 30)); });
             cvs.onclick = (e) => { paddleX = Math.max(0, Math.min(220, e.offsetX - 30)); };
 
-            let brickRows = Math.min(5, 2 + Math.floor(lvl / 2));
-            let brickCols = 6;
-            let bricks = []; 
-            for (let r = 0; r < brickRows; r++) {
-                for (let c = 0; c < brickCols; c++) {
-                    bricks.push({ x: c * 42 + 15, y: r * 16 + 15, active: true });
-                }
-            }
-            let totalBricks = bricks.length;
-            document.getElementById('gameScoreDisplay').innerText = `Sisa: ${totalBricks}/${totalBricks} Balok`;
+            let brickRows = Math.min(5, 2 + Math.floor(lvl / 2)), brickCols = 6, bricks = []; 
+            for (let r = 0; r < brickRows; r++) for (let c = 0; c < brickCols; c++) bricks.push({ x: c * 42 + 15, y: r * 16 + 15, active: true });
+            let totalBricks = bricks.length; document.getElementById('gameScoreDisplay').innerText = `Sisa: ${totalBricks}/${totalBricks} Balok`;
 
             activeGameLoop = setInterval(() => {
                 ballX += dx; ballY += dy;
-                if (ballX < 5 || ballX > 275) dx = -dx; 
-                if (ballY < 5) dy = -dy;
+                if (ballX < 5 || ballX > 275) dx = -dx; if (ballY < 5) dy = -dy;
                 if (ballY > 170 && ballY < 182 && ballX > paddleX && ballX < paddleX + 60) dy = -Math.abs(dy);
 
                 let activeCount = 0;
                 bricks.forEach(b => { 
                     if (b.active) {
                         activeCount++;
-                        if (ballX > b.x && ballX < b.x + 38 && ballY > b.y && ballY < b.y + 12) { 
-                            b.active = false; 
-                            dy = -dy; 
-                        }
+                        if (ballX > b.x && ballX < b.x + 38 && ballY > b.y && ballY < b.y + 12) { b.active = false; dy = -dy; }
                     }
                 });
-
                 document.getElementById('gameScoreDisplay').innerText = `Sisa: ${activeCount}/${totalBricks} Balok`;
 
                 ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, cvs.width, cvs.height); 
                 ctx.fillStyle = '#eab308'; ctx.fillRect(paddleX, 180, 60, 10); 
                 ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(ballX, ballY, 5, 0, Math.PI*2); ctx.fill();
-                
-                bricks.forEach(b => { 
-                    if (b.active) { 
-                        ctx.fillStyle = '#38bdf8'; 
-                        ctx.fillRect(b.x, b.y, 38, 12); 
-                    } 
-                });
+                bricks.forEach(b => { if (b.active) { ctx.fillStyle = '#38bdf8'; ctx.fillRect(b.x, b.y, 38, 12); } });
 
                 if (ballY > 200) showResultOverlay(false, "GAME OVER", "Bola jatuh!"); 
                 if (activeCount === 0) awardGameWin('breakout');
             }, 30);
         }
 
-        // --- REVISED 4: BLOK SHOOTER (Space Shooter vs Alien Fleet) ---
-        function runSpaceShooter(cvs, ctx, lvl, controls) {
+        function runSpaceShooter(cvs, ctx, lvl) {
             document.getElementById('gameTitleDisplay').innerText = "8. Space Alien Shooter"; 
             let targetScore = 3 + lvl * 3;
             document.getElementById('gameScoreDisplay').innerText = `Target: 0/${targetScore} Alien`;
             let shipX = 120, bullets = [], enemyBullets = [], aliens = [], score = 0;
             
-            controls.innerHTML = `<button onclick="window.moveShip(-15)" class="px-3 py-1 bg-slate-800 rounded text-xs">◀</button><button onclick="window.shootShip()" class="px-3 py-1 bg-purple-600 font-bold rounded text-xs">💥 TEMBAK</button><button onclick="window.moveShip(15)" class="px-3 py-1 bg-slate-800 rounded text-xs">▶</button>`;
-            window.moveShip = (d) => { shipX = Math.max(10, Math.min(250, shipX + d)); }; 
-            window.shootShip = () => { bullets.push({x: shipX + 8, y: 170}); };
+            setupTouchGestures(cvs, null, () => { bullets.push({x: shipX + 8, y: 170}); }, (touchX) => {
+                shipX = Math.max(10, Math.min(250, touchX - 10));
+            });
+            cvs.onclick = () => { bullets.push({x: shipX + 8, y: 170}); };
 
             function spawnAlienWave() {
                 aliens = [];
                 let count = Math.min(6, 3 + Math.floor(lvl / 2));
-                for (let i = 0; i < count; i++) {
-                    aliens.push({ x: 25 + i * 40, y: 20 + (i % 2) * 18, dir: 1, speed: 1.0 + lvl * 0.3 });
-                }
+                for (let i = 0; i < count; i++) aliens.push({ x: 25 + i * 40, y: 20 + (i % 2) * 18, dir: 1, speed: 1.0 + lvl * 0.3 });
             }
             spawnAlienWave();
 
             activeGameLoop = setInterval(() => {
                 ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, cvs.width, cvs.height); 
-                
-                // Draw player ship
                 ctx.fillStyle = '#a855f7'; ctx.fillRect(shipX, 175, 20, 15);
                 ctx.fillStyle = '#38bdf8'; ctx.fillRect(shipX + 8, 170, 4, 6);
 
-                // Update & draw alien fleet
-                aliens.forEach((a, ai) => {
+                if (Math.random() < 0.1) bullets.push({x: shipX + 8, y: 170}); // Auto-fire untuk kenyamanan mobile
+
+                aliens.forEach((a) => {
                     a.x += a.speed * a.dir;
-                    if (a.x > 255 || a.x < 10) {
-                        a.dir = -a.dir;
-                        a.y += 8; // Drop down when hitting wall
-                    }
-
-                    // Alien firing lasers back
-                    if (Math.random() < 0.015 + lvl * 0.005) {
-                        enemyBullets.push({ x: a.x + 8, y: a.y + 15 });
-                    }
-
-                    ctx.fillStyle = '#f43f5e'; 
-                    ctx.fillRect(a.x, a.y, 18, 14);
-                    ctx.fillStyle = '#fbbf24';
-                    ctx.fillRect(a.x + 4, a.y + 4, 10, 4);
-
+                    if (a.x > 255 || a.x < 10) { a.dir = -a.dir; a.y += 8; }
+                    if (Math.random() < 0.015 + lvl * 0.005) enemyBullets.push({ x: a.x + 8, y: a.y + 15 });
+                    ctx.fillStyle = '#f43f5e'; ctx.fillRect(a.x, a.y, 18, 14);
                     if (a.y > 155) showResultOverlay(false, "GAME OVER", "Invasi alien mencapai bumi!");
                 });
 
-                // Player bullets
                 bullets.forEach((b, bi) => {
                     b.y -= 8; ctx.fillStyle = '#38bdf8'; ctx.fillRect(b.x, b.y, 3, 8);
                     aliens.forEach((a, ai) => { 
                         if (Math.abs(b.x - a.x) < 18 && Math.abs(b.y - a.y) < 14) { 
-                            aliens.splice(ai, 1); 
-                            bullets.splice(bi, 1); 
-                            score++; 
+                            aliens.splice(ai, 1); bullets.splice(bi, 1); score++; 
                             document.getElementById('gameScoreDisplay').innerText = `Target: ${score}/${targetScore} Alien`; 
                             if (aliens.length === 0) spawnAlienWave();
                         } 
                     });
                 });
 
-                // Enemy lasers hitting player
-                enemyBullets.forEach((eb, ebi) => {
+                enemyBullets.forEach((eb) => {
                     eb.y += 5; ctx.fillStyle = '#ef4444'; ctx.fillRect(eb.x, eb.y, 3, 8);
-                    if (Math.abs(eb.x - (shipX + 10)) < 15 && eb.y > 170 && eb.y < 190) {
-                        showResultOverlay(false, "GAME OVER", "Pesawatmu hancur diserang alien!");
-                    }
+                    if (Math.abs(eb.x - (shipX + 10)) < 15 && eb.y > 170 && eb.y < 190) showResultOverlay(false, "GAME OVER", "Pesawatmu hancur diserang alien!");
                 });
 
                 if (score >= targetScore) awardGameWin('shooter');
             }, 30);
         }
 
-        function runPingPong(cvs, ctx, lvl, controls) {
+        function runPingPong(cvs, ctx, lvl) {
             document.getElementById('gameTitleDisplay').innerText = "9. Ping Pong vs AI"; let targetGoals = lvl; document.getElementById('gameScoreDisplay').innerText = `Gol: 0/${targetGoals}`;
             let pX = 110, aiX = 110, bX = 140, bY = 100, ballSpeed = 3.5 + lvl * 0.6, dx = ballSpeed * (Math.random() < 0.5 ? 1 : -1), dy = ballSpeed, playerGoals = 0;
+            
+            setupTouchGestures(cvs, null, null, (touchX) => { pX = Math.max(0, Math.min(230, touchX - 25)); });
             cvs.onclick = (e) => { pX = Math.max(0, Math.min(230, e.offsetX - 25)); };
+
             activeGameLoop = setInterval(() => {
                 bX += dx; bY += dy;
                 let aiAgility = Math.min(0.98, 0.15 + lvl * 0.08); aiX += (bX - (aiX + 25)) * aiAgility; aiX = Math.max(0, Math.min(230, aiX));
@@ -1605,16 +1594,24 @@
                 }
             }, 30);
         }
-        function runMatch3Color(cvs, ctx, lvl, controls) {
+
+        function runMatch3Color(cvs, ctx, lvl) {
             document.getElementById('gameTitleDisplay').innerText = "10. Color Tetris Match-5"; document.getElementById('gameScoreDisplay').innerText = "Target: 0/10";
             let score = 0, speed = Math.max(70, 320 - lvl * 25);
-            controls.innerHTML = `<button onclick="window.colorTetrisMove(-1)" class="px-3 py-1 bg-slate-800 rounded text-xs">◀ Kiri</button><button onclick="window.colorTetrisRotate()" class="px-3 py-1 bg-teal-600 rounded text-xs font-bold">🔄 Putar</button><button onclick="window.colorTetrisMove(1)" class="px-3 py-1 bg-slate-800 rounded text-xs">Kanan ▶</button>`;
             const cols = 10, rows = 14, size = 12, offsetX = 80; let grid = Array(rows).fill().map(() => Array(cols).fill(null));
             const colorShapes = [ { shape: [[1,1,1,1]], color: '#06b6d4' }, { shape: [[1,1],[1,1]], color: '#eab308' }, { shape: [[0,1,0],[1,1,1]], color: '#a855f7' } ];
             let piece = spawnColorPiece(); function spawnColorPiece() { const p = colorShapes[Math.floor(Math.random() * colorShapes.length)]; return { x: 3, y: 0, shape: p.shape, color: p.color }; }
             function checkCollision(px, py, shape) { for (let r = 0; r < shape.length; r++) { for (let c = 0; c < shape[r].length; c++) { if (shape[r][c]) { let newX = px + c, newY = py + r; if (newX < 0 || newX >= cols || newY >= rows || (newY >= 0 && grid[newY][newX])) return true; } } } return false; }
-            window.colorTetrisMove = (dir) => { if (!checkCollision(piece.x + dir, piece.y, piece.shape)) piece.x += dir; };
-            window.colorTetrisRotate = () => { const rotated = piece.shape[0].map((_, i) => piece.shape.map(row => row[i]).reverse()); if (!checkCollision(piece.x, piece.y, rotated)) piece.shape = rotated; };
+            
+            setupTouchGestures(cvs, (dir) => {
+                if (dir === 'LEFT' && !checkCollision(piece.x - 1, piece.y, piece.shape)) piece.x--;
+                if (dir === 'RIGHT' && !checkCollision(piece.x + 1, piece.y, piece.shape)) piece.x++;
+                if (dir === 'DOWN' && !checkCollision(piece.x, piece.y + 1, piece.shape)) piece.y++;
+            }, () => {
+                const rotated = piece.shape[0].map((_, i) => piece.shape.map(row => row[i]).reverse());
+                if (!checkCollision(piece.x, piece.y, rotated)) piece.shape = rotated;
+            });
+
             function checkMatch5Color() {
                 let matchesFound = false;
                 for (let r = 0; r < rows; r++) {
@@ -1631,6 +1628,7 @@
                 }
                 return matchesFound;
             }
+
             activeGameLoop = setInterval(() => {
                 if (!checkCollision(piece.x, piece.y + 1, piece.shape)) { piece.y++; } else {
                     for (let r = 0; r < piece.shape.length; r++) { for (let c = 0; c < piece.shape[r].length; c++) { if (piece.shape[r][c] && piece.y + r >= 0) grid[piece.y + r][piece.x + c] = piece.color; } }

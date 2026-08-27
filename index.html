@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Rupiah Miner Indonesia v8.8 - Touchscreen Responsive Edition</title>
+    <title>Rupiah Miner Indonesia v8.9 - Leaderboard & Big Screen Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -18,15 +18,33 @@
         .glow-yellow { box-shadow: 0 0 15px rgba(234, 179, 8, 0.4); }
         .spin-slow { animation: spin 3s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
-        /* Mencegah seleksi teks saat swiping di HP */
         canvas { touch-action: none; -webkit-user-select: none; user-select: none; }
+        
+        /* Fullscreen Game Container */
+        .game-fullscreen {
+            position: fixed !important;
+            inset: 0 !important;
+            z-index: 9999 !important;
+            background-color: #020617 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+            align-items: center !important;
+            padding: 1rem !important;
+        }
+        .game-fullscreen canvas {
+            width: 100% !important;
+            max-width: 480px !important;
+            height: auto !important;
+            max-height: 70vh !important;
+        }
     </style>
 </head>
 <body class="bg-slate-950 text-white font-sans min-h-screen flex flex-col pixel-bg selection:bg-red-500 selection:text-white">
 
     <!-- Top Bar Dashboard -->
     <header class="bg-slate-900/90 backdrop-blur-md border-b border-red-900/50 p-4 sticky top-0 z-20">
-        <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-4">
+        <div class="max-w-6xl mx-auto flex flex-wrap justify-between items-center gap-4">
             <div class="flex items-center space-x-3">
                 <div class="w-11 h-11 bg-gradient-to-tr from-red-600 to-amber-500 rounded-xl flex items-center justify-center text-white font-black text-2xl shadow-lg glow-red">
                     <i class="fa-solid fa-rupiah-sign"></i>
@@ -36,13 +54,12 @@
                         <h1 class="font-extrabold text-lg text-red-500 tracking-wide leading-none">Rupiah Miner</h1>
                         <span id="playerBadge" class="bg-amber-500/20 text-amber-400 border border-amber-500/50 text-[10px] font-bold px-2 py-0.5 rounded-full">Penambang MH/s</span>
                     </div>
-                    <span class="text-[11px] text-gray-400">Engine v8.8 Touch Pro</span>
+                    <span class="text-[11px] text-gray-400">Engine v8.9 Big Screen</span>
                 </div>
             </div>
 
             <!-- Stats Bar -->
             <div class="flex flex-wrap items-center gap-2 sm:gap-3 text-sm">
-                <!-- Meteran Listrik / Baterai -->
                 <div class="bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-700/50 flex items-center space-x-2">
                     <i id="powerGridIcon" class="fa-solid fa-bolt text-yellow-400 text-base animate-pulse"></i>
                     <div>
@@ -62,7 +79,6 @@
                     <span id="userNameDisplay" class="font-bold">Masuk / Daftar</span>
                 </button>
 
-                <!-- Hashrate Total Box -->
                 <div class="bg-slate-800/80 px-3 py-1.5 rounded-xl border border-slate-700/50">
                     <span class="text-gray-400 text-[10px] block">Total Hashrate Aktif</span>
                     <span id="totalPower" class="font-mono font-bold text-emerald-400 text-sm sm:text-base">0 MH/s</span>
@@ -73,44 +89,19 @@
                     <span id="coinBalance" class="font-mono font-bold text-yellow-400 text-sm sm:text-base">Rp 0.00000</span>
                 </div>
 
-                <button onclick="playSound('click'); openWithdrawModal()" class="px-3.5 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 active:scale-95 text-white font-bold text-xs rounded-xl shadow-lg shadow-emerald-900/40 transition flex items-center gap-1.5">
-                    <i class="fa-solid fa-wallet"></i> Tarik Saldo
+                <!-- Menggantikan Tombol Tarik Saldo dengan Leaderboard & Hadiah -->
+                <button onclick="playSound('click'); openLeaderboardModal()" class="px-3.5 py-2 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 active:scale-95 text-slate-950 font-black text-xs rounded-xl shadow-lg shadow-amber-900/40 transition flex items-center gap-1.5 glow-gold">
+                    <i class="fa-solid fa-trophy"></i> Leaderboard & Hadiah
                 </button>
             </div>
         </div>
     </header>
 
     <!-- Main Container -->
-    <div class="max-w-7xl mx-auto w-full flex-1 p-2 sm:p-4 flex gap-4">
-        
-        <!-- Left Banner Ad Slot -->
-        <aside class="hidden xl:flex flex-col w-44 space-y-4">
-            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-3 text-center flex-1 flex flex-col justify-between shadow-lg">
-                <div>
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-[9px] text-amber-400 font-bold uppercase tracking-wider">Sponsor Ad</span>
-                        <span class="text-[8px] bg-slate-800 text-gray-400 px-1.5 py-0.5 rounded">Ads by Google</span>
-                    </div>
-                    <div class="bg-gradient-to-tr from-slate-950 via-blue-950/40 to-slate-950 border border-blue-500/30 rounded-xl p-3 space-y-2.5 shadow-inner">
-                        <div class="w-12 h-12 bg-blue-600/20 border border-blue-500/40 rounded-xl mx-auto flex items-center justify-center text-blue-400 text-xl shadow">
-                            <i class="fa-solid fa-mobile-screen-button"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-black text-xs text-white">iPhone 17 Pro Max</h4>
-                            <p class="text-[9px] text-gray-300 mt-0.5">Titanium Design, Chip A19 Pro, & Kamera Studio 48MP.</p>
-                        </div>
-                    </div>
-                </div>
-                <button onclick="playSound('click'); alert('Mengarahkan ke halaman promo resmi iPhone 17 Pro & Max Indonesia!');" class="w-full py-2 bg-blue-600 hover:bg-blue-500 text-white font-bold text-[10px] rounded-xl transition shadow">
-                    ✨ Cek Promo
-                </button>
-            </div>
-        </aside>
+    <div class="max-w-6xl mx-auto w-full flex-1 p-3 sm:p-5">
+        <main class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-        <!-- Center Dashboard -->
-        <main class="flex-1 grid grid-cols-1 md:grid-cols-3 gap-6">
-
-            <!-- Kolom 1 -->
+            <!-- Kolom 1 (Kiri) -->
             <div class="md:col-span-2 space-y-6">
                 
                 <!-- Quick Event Bar -->
@@ -166,8 +157,9 @@
                         <h2 class="font-bold text-gray-200 flex items-center gap-2">
                             <i class="fa-solid fa-server text-red-500"></i> Ruang Server Nusantara
                         </h2>
-                        <button id="claimFreeHashBtn" onclick="playSound('click'); tryClaimFreeHash()" class="text-xs bg-emerald-950 hover:bg-emerald-900 text-emerald-300 px-3 py-1 rounded-full border border-emerald-800 font-mono font-bold transition shadow">
-                            🎁 Gratis Hashrate: 05:00
+                        <!-- Free Hashrate via TikTok Channel -->
+                        <button id="claimFreeHashBtn" onclick="playSound('click'); tryClaimFreeHashTikTok()" class="text-xs bg-emerald-950 hover:bg-emerald-900 text-emerald-300 px-3 py-1.5 rounded-full border border-emerald-800 font-mono font-bold transition shadow flex items-center gap-1.5">
+                            <i class="fa-brands fa-tiktok text-pink-400"></i> <span id="freeHashBtnText">TikTok RupiahMiner: 05:00</span>
                         </button>
                     </div>
 
@@ -189,39 +181,23 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-xl">
-                        <h3 class="font-bold text-sm text-yellow-400 mb-3 flex items-center gap-2"><i class="fa-solid fa-trophy text-amber-400"></i> Leaderboard Server</h3>
-                        <div class="space-y-2 text-xs" id="leaderboardList"></div>
+                <!-- Log Aktivitas -->
+                <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-xl">
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="font-bold text-sm text-gray-300"><i class="fa-solid fa-receipt text-yellow-500 mr-2"></i>Log Aktivitas Server</h3>
+                        <button onclick="resetGameProgress()" class="text-[10px] text-red-400 hover:text-red-300 underline">Reset Data</button>
                     </div>
-                    <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-xl">
-                        <div class="flex justify-between items-center mb-3">
-                            <h3 class="font-bold text-sm text-gray-300"><i class="fa-solid fa-receipt text-yellow-500 mr-2"></i>Log Aktivitas</h3>
-                            <button onclick="resetGameProgress()" class="text-[10px] text-red-400 hover:text-red-300 underline">Reset Data</button>
-                        </div>
-                        <div id="activityLog" class="text-xs font-mono space-y-1.5 max-h-36 overflow-y-auto text-gray-400">
-                            <p class="text-gray-500">[Sistem] Engine v8.8 Touch Active!</p>
-                        </div>
+                    <div id="activityLog" class="text-xs font-mono space-y-1.5 max-h-36 overflow-y-auto text-gray-400">
+                        <p class="text-gray-500">[Sistem] Engine v8.9 Big Screen Ready!</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Kolom 2: Game & Toko -->
+            <!-- Kolom 2: Game & Toko (Kanan) -->
             <div class="space-y-6">
-                <!-- Arcade Hub -->
+                <!-- Arcade Hub & Screen Resizer -->
                 <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-xl">
-                    <div class="mb-4 bg-gradient-to-r from-amber-600/30 to-yellow-600/30 border border-yellow-500/50 p-3 rounded-xl flex items-center justify-between glow-gold">
-                        <div>
-                            <span class="text-[10px] font-bold bg-yellow-500 text-slate-950 px-1.5 py-0.5 rounded">BOOST HASHRATE</span>
-                            <h4 class="font-bold text-xs text-yellow-300 mt-1">Nonton Video (+300 MH/s)</h4>
-                            <p id="adCooldownSubtitle" class="text-[10px] text-gray-300">Cooldown: 30 Menit</p>
-                        </div>
-                        <button id="boostAdBtn" onclick="playSound('click'); watchRewardAd()" class="px-3 py-2 bg-yellow-500 hover:bg-yellow-400 active:scale-95 text-slate-950 font-bold text-xs rounded-lg transition shadow-lg flex items-center gap-1.5 flex-shrink-0">
-                            <i class="fa-solid fa-circle-play text-sm"></i> <span id="boostAdBtnText">Tonton</span>
-                        </button>
-                    </div>
-
-                    <div class="flex justify-between items-center mb-3 border-t border-slate-800 pt-3">
+                    <div class="flex justify-between items-center mb-3">
                         <h2 class="font-bold text-gray-200 flex items-center gap-2 text-sm"><i class="fa-solid fa-gamepad text-emerald-400"></i> 10 Arcade Mini-Games</h2>
                         <button onclick="playSound('click'); closeActiveGame()" id="backToMenuBtn" class="hidden text-xs bg-red-900/80 hover:bg-red-800 text-red-200 px-2.5 py-1 rounded-lg border border-red-700 transition"><i class="fa-solid fa-xmark mr-1"></i> Keluar</button>
                     </div>
@@ -239,14 +215,21 @@
                         <button onclick="playSound('click'); startArcadeGame('match3')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-border-all text-teal-400 text-base"></i><div><h4 class="font-bold text-gray-200">10. Color Tetris Match-5</h4><p class="text-[9px] text-gray-400">Usap / Tap Layar (+5 TH/s)</p></div></div><span id="lvl_match3" class="text-[10px] font-bold text-teal-400 bg-teal-950/60 border border-teal-800 px-2 py-0.5 rounded">Lvl 1</span></button>
                     </div>
 
+                    <!-- Active Game Area (Layar Diperbesar) -->
                     <div id="activeGameArea" class="hidden text-center space-y-3 pt-2 relative">
                         <div class="flex justify-between items-center text-xs bg-slate-950 p-2.5 rounded-xl border border-slate-800">
                             <span id="gameTitleDisplay" class="font-bold text-yellow-400">Judul Game</span>
                             <span id="gameScoreDisplay" class="font-mono text-emerald-400 font-bold">Target: 0/10</span>
-                            <span id="gameLevelDisplay" class="font-bold text-purple-400">Level 1</span>
+                            
+                            <!-- Tombol Toggle Fullscreen / Perbesar Layar -->
+                            <button onclick="toggleGameFullscreen()" class="px-2.5 py-1 bg-cyan-950 hover:bg-cyan-900 border border-cyan-700 text-cyan-300 rounded-lg text-[10px] font-bold transition flex items-center gap-1">
+                                <i class="fa-solid fa-expand"></i> <span id="fullscreenBtnText">Layar Penuh</span>
+                            </button>
                         </div>
-                        <div class="relative inline-block mx-auto">
-                            <canvas id="mainGameCanvas" width="280" height="200" class="bg-slate-950 border-2 border-slate-700 rounded-xl shadow-inner cursor-pointer"></canvas>
+
+                        <div id="gameCanvasWrapper" class="relative inline-block mx-auto w-full flex justify-center">
+                            <canvas id="mainGameCanvas" width="340" height="240" class="bg-slate-950 border-2 border-slate-700 rounded-xl shadow-inner cursor-pointer w-full max-w-[340px] h-auto"></canvas>
+                            
                             <div id="gameOverlay" class="absolute inset-0 bg-slate-950/90 backdrop-blur-sm rounded-xl flex flex-col items-center justify-center p-4 hidden z-10">
                                 <h3 id="overlayResultTitle" class="text-lg font-black mb-1">GAME OVER</h3>
                                 <p id="overlayResultSub" class="text-xs text-gray-300 mb-4">Target tidak tercapai.</p>
@@ -256,11 +239,10 @@
                                 </div>
                             </div>
                         </div>
+
                         <div id="touchGuideNotice" class="text-[10px] text-cyan-400 font-bold bg-slate-950 p-2 rounded-xl border border-cyan-900/50">
                             💡 Usap (Swipe) / Sentuh Layar Game untuk Mengontrol
                         </div>
-                        <div id="gameControlsContainer" class="flex justify-center gap-2 hidden"></div>
-                        <p id="gameMessageDisplay" class="text-xs text-amber-400 font-semibold h-4"></p>
                     </div>
                 </div>
 
@@ -314,7 +296,7 @@
                         <div class="bg-slate-950 p-2.5 rounded-xl border border-yellow-500/60 flex items-center justify-between glow-gold">
                             <div class="flex items-center space-x-3">
                                 <div class="w-14 h-14 flex-shrink-0">
-                                    <svg class="w-full h-full drop-shadow" viewBox="0 0 100 100"><polygon points="50,5 95,25 95,75 50,95 5,75 5,25" fill="#1c1917" stroke="#fbbf24" stroke-width="3"/><polygon points="50,15 80,30 80,70 50,85 20,70 20,30" fill="#422006"/><circle cx="50" cy="50" r="15" fill="#f59e0b" class="animate-pulse"/><circle cx="50" cy="50" r="8" fill="#fffbeb"/><rect x="10" y="80" width="80" height="12" rx="3" fill="#fbbf24"/><text x="50" y="89" font-size="7" fill="#1c1917" font-family="monospace" font-weight="900" text-anchor="middle">RAKYAT SEJAHTERA</text></svg>
+                                    <svg class="w-full h-full drop-shadow" viewBox="0 0 100 100"><polygon points="50,5 95,25 95,75 50,95 5,25" fill="#1c1917" stroke="#fbbf24" stroke-width="3"/><polygon points="50,15 80,30 80,70 50,85 20,70 20,30" fill="#422006"/><circle cx="50" cy="50" r="15" fill="#f59e0b" class="animate-pulse"/><circle cx="50" cy="50" r="8" fill="#fffbeb"/><rect x="10" y="80" width="80" height="12" rx="3" fill="#fbbf24"/><text x="50" y="89" font-size="7" fill="#1c1917" font-family="monospace" font-weight="900" text-anchor="middle">RAKYAT SEJAHTERA</text></svg>
                                 </div>
                                 <div><h4 class="font-bold text-xs text-yellow-300">Rig RAKYAT SEJAHTERA</h4><p class="text-[9px] text-gray-300">+10.000 MH/s (10 GH/s)</p><p class="text-xs text-emerald-300 font-bold mt-0.5">Rp 50.000</p></div>
                             </div>
@@ -325,35 +307,69 @@
 
             </div>
         </main>
-
-        <!-- Right Banner Ad Slot -->
-        <aside class="hidden xl:flex flex-col w-44 space-y-4">
-            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-3 text-center flex-1 flex flex-col justify-between shadow-lg">
-                <div>
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-[9px] text-amber-400 font-bold uppercase tracking-wider">Sponsor Ad</span>
-                        <span class="text-[8px] bg-slate-800 text-gray-400 px-1.5 py-0.5 rounded">Ads by Google</span>
-                    </div>
-                    <div class="bg-gradient-to-tr from-slate-950 via-purple-950/40 to-slate-950 border border-purple-500/30 rounded-xl p-3 space-y-2.5 shadow-inner">
-                        <div class="w-12 h-12 bg-purple-600/20 border border-purple-500/40 rounded-xl mx-auto flex items-center justify-center text-purple-400 text-xl shadow">
-                            <i class="fa-solid fa-gamepad"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-black text-xs text-white">Gaming Pro Gear</h4>
-                            <p class="text-[9px] text-gray-300 mt-0.5">Headset & Keyboard Mechanical RGB Low Latency.</p>
-                        </div>
-                    </div>
-                </div>
-                <button onclick="playSound('click'); alert('Membuka toko partner Gaming Pro Gear!');" class="w-full py-2 bg-purple-600 hover:bg-purple-500 text-white font-bold text-[10px] rounded-xl transition shadow">
-                    🎮 Lihat Penawaran
-                </button>
-            </div>
-        </aside>
     </div>
 
     <!-- Modals -->
 
-    <!-- Modal Offline Earnings Report -->
+    <!-- Modal Leaderboard & Hadiah ShopeePay -->
+    <div id="leaderboardModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-slate-900 border border-amber-500/50 rounded-2xl max-w-2xl w-full p-6 shadow-2xl relative space-y-4 max-h-[90vh] flex flex-col glow-gold">
+            <button onclick="playSound('click'); closeLeaderboardModal()" class="absolute right-4 top-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            
+            <div class="flex items-center space-x-3 border-b border-slate-800 pb-3">
+                <div class="w-10 h-10 bg-amber-500/20 border border-amber-500/50 rounded-xl flex items-center justify-center text-amber-400 text-xl shadow">
+                    <i class="fa-solid fa-trophy"></i>
+                </div>
+                <div>
+                    <h3 class="font-black text-base text-white">Leaderboard & Reward ShopeePay</h3>
+                    <p class="text-xs text-gray-400">Peringkat 1 s/d 20 Penambang Teratas Server</p>
+                </div>
+            </div>
+
+            <!-- Pengumuman Penukaran Koin -->
+            <div class="bg-amber-950/40 border border-amber-500/50 p-3 rounded-xl text-xs space-y-1">
+                <div class="flex items-center gap-1.5 text-amber-300 font-bold">
+                    <i class="fa-solid fa-circle-info"></i> INFO PENUKARAN KOIN RUPIAH
+                </div>
+                <p class="text-[11px] text-gray-300 leading-relaxed">
+                    Saat ini fitur penukaran Koin Rupiah ke e-wallet (GoPay, ShopeePay, DANA) <b>belum dibuka</b>. Harap menunggu informasi di update berikutnya!
+                </p>
+            </div>
+
+            <!-- Posisi Peringkat Pemain Saat Ini -->
+            <div id="myRankBox" class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex justify-between items-center text-xs">
+                <div>
+                    <span class="text-gray-400 block text-[10px]">Posisi Kamu Saat Ini:</span>
+                    <span id="myRankNumberDisplay" class="font-bold text-amber-400 text-sm">Peringkat #--</span>
+                </div>
+                <div class="text-right font-mono">
+                    <span id="myRankPowerDisplay" class="text-emerald-400 font-bold block">0 MH/s</span>
+                    <span id="myRankCoinDisplay" class="text-yellow-400 text-[11px]">Rp 0.000</span>
+                </div>
+            </div>
+
+            <!-- Daftar Hadiah ShopeePay -->
+            <div class="space-y-2">
+                <h4 class="font-bold text-xs text-gray-300 flex items-center gap-1.5"><i class="fa-solid fa-gift text-pink-400"></i> Skema Hadiah ShopeePay Top 20:</h4>
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-[11px] font-mono">
+                    <div class="bg-slate-950 p-2 rounded-lg border border-amber-500/40 text-amber-300 font-bold">🥇 Juara 1: <span>Rp 100.000</span></div>
+                    <div class="bg-slate-950 p-2 rounded-lg border border-slate-700 text-gray-200">🥈 Juara 2: <span class="text-amber-300 font-bold">Rp 75.000</span></div>
+                    <div class="bg-slate-950 p-2 rounded-lg border border-slate-700 text-gray-200">🥉 Juara 3: <span class="text-amber-300 font-bold">Rp 50.000</span></div>
+                    <div class="bg-slate-950 p-2 rounded-lg border border-slate-700 text-gray-300">4. Juara 4: <span class="text-emerald-400 font-bold">Rp 35.000</span></div>
+                    <div class="bg-slate-950 p-2 rounded-lg border border-slate-700 text-gray-300">5. Juara 5: <span class="text-emerald-400 font-bold">Rp 25.000</span></div>
+                    <div class="bg-slate-950 p-2 rounded-lg border border-slate-700 text-gray-400">6-20. Juara 6-20: <span class="text-emerald-400 font-bold">Rp 10.000</span></div>
+                </div>
+            </div>
+
+            <!-- Tabel Peringkat Top 1 s/d 20 -->
+            <div class="flex-1 overflow-y-auto pr-1">
+                <h4 class="font-bold text-xs text-gray-300 mb-2"><i class="fa-solid fa-ranking-star text-yellow-400 mr-1"></i> Peringkat 1 - 20 Teratas:</h4>
+                <div id="fullLeaderboardList" class="space-y-1.5 text-xs"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Offline Earnings -->
     <div id="offlineModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-slate-900 border border-emerald-500/50 rounded-2xl max-w-sm w-full p-6 shadow-2xl relative text-center space-y-4 glow-gold">
             <div class="w-12 h-12 bg-emerald-950 border border-emerald-500 text-emerald-400 rounded-2xl flex items-center justify-center mx-auto text-xl shadow-lg"><i class="fa-solid fa-moon"></i></div>
@@ -392,7 +408,7 @@
         </div>
     </div>
 
-    <!-- Modal Listrik & Stasiun Baterai -->
+    <!-- Modal Stasiun Baterai -->
     <div id="powerModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-slate-900 border border-yellow-500/50 rounded-2xl max-w-sm w-full p-6 shadow-2xl relative space-y-4 glow-yellow">
             <button onclick="playSound('click'); closePowerModal()" class="absolute right-4 top-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
@@ -400,7 +416,6 @@
             <div class="text-center"><h3 class="font-bold text-base text-white">Stasiun Baterai & Panel Surya</h3></div>
             
             <div class="space-y-2.5 text-xs max-h-[320px] overflow-y-auto pr-1">
-                <!-- Klaim Baterai di Stasiun -->
                 <div class="bg-slate-950 p-3 rounded-xl border border-yellow-500/40 flex items-center justify-between">
                     <div><h4 class="font-bold text-yellow-300">Klaim Stasiun Baterai</h4><p class="text-[9px] text-gray-400">Isi ulang daya baterai secara manual</p></div>
                     <button onclick="playSound('click'); claimStationBattery()" class="px-3 py-1.5 bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-bold text-xs rounded-lg transition shadow">Klaim 100%</button>
@@ -408,7 +423,6 @@
                 <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between"><div><h4 class="font-bold text-emerald-400">Token Standar (+50%)</h4><p class="text-[10px] text-gray-400">Rp 2.500</p></div><button onclick="playSound('click'); buyElectricity('coin', 2500, 50)" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-lg transition">Beli</button></div>
                 <div class="bg-slate-950 p-3 rounded-xl border border-amber-500/50 flex items-center justify-between"><div><h4 class="font-bold text-amber-300">Token Sultan (+100% Full)</h4><p class="text-[10px] text-gray-400">Rp 5.000</p></div><button onclick="playSound('click'); buyElectricity('coin', 5000, 100)" class="px-3 py-1.5 bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-950 font-black text-xs rounded-lg transition shadow-lg">Beli Full</button></div>
                 
-                <!-- Upgrade Panel Surya & Efisiensi (Permanen) -->
                 <div class="border-t border-slate-800 pt-2 space-y-2">
                     <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex items-center justify-between">
                         <div><h4 id="solarLevelText" class="font-bold text-cyan-400">Panel Surya Otomatis (Lvl 0)</h4><p class="text-[9px] text-gray-400">Isi baterai pasif +0.02%/dtk (Permanen)</p></div>
@@ -437,38 +451,6 @@
         </div>
     </div>
 
-    <!-- Modal Iklan Sponsor (10 Detik) -->
-    <div id="adModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-slate-900 border border-yellow-500/50 rounded-2xl max-w-sm w-full p-5 shadow-2xl relative text-center space-y-4">
-            <div class="flex justify-between items-center border-b border-slate-800 pb-2">
-                <span class="text-[10px] bg-yellow-500 text-slate-950 font-bold px-2 py-0.5 rounded">IKLAN SPONSOR (Wajib 10 Detik)</span>
-                <span id="adTimerText" class="text-xs font-mono font-bold text-yellow-400">Selesai dalam: 10s</span>
-            </div>
-            <div class="bg-slate-950 rounded-xl h-44 flex flex-col items-center justify-center relative overflow-hidden border border-slate-800 p-4 space-y-2">
-                <div class="w-12 h-12 bg-blue-600/20 rounded-2xl flex items-center justify-center text-blue-400 text-2xl border border-blue-500/30">
-                    <i class="fa-solid fa-mobile-screen-button"></i>
-                </div>
-                <h3 class="font-black text-xs text-white">Promo Spesial: iPhone 17 Pro Max</h3>
-                <p class="text-[10px] text-gray-400">Saksikan video sponsor ini sampai selesai untuk mendapatkan reward gratis hashrate.</p>
-                <div class="absolute bottom-0 left-0 right-0 h-1.5 bg-slate-800">
-                    <div id="adProgressBar" class="h-full bg-yellow-500 w-0 transition-all duration-1000"></div>
-                </div>
-            </div>
-            <button id="claimAdBtn" disabled class="w-full py-2.5 bg-gray-800 text-gray-500 font-bold text-xs rounded-xl cursor-not-allowed">Menonton iklan (10s)...</button>
-        </div>
-    </div>
-
-    <!-- Modal PIN -->
-    <div id="pinModal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-slate-900 border border-emerald-500/50 rounded-2xl max-w-sm w-full p-6 shadow-2xl text-center space-y-4 relative">
-            <button onclick="playSound('click'); closePinModal()" class="absolute right-4 top-4 text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
-            <div class="w-12 h-12 bg-emerald-950 border border-emerald-500 text-emerald-400 rounded-2xl flex items-center justify-center mx-auto text-xl shadow-lg"><i class="fa-solid fa-lock"></i></div>
-            <div><h3 class="font-bold text-base text-white">Masukkan PIN Transaksi</h3></div>
-            <div><input type="password" id="pinInput" maxlength="6" placeholder="******" class="w-48 text-center text-2xl font-mono tracking-widest p-3 bg-slate-950 border border-slate-700 rounded-xl focus:border-emerald-500 focus:outline-none text-emerald-400 font-bold"></div>
-            <button onclick="playSound('click'); confirmPinAction()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 font-bold text-white text-xs rounded-xl transition shadow-lg">Konfirmasi & Kirim WD</button>
-        </div>
-    </div>
-
     <!-- Modal Referral -->
     <div id="referralModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-slate-900 border border-red-500/40 rounded-2xl max-w-md w-full p-6 shadow-2xl relative space-y-4">
@@ -486,7 +468,6 @@
                 <p class="text-[10px] text-emerald-400">Dapatkan <b>Rp 1.000 Koin Rupiah + 100 MH/s</b> setiap teman mendaftar!</p>
             </div>
 
-            <!-- Input Klaim Kode Teman -->
             <div class="space-y-2 border-t border-slate-800 pt-3">
                 <label class="text-xs text-gray-300 font-semibold block">Punya Kode Referral Teman?</label>
                 <div class="flex gap-2">
@@ -495,7 +476,6 @@
                 </div>
             </div>
 
-            <!-- Daftar Teman Terundang -->
             <div class="border-t border-slate-800 pt-3 space-y-2">
                 <div class="flex justify-between items-center text-xs">
                     <span class="font-bold text-gray-300">Daftar Teman Diundang:</span>
@@ -521,24 +501,9 @@
         </div>
     </div>
 
-    <!-- Modal Withdraw -->
-    <div id="withdrawModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-slate-900 border border-emerald-500/40 rounded-2xl max-w-sm w-full p-6 shadow-2xl relative">
-            <div class="flex justify-between items-center border-b border-slate-800 pb-3 mb-4"><h3 class="font-bold text-base text-white flex items-center gap-2"><i class="fa-solid fa-money-bill-transfer text-emerald-400"></i> Penarikan Saldo Cuan</h3><button onclick="playSound('click'); closeWithdrawModal()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button></div>
-            <div class="space-y-3.5 text-xs">
-                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex justify-between items-center"><span class="text-gray-400">Saldo Tersedia:</span><span id="wdBalanceDisplay" class="font-mono font-bold text-yellow-400 text-sm">Rp 0</span></div>
-                <div><label class="text-gray-400 block mb-1">Metode Penarikan</label><select id="wdMethodSelect" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white"><option value="DANA">DANA E-Wallet</option><option value="GoPay">GoPay</option><option value="OVO">OVO</option><option value="ShopeePay">ShopeePay</option><option value="QRIS">QRIS Instant Transfer</option></select></div>
-                <div><label class="text-gray-400 block mb-1">Nomor Tujuan</label><input type="text" id="wdNumberInput" placeholder="081234567890" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white"></div>
-                <div><label class="text-gray-400 block mb-1">Nominal (Rp)</label><input type="number" id="wdAmountInput" placeholder="Min Rp 50.000" class="w-full p-2.5 bg-slate-950 border border-slate-800 rounded-xl text-white font-mono"></div>
-                <button onclick="playSound('click'); processWithdraw()" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 font-bold text-white rounded-xl transition shadow-lg">Lanjut Verifikasi PIN (2FA)</button>
-            </div>
-        </div>
-    </div>
 
-
-    <!-- FULL JAVASCRIPT ENGINE v8.8 -->
+    <!-- FULL JAVASCRIPT ENGINE v8.9 -->
     <script>
-        // --- WEB AUDIO API 8-BIT SOUND UTILITY ---
         let audioCtx = null;
         function playSound(type) {
             try {
@@ -578,7 +543,6 @@
         };
         let coinBalance = 0, freeHashTimerSec = 300, minersPurchased = [], activeGameLoop = null, currentArcadeKey = null;
         let electricityLevel = 100;
-        let lastBoostAdTime = 0;
 
         let solarPanelLevel = 0; 
         let batteryEfficiencyLevel = 1;
@@ -612,7 +576,7 @@
             'Rig MPR': `<svg class="w-full h-full drop-shadow" viewBox="0 0 100 100"><rect x="10" y="10" width="80" height="80" rx="5" fill="#172554" stroke="#3b82f6" stroke-width="2"/><rect x="15" y="15" width="70" height="15" rx="2" fill="#1e3a8a"/><rect x="15" y="35" width="70" height="15" rx="2" fill="#1e3a8a"/><rect x="15" y="55" width="70" height="15" rx="2" fill="#1e3a8a"/><circle cx="22" cy="22.5" r="2" fill="#60a5fa" class="animate-ping"/><circle cx="22" cy="42.5" r="2" fill="#60a5fa" class="animate-pulse"/><circle cx="22" cy="62.5" r="2" fill="#60a5fa" class="animate-ping"/><rect x="15" y="75" width="70" height="12" rx="2" fill="#3b82f6"/><text x="50" y="84" font-size="8" fill="#172554" font-family="monospace" font-weight="900" text-anchor="middle">RIG MPR</text></svg>`,
             'Rig GARUDA': `<svg class="w-full h-full drop-shadow" viewBox="0 0 100 100"><path d="M10 50 Q 5 30 25 15 Q 15 35 30 40 Z" fill="#d97706"/><path d="M90 50 Q 95 30 75 15 Q 85 35 70 40 Z" fill="#d97706"/><rect x="25" y="20" width="50" height="70" rx="6" fill="#451a03" stroke="#f59e0b" stroke-width="2"/><rect x="30" y="25" width="40" height="25" rx="3" fill="#78350f"/><circle cx="50" cy="37" r="9" fill="#451a03" stroke="#fbbf24" stroke-width="2"/><path d="M50 28 L50 46 M41 37 L59 37 M44 31 L56 43 M44 43 L56 31" stroke="#fef3c7" stroke-width="1" class="spin-slow" style="transform-origin: 50px 37px;"/><rect x="15" y="65" width="70" height="15" rx="4" fill="#f59e0b"/><text x="50" y="75" font-size="8" fill="#451a03" font-family="monospace" font-weight="900" text-anchor="middle">RIG GARUDA</text></svg>`,
             'Rig MERAH PUTIH': `<svg class="w-full h-full drop-shadow" viewBox="0 0 100 100"><rect x="15" y="10" width="70" height="80" rx="8" fill="#0f172a" stroke="#cbd5e1" stroke-width="2"/><rect x="20" y="15" width="60" height="30" rx="4" fill="#991b1b" stroke="#ef4444" stroke-width="1"/><rect x="20" y="50" width="60" height="30" rx="4" fill="#e2e8f0" stroke="#ffffff" stroke-width="1"/><circle cx="50" cy="30" r="10" fill="#450a0a" class="animate-spin" style="transform-origin: 50px 30px; stroke-dasharray: 4 4; stroke: #ef4444;"/><circle cx="50" cy="65" r="10" fill="#94a3b8" class="animate-spin" style="transform-origin: 50px 65px; stroke-dasharray: 4 4; stroke: #94a3b8; animation-direction: reverse;"/><rect x="10" y="44" width="80" height="12" rx="3" fill="#f8fafc" stroke="#dc2626" stroke-width="2"/><text x="50" y="52" font-size="7.5" fill="#dc2626" font-family="monospace" font-weight="900" text-anchor="middle">MERAH PUTIH</text></svg>`,
-            'Rig RAKYAT SEJAHTERA': `<svg class="w-full h-full drop-shadow" viewBox="0 0 100 100"><polygon points="50,5 95,25 95,75 50,95 5,75 5,25" fill="#1c1917" stroke="#fbbf24" stroke-width="3"/><polygon points="50,15 80,30 80,70 50,85 20,70 20,30" fill="#422006"/><circle cx="50" cy="50" r="15" fill="#f59e0b" class="animate-pulse"/><circle cx="50" cy="50" r="8" fill="#fffbeb"/><rect x="10" y="80" width="80" height="12" rx="3" fill="#fbbf24"/><text x="50" y="89" font-size="7" fill="#1c1917" font-family="monospace" font-weight="900" text-anchor="middle">RAKYAT SEJAHTERA</text></svg>`
+            'Rig RAKYAT SEJAHTERA': `<svg class="w-full h-full drop-shadow" viewBox="0 0 100 100"><polygon points="50,5 95,25 95,75 50,95 5,25" fill="#1c1917" stroke="#fbbf24" stroke-width="3"/><polygon points="50,15 80,30 80,70 50,85 20,70 20,30" fill="#422006"/><circle cx="50" cy="50" r="15" fill="#f59e0b" class="animate-pulse"/><circle cx="50" cy="50" r="8" fill="#fffbeb"/><rect x="10" y="80" width="80" height="12" rx="3" fill="#fbbf24"/><text x="50" y="89" font-size="7" fill="#1c1917" font-family="monospace" font-weight="900" text-anchor="middle">RAKYAT SEJAHTERA</text></svg>`
         };
 
         function getRigPowerTotal() { return minersPurchased.reduce((sum, m) => sum + m.powerBonus, 0); }
@@ -653,14 +617,14 @@
             userData.lastSaveTimestamp = Date.now();
             const dataToSave = { 
                 userData, coinBalance, freePowerLogs, gamePowerLogs, invitedFriends, 
-                minersPurchased, gameLevels, electricityLevel, lastBoostAdTime, 
+                minersPurchased, gameLevels, electricityLevel, 
                 solarPanelLevel, batteryEfficiencyLevel, achievements, gamesWonCount 
             };
-            localStorage.setItem('RupiahMinerProgress_v88', JSON.stringify(dataToSave));
+            localStorage.setItem('RupiahMinerProgress_v89', JSON.stringify(dataToSave));
         }
 
         function loadGameData() {
-            const savedData = localStorage.getItem('RupiahMinerProgress_v88');
+            const savedData = localStorage.getItem('RupiahMinerProgress_v89');
             if (savedData) {
                 try {
                     const parsed = JSON.parse(savedData);
@@ -672,7 +636,6 @@
                     minersPurchased = parsed.minersPurchased || [];
                     gameLevels = parsed.gameLevels || gameLevels;
                     electricityLevel = parsed.electricityLevel !== undefined ? parsed.electricityLevel : 100;
-                    lastBoostAdTime = parsed.lastBoostAdTime || 0;
                     solarPanelLevel = parsed.solarPanelLevel || 0;
                     batteryEfficiencyLevel = parsed.batteryEfficiencyLevel || 1;
                     achievements = parsed.achievements || achievements;
@@ -681,7 +644,6 @@
                     if (!userData.myRefCode) userData.myRefCode = "CUAN-" + Math.floor(1000 + Math.random() * 9000);
                     if (userData.isRegistered) {
                         document.getElementById('userNameDisplay').innerText = userData.name;
-                        document.getElementById('wdNumberInput').value = userData.phone;
                     }
 
                     const now = Date.now();
@@ -707,7 +669,7 @@
                 saveGameData();
             }
 
-            checkMidnightGameReset(); checkAttendanceStreakReset(); updateUI(); renderMiners(); updateLevelBadges(); checkDailyStatus(); renderLeaderboard(); drawWheel(0); renderInvitedFriends(); updatePowerUpgradesUI();
+            checkMidnightGameReset(); checkAttendanceStreakReset(); updateUI(); renderMiners(); updateLevelBadges(); checkDailyStatus(); drawWheel(0); renderInvitedFriends(); updatePowerUpgradesUI();
         }
 
         function showOfflineEarnings(sec, coin) {
@@ -719,7 +681,7 @@
         }
         function closeOfflineModal() { document.getElementById('offlineModal').classList.add('hidden'); }
 
-        function resetGameProgress() { if (confirm("Reset semua data?")) { localStorage.removeItem('RupiahMinerProgress_v88'); location.reload(); } }
+        function resetGameProgress() { if (confirm("Reset semua data game?")) { localStorage.removeItem('RupiahMinerProgress_v89'); location.reload(); } }
         function addLog(msg) {
             const logBox = document.getElementById('activityLog');
             const p = document.createElement('p'); p.innerText = `[${new Date().toLocaleTimeString('id-ID')}] ${msg}`;
@@ -750,14 +712,15 @@
                 const banner = document.getElementById('powerOutageBanner');
                 if (electricityLevel <= 0) { banner.classList.remove('hidden'); } else { banner.classList.add('hidden'); freeHashTimerSec--; }
 
+                const freeBtnText = document.getElementById('freeHashBtnText');
                 if (freeHashTimerSec <= 0) {
                     document.getElementById('claimFreeHashBtn').classList.add('animate-bounce');
-                    document.getElementById('claimFreeHashBtn').innerText = "🎁 KLAIM GRATIS SEKARANG!";
+                    if (freeBtnText) freeBtnText.innerText = "🎁 TIKTOK RUPIAHMINER (SIAP KLAIM!)";
                 } else {
                     const mins = Math.floor(freeHashTimerSec / 60), secs = freeHashTimerSec % 60;
                     document.getElementById('claimFreeHashBtn').classList.remove('animate-bounce');
-                    document.getElementById('claimFreeHashBtn').innerText = electricityLevel > 0 ? 
-                        `🎁 Gratis Hashrate: ${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}` : `PAUSED (Baterai Habis)`;
+                    if (freeBtnText) freeBtnText.innerText = electricityLevel > 0 ? 
+                        `TikTok RupiahMiner: ${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}` : `PAUSED (Baterai Habis)`;
                 }
 
                 updateUI();
@@ -765,20 +728,22 @@
             }, 1000);
         }
 
-        function tryClaimFreeHash() {
+        // FREE HASHRATE VIA TIKTOK CHANNEL
+        function tryClaimFreeHashTikTok() {
             if (freeHashTimerSec > 0) {
                 alert(`Tunggu ${Math.floor(freeHashTimerSec/60)}m ${freeHashTimerSec%60}s lagi untuk klaim Free Hashrate berikutnya!`);
                 return;
             }
-            openAdModalForAction(10, () => {
-                const freeBonus = 100;
-                addFreePower(freeBonus);
-                freeHashTimerSec = 300; 
-                updateUI(); saveGameData();
-                playSound('win');
-                alert(`Berhasil! +${freeBonus} MH/s ditambahkan ke Free Hash (Aktif 1x24 jam).`);
-                addLog(`[FREE HASHRATE] Berhasil klaim +100 MH/s.`);
-            });
+            // Buka TikTok di Tab Baru
+            window.open("https://www.tiktok.com/@iciti.id/video/7677897224197541138?is_from_webapp=1&sender_device=pc", "_blank");
+            
+            const freeBonus = 150;
+            addFreePower(freeBonus);
+            freeHashTimerSec = 300; 
+            updateUI(); saveGameData();
+            playSound('win');
+            alert(`Terima kasih sudah berkunjung ke TikTok RupiahMiner! +${freeBonus} MH/s berhasil ditambahkan (Aktif 1x24 jam).`);
+            addLog(`[FREE HASHRATE] Berhasil klaim +150 MH/s dari TikTok Channel.`);
         }
 
         function updateUI() {
@@ -805,15 +770,84 @@
             else { badge.innerText = "Penambang MH/s"; badge.className = "bg-red-500/20 text-red-400 border border-red-500/50 text-[10px] font-bold px-2 py-0.5 rounded-full"; }
         }
 
-        function renderLeaderboard() {
-            const list = document.getElementById('leaderboardList');
-            const topPlayers = [ { name: "Sultan Jakarta", power: "2.45 GH/s", avatar: "🥇" }, { name: "Raja Cuan Bali", power: "1.80 GH/s", avatar: "🥈" }, { name: userData.name || "Kamu (Pemain)", power: formatHashrate(getTotalPower()), avatar: "🎗️" } ];
-            list.innerHTML = "";
-            topPlayers.forEach(p => {
-                const item = document.createElement('div');
-                item.className = "p-2 bg-slate-950 rounded-xl border border-slate-800 flex justify-between items-center";
-                item.innerHTML = `<div class="flex items-center space-x-2"><span>${p.avatar}</span><span class="font-bold text-gray-200">${p.name}</span></div><span class="font-mono text-emerald-400 font-bold">${p.power}</span>`;
-                list.appendChild(item);
+        // LEADERBOARD MODAL FUNCTIONALITY (TOP 1 s/d 20)
+        function openLeaderboardModal() {
+            renderFullLeaderboard();
+            document.getElementById('leaderboardModal').classList.remove('hidden');
+        }
+        function closeLeaderboardModal() {
+            document.getElementById('leaderboardModal').classList.add('hidden');
+        }
+
+        function renderFullLeaderboard() {
+            const myPower = getTotalPower();
+            const myCoin = coinBalance;
+            const myName = userData.name || "Kamu (Pemain)";
+
+            // Data simulasi penambang lain di server
+            let mockPlayers = [
+                { name: "Sultan_Jakarta", power: 1250000, coin: 45000 },
+                { name: "RajaCuan_Bali", power: 980000, coin: 38200 },
+                { name: "Miner_Bandung", power: 750000, coin: 29000 },
+                { name: "Gamer_Surabaya", power: 520000, coin: 21500 },
+                { name: "NusantaraRig99", power: 340000, coin: 18000 },
+                { name: "KryptoMedan", power: 280000, coin: 14200 },
+                { name: "CuanLokal_Jogja", power: 210000, coin: 11000 },
+                { name: "SultanMakassar", power: 180000, coin: 9500 },
+                { name: "BorneoMiner", power: 140000, coin: 7800 },
+                { name: "PenambangDepok", power: 110000, coin: 6200 },
+                { name: "BatamCrypto_Pro", power: 95000, coin: 5100 },
+                { name: "SemarangRig", power: 80000, coin: 4200 },
+                { name: "Sultra_Miner", power: 65000, coin: 3500 },
+                { name: "PalembangCuan", power: 50000, coin: 2800 },
+                { name: "SoloPlayer88", power: 42000, coin: 2100 },
+                { name: "LombokCrypto", power: 35000, coin: 1700 },
+                { name: "SultanAceh", power: 28000, coin: 1300 },
+                { name: "PapuaRigMaster", power: 20000, coin: 950 },
+                { name: "ManadoCuan", power: 15000, coin: 700 }
+            ];
+
+            // Masukkan data pemain asli ke dalam daftar
+            let allPlayers = [...mockPlayers, { name: myName, power: myPower, coin: myCoin, isMe: true }];
+            
+            // Urutkan berdasarkan total Hashrate tertinggi
+            allPlayers.sort((a, b) => b.power - a.power);
+
+            // Cari posisi peringkat pemain asli
+            const myRankIndex = allPlayers.findIndex(p => p.isMe === true) + 1;
+            document.getElementById('myRankNumberDisplay').innerText = `Peringkat #${myRankIndex} dari ${allPlayers.length} Penambang`;
+            document.getElementById('myRankPowerDisplay').innerText = formatHashrate(myPower);
+            document.getElementById('myRankCoinDisplay').innerText = `Rp ${myCoin.toFixed(2)}`;
+
+            // Tampilkan Top 20
+            const listContainer = document.getElementById('fullLeaderboardList');
+            listContainer.innerHTML = "";
+
+            const top20 = allPlayers.slice(0, 20);
+            top20.forEach((player, idx) => {
+                const rankNum = idx + 1;
+                let badgeIcon = `#${rankNum}`;
+                if (rankNum === 1) badgeIcon = "🥇";
+                if (rankNum === 2) badgeIcon = "🥈";
+                if (rankNum === 3) badgeIcon = "🥉";
+
+                let rowBg = player.isMe ? "bg-amber-950/60 border-amber-500/80 glow-gold" : "bg-slate-950 border-slate-800";
+
+                const row = document.createElement('div');
+                row.className = `p-2.5 rounded-xl border flex justify-between items-center ${rowBg}`;
+                row.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <span class="font-bold text-xs ${rankNum <= 3 ? 'text-amber-400 text-sm' : 'text-gray-400'} w-6 text-center">${badgeIcon}</span>
+                        <div>
+                            <span class="font-bold ${player.isMe ? 'text-amber-300 font-black' : 'text-gray-200'}">${player.name} ${player.isMe ? '(Kamu)' : ''}</span>
+                            <span class="text-[10px] text-gray-400 block font-mono">Saldo: Rp ${player.coin.toLocaleString('id-ID', {minimumFractionDigits: 2})}</span>
+                        </div>
+                    </div>
+                    <div class="text-right font-mono">
+                        <span class="font-bold text-emerald-400 text-xs">${formatHashrate(player.power)}</span>
+                    </div>
+                `;
+                listContainer.appendChild(row);
             });
         }
 
@@ -967,59 +1001,6 @@
             });
         }
 
-        function openAdModalForAction(durationSec, onCompleteCallback) {
-            const adModal = document.getElementById('adModal');
-            const timerText = document.getElementById('adTimerText');
-            const progressBar = document.getElementById('adProgressBar');
-            const claimBtn = document.getElementById('claimAdBtn');
-
-            adModal.classList.remove('hidden');
-            claimBtn.disabled = true;
-            claimBtn.className = "w-full py-2.5 bg-gray-800 text-gray-500 font-bold text-xs rounded-xl cursor-not-allowed";
-            claimBtn.innerText = `Menonton iklan (${durationSec}s)...`;
-
-            let timeLeft = durationSec;
-            timerText.innerText = `Selesai dalam: ${timeLeft}s`;
-            progressBar.style.width = "0%";
-
-            let adInterval = setInterval(() => {
-                timeLeft--;
-                timerText.innerText = `Selesai dalam: ${timeLeft}s`;
-                progressBar.style.width = `${((durationSec - timeLeft) / durationSec) * 100}%`;
-
-                if (timeLeft <= 0) {
-                    clearInterval(adInterval);
-                    timerText.innerText = "Selesai! Silakan lanjutkan.";
-                    claimBtn.disabled = false;
-                    claimBtn.className = "w-full py-2.5 bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-bold text-xs rounded-xl transition shadow-lg";
-                    claimBtn.innerText = "KLAIM HADIAH SEKARANG";
-
-                    claimBtn.onclick = () => {
-                        adModal.classList.add('hidden');
-                        if (onCompleteCallback) onCompleteCallback();
-                    };
-                }
-            }, 1000);
-        }
-
-        function watchRewardAd() {
-            const now = Date.now(), cooldownMs = 30 * 60 * 1000;
-            if (now - lastBoostAdTime < cooldownMs) {
-                const remainingSecs = Math.ceil((cooldownMs - (now - lastBoostAdTime)) / 1000);
-                const rmMin = Math.floor(remainingSecs / 60), rmSec = remainingSecs % 60;
-                alert(`Boost iklan masih cooldown! Tunggu ${rmMin}m ${rmSec}s lagi.`);
-                return;
-            }
-            openAdModalForAction(10, () => {
-                addFreePower(300);
-                lastBoostAdTime = Date.now();
-                updateUI(); saveGameData();
-                playSound('win');
-                alert("Berhasil! +300 MH/s ditambahkan dari Boost Video Iklan.");
-                addLog("[BOOST] +300 MH/s ditambahkan dari iklan sponsor.");
-            });
-        }
-
         function openPowerModal() { 
             updatePowerUpgradesUI();
             document.getElementById('powerModal').classList.remove('hidden'); 
@@ -1095,26 +1076,12 @@
             if (userData.lastSpinDate === today) { const sBtn = document.getElementById('spinActionBtn'); sBtn.innerText = "SUDAH KLAIM"; sBtn.disabled = true; sBtn.className = "w-full py-3 bg-gray-800 text-gray-500 font-bold text-xs rounded-xl cursor-not-allowed"; }
         }
 
-        // AUTH & WITHDRAW
         function openAuthModal() { document.getElementById('authModal').classList.remove('hidden'); }
         function closeAuthModal() { document.getElementById('authModal').classList.add('hidden'); }
         function saveAccount() {
             const name = document.getElementById('regNameInput').value.trim(), phone = document.getElementById('regPhoneInput').value.trim(), pin = document.getElementById('regPinInput').value.trim();
             if (!name || !phone || !pin || pin.length !== 6) { alert("Isi data & PIN 6 digit!"); return; }
-            userData.name = name; userData.phone = phone; userData.pin = pin; userData.isRegistered = true; saveGameData(); closeAuthModal(); renderLeaderboard();
-        }
-        function openWithdrawModal() { document.getElementById('wdBalanceDisplay').innerText = `Rp ${coinBalance.toFixed(2)}`; document.getElementById('withdrawModal').classList.remove('hidden'); }
-        function closeWithdrawModal() { document.getElementById('withdrawModal').classList.add('hidden'); }
-        function processWithdraw() {
-            const amount = parseInt(document.getElementById('wdAmountInput').value);
-            if (!userData.isRegistered) { alert("Daftar akun dulu!"); openAuthModal(); return; }
-            if (isNaN(amount) || amount < 50000 || coinBalance < amount + 2000) { alert("Saldo tidak cukup / Minimal Rp 50.000!"); return; }
-            document.getElementById('pinModal').classList.remove('hidden');
-        }
-        function closePinModal() { document.getElementById('pinModal').classList.add('hidden'); }
-        function confirmPinAction() {
-            if (document.getElementById('pinInput').value.trim() !== userData.pin) { alert("PIN Salah!"); return; }
-            coinBalance -= 52000; updateUI(); saveGameData(); closePinModal(); closeWithdrawModal(); alert("Pengajuan WD Berhasil Diproses!");
+            userData.name = name; userData.phone = phone; userData.pin = pin; userData.isRegistered = true; saveGameData(); closeAuthModal();
         }
 
         // LUCKY SPIN WHEEL
@@ -1197,7 +1164,7 @@
             requestAnimationFrame(animateSpin);
         }
 
-        // ARCADE MINI GAMES SYSTEM & TOUCH GESTURE ENGINE v8.8
+        // ARCADE MINI GAMES SYSTEM & TOUCH GESTURE ENGINE v8.9
         function checkMidnightGameReset() {
             const today = new Date().toDateString();
             if (userData.lastDailyResetDate !== today) {
@@ -1214,6 +1181,22 @@
             else if (['frogger', 'breakout'].includes(gameKey)) { basePower = lvl * 1500; durationHours = 72; }
             else { basePower = lvl * 6000; durationHours = 168; }
             return { amount: basePower, durationMs: durationHours * 60 * 60 * 1000, hours: durationHours };
+        }
+
+        // TOGGLE FULLSCREEN / PERBESAR LAYAR GAME
+        let isGameFullscreen = false;
+        function toggleGameFullscreen() {
+            const wrapper = document.getElementById('activeGameArea');
+            const btnText = document.getElementById('fullscreenBtnText');
+            if (!isGameFullscreen) {
+                wrapper.classList.add('game-fullscreen');
+                btnText.innerText = "Kecilkan Layar";
+                isGameFullscreen = true;
+            } else {
+                wrapper.classList.remove('game-fullscreen');
+                btnText.innerText = "Layar Penuh";
+                isGameFullscreen = false;
+            }
         }
 
         // UNIVERSAL TOUCH / SWIPE CONTROLLER FOR CANVAS
@@ -1254,11 +1237,10 @@
         function startArcadeGame(gameKey) {
             currentArcadeKey = gameKey;
             document.getElementById('gameMenuList').classList.add('hidden'); document.getElementById('activeGameArea').classList.remove('hidden'); document.getElementById('backToMenuBtn').classList.remove('hidden'); document.getElementById('gameOverlay').classList.add('hidden');
-            const lvl = gameLevels[gameKey] || 1; document.getElementById('gameLevelDisplay').innerText = `Level ${lvl}`; document.getElementById('gameMessageDisplay').innerText = "Gim Dimulai!";
+            const lvl = gameLevels[gameKey] || 1; document.getElementById('gameMessageDisplay').innerText = "Gim Dimulai!";
             if (activeGameLoop) clearInterval(activeGameLoop);
-            const cvs = document.getElementById('mainGameCanvas'), ctx = cvs.getContext('2d'), controls = document.getElementById('gameControlsContainer'); controls.innerHTML = "";
+            const cvs = document.getElementById('mainGameCanvas'), ctx = cvs.getContext('2d');
             
-            // Clear previous touch handlers
             cvs.ontouchstart = null; cvs.ontouchmove = null; cvs.ontouchend = null; cvs.onclick = null;
 
             if (gameKey === 'flappy') runFlappyBall(cvs, ctx, lvl);
@@ -1273,7 +1255,16 @@
             if (gameKey === 'match3') runMatch3Color(cvs, ctx, lvl);
         }
 
-        function closeActiveGame() { if (activeGameLoop) clearInterval(activeGameLoop); document.getElementById('mainGameCanvas').onclick = null; document.getElementById('gameOverlay').classList.add('hidden'); document.getElementById('activeGameArea').classList.add('hidden'); document.getElementById('backToMenuBtn').classList.add('hidden'); document.getElementById('gameMenuList').classList.remove('hidden'); }
+        function closeActiveGame() { 
+            if (activeGameLoop) clearInterval(activeGameLoop); 
+            if (isGameFullscreen) toggleGameFullscreen();
+            document.getElementById('mainGameCanvas').onclick = null; 
+            document.getElementById('gameOverlay').classList.add('hidden'); 
+            document.getElementById('activeGameArea').classList.add('hidden'); 
+            document.getElementById('backToMenuBtn').classList.add('hidden'); 
+            document.getElementById('gameMenuList').classList.remove('hidden'); 
+        }
+
         function showResultOverlay(win, title, sub) {
             if (activeGameLoop) clearInterval(activeGameLoop);
             const overlay = document.getElementById('gameOverlay'), t = document.getElementById('overlayResultTitle'), s = document.getElementById('overlayResultSub'), btn = document.getElementById('overlayActionBtn');
@@ -1281,6 +1272,7 @@
             if (win) { t.className = "text-lg font-black mb-1 text-emerald-400"; btn.innerText = "🚀 Level Selanjutnya"; btn.className = "px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl transition shadow-lg"; } 
             else { t.className = "text-lg font-black mb-1 text-rose-500"; btn.innerText = "🔄 Ulangi Level"; btn.className = "px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs rounded-xl transition shadow-lg"; }
         }
+
         function retryOrNextLevel() { document.getElementById('gameOverlay').classList.add('hidden'); startArcadeGame(currentArcadeKey); }
         
         function awardGameWin(gameKey) {
@@ -1295,27 +1287,26 @@
             addLog(`[GAME WIN] ${gameKey.toUpperCase()} Lvl ${lvl}! +${formatHashrate(reward.amount)}.`);
         }
 
-        // TOUCH-OPTIMIZED MINI GAMES
+        // MINI GAMES ENGINE
         function runFlappyBall(cvs, ctx, lvl) {
             document.getElementById('gameTitleDisplay').innerText = "1. Flappy Ball"; document.getElementById('gameScoreDisplay').innerText = "Target: 0/10";
-            let ballY = 100, vel = 0, pipes = [], score = 0, speed = 2 + lvl * 0.35; pipes.push({ x: 280, top: 50, bottom: 60 });
+            let ballY = 120, vel = 0, pipes = [], score = 0, speed = 2 + lvl * 0.35; pipes.push({ x: 340, top: 60, bottom: 70 });
             
-            const jumpAction = () => { vel = -4.5; };
-            cvs.onclick = jumpAction;
-            cvs.ontouchstart = (e) => { e.preventDefault(); jumpAction(); };
+            const jumpAction = () => { vel = -4.8; };
+            cvs.onclick = jumpAction; cvs.ontouchstart = (e) => { e.preventDefault(); jumpAction(); };
 
             activeGameLoop = setInterval(() => {
-                vel += 0.3; ballY += vel;
+                vel += 0.32; ballY += vel;
                 ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, cvs.width, cvs.height);
-                ctx.fillStyle = '#f59e0b'; ctx.beginPath(); ctx.arc(40, ballY, 8, 0, Math.PI * 2); ctx.fill();
+                ctx.fillStyle = '#f59e0b'; ctx.beginPath(); ctx.arc(50, ballY, 9, 0, Math.PI * 2); ctx.fill();
                 pipes.forEach(p => {
                     p.x -= speed;
-                    ctx.fillStyle = '#10b981'; ctx.fillRect(p.x, 0, 22, p.top); ctx.fillRect(p.x, cvs.height - p.bottom, 22, p.bottom);
-                    if (Math.abs(p.x - 40) < speed / 2) { score++; document.getElementById('gameScoreDisplay').innerText = `Target: ${score}/10`; }
-                    if (p.x < 48 && p.x + 22 > 32 && (ballY - 8 < p.top || ballY + 8 > cvs.height - p.bottom)) showResultOverlay(false, "GAME OVER", "Menabrak pipa!");
+                    ctx.fillStyle = '#10b981'; ctx.fillRect(p.x, 0, 26, p.top); ctx.fillRect(p.x, cvs.height - p.bottom, 26, p.bottom);
+                    if (Math.abs(p.x - 50) < speed / 2) { score++; document.getElementById('gameScoreDisplay').innerText = `Target: ${score}/10`; }
+                    if (p.x < 59 && p.x + 26 > 41 && (ballY - 9 < p.top || ballY + 9 > cvs.height - p.bottom)) showResultOverlay(false, "GAME OVER", "Menabrak pipa!");
                 });
-                if (pipes.length > 0 && pipes[0].x < -22) pipes.shift();
-                if (pipes.length === 0 || pipes[pipes.length - 1].x < 140) { let topH = Math.floor(Math.random() * 60) + 20; pipes.push({ x: 280, top: topH, bottom: cvs.height - topH - 55 }); }
+                if (pipes.length > 0 && pipes[0].x < -26) pipes.shift();
+                if (pipes.length === 0 || pipes[pipes.length - 1].x < 170) { let topH = Math.floor(Math.random() * 80) + 20; pipes.push({ x: 340, top: topH, bottom: cvs.height - topH - 65 }); }
                 if (ballY > cvs.height || ballY < 0) showResultOverlay(false, "GAME OVER", "Bola keluar arena!");
                 if (score >= 10) awardGameWin('flappy');
             }, 30);
@@ -1324,7 +1315,7 @@
         function runClassicTetris(cvs, ctx, lvl) {
             document.getElementById('gameTitleDisplay').innerText = "2. Classic Tetris"; document.getElementById('gameScoreDisplay').innerText = "Target: 0/10";
             let score = 0, speed = Math.max(80, 350 - lvl * 25);
-            const cols = 10, rows = 14, size = 12, offsetX = 80; let grid = Array(rows).fill().map(() => Array(cols).fill(0));
+            const cols = 10, rows = 14, size = 15, offsetX = 95; let grid = Array(rows).fill().map(() => Array(cols).fill(0));
             const shapes = [[[1,1,1,1]], [[1,1],[1,1]], [[0,1,0],[1,1,1]], [[1,0,0],[1,1,1]], [[0,0,1],[1,1,1]], [[0,1,1],[1,1,0]]];
             let piece = spawnPiece(); function spawnPiece() { return { x: 3, y: 0, shape: shapes[Math.floor(Math.random() * shapes.length)] }; }
             function checkCollision(px, py, shape) { for (let r = 0; r < shape.length; r++) { for (let c = 0; c < shape[r].length; c++) { if (shape[r][c]) { let newX = px + c, newY = py + r; if (newX < 0 || newX >= cols || newY >= rows || (newY >= 0 && grid[newY][newX])) return true; } } } return false; }
@@ -1344,16 +1335,16 @@
                     for (let r = rows - 1; r >= 0; r--) { if (grid[r].every(v => v === 1)) { grid.splice(r, 1); grid.unshift(Array(cols).fill(0)); score++; document.getElementById('gameScoreDisplay').innerText = `Target: ${score}/10`; r++; } }
                     piece = spawnPiece(); if (checkCollision(piece.x, piece.y, piece.shape)) showResultOverlay(false, "GAME OVER", "Tumpukan penuh!");
                 }
-                ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, cvs.width, cvs.height); ctx.strokeStyle = '#1e293b'; ctx.strokeRect(offsetX, 10, cols * size, rows * size);
-                for (let r = 0; r < rows; r++) { for (let c = 0; c < cols; c++) { if (grid[r][c]) { ctx.fillStyle = '#6366f1'; ctx.fillRect(offsetX + c * size, 10 + r * size, size - 1, size - 1); } } }
-                ctx.fillStyle = '#818cf8'; for (let r = 0; r < piece.shape.length; r++) { for (let c = 0; c < piece.shape[r].length; c++) { if (piece.shape[r][c]) ctx.fillRect(offsetX + (piece.x + c) * size, 10 + (piece.y + r) * size, size - 1, size - 1); } }
+                ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, cvs.width, cvs.height); ctx.strokeStyle = '#1e293b'; ctx.strokeRect(offsetX, 15, cols * size, rows * size);
+                for (let r = 0; r < rows; r++) { for (let c = 0; c < cols; c++) { if (grid[r][c]) { ctx.fillStyle = '#6366f1'; ctx.fillRect(offsetX + c * size, 15 + r * size, size - 1, size - 1); } } }
+                ctx.fillStyle = '#818cf8'; for (let r = 0; r < piece.shape.length; r++) { for (let c = 0; c < piece.shape[r].length; c++) { if (piece.shape[r][c]) ctx.fillRect(offsetX + (piece.x + c) * size, 15 + (piece.y + r) * size, size - 1, size - 1); } }
                 if (score >= 10) awardGameWin('tetris');
             }, speed);
         }
 
         function runCarRacing(cvs, ctx, lvl) {
             document.getElementById('gameTitleDisplay').innerText = "3. Balap Blok"; document.getElementById('gameScoreDisplay').innerText = "Target: 0/10";
-            let carX = 1, obstacles = [], score = 0, speed = 2.8 + lvl * 0.7; let laneX = [60, 125, 190];
+            let carX = 1, obstacles = [], score = 0, speed = 3.0 + lvl * 0.7; let laneX = [70, 155, 240];
             
             setupTouchGestures(cvs, (dir) => {
                 if (dir === 'LEFT') carX = Math.max(0, carX - 1);
@@ -1361,21 +1352,21 @@
             }, (tx) => {
                 const rect = cvs.getBoundingClientRect();
                 const relX = tx - rect.left;
-                if (relX < 90) carX = 0; else if (relX < 180) carX = 1; else carX = 2;
+                if (relX < 110) carX = 0; else if (relX < 220) carX = 1; else carX = 2;
             });
 
             activeGameLoop = setInterval(() => {
-                ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, cvs.width, cvs.height); ctx.fillStyle = '#334155'; ctx.fillRect(40, 0, 8, 200); ctx.fillRect(232, 0, 8, 200);
-                ctx.fillStyle = '#38bdf8'; ctx.fillRect(laneX[carX], 150, 30, 35);
-                if (Math.random() < (0.04 + lvl * 0.012) && (obstacles.length === 0 || obstacles[obstacles.length - 1].y > 50)) { obstacles.push({ lane: Math.floor(Math.random() * 3), y: -35 }); }
-                obstacles.forEach((o, i) => { o.y += speed; ctx.fillStyle = '#f43f5e'; ctx.fillRect(laneX[o.lane], o.y, 30, 30); if (o.y > 120 && o.y < 185 && o.lane === carX) showResultOverlay(false, "GAME OVER", "Menabrak musuh!"); if (o.y > 200) { obstacles.splice(i, 1); score++; document.getElementById('gameScoreDisplay').innerText = `Target: ${score}/10`; } });
+                ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, cvs.width, cvs.height); ctx.fillStyle = '#334155'; ctx.fillRect(50, 0, 8, 240); ctx.fillRect(282, 0, 8, 240);
+                ctx.fillStyle = '#38bdf8'; ctx.fillRect(laneX[carX], 180, 35, 42);
+                if (Math.random() < (0.04 + lvl * 0.012) && (obstacles.length === 0 || obstacles[obstacles.length - 1].y > 60)) { obstacles.push({ lane: Math.floor(Math.random() * 3), y: -40 }); }
+                obstacles.forEach((o, i) => { o.y += speed; ctx.fillStyle = '#f43f5e'; ctx.fillRect(laneX[o.lane], o.y, 35, 35); if (o.y > 145 && o.y < 220 && o.lane === carX) showResultOverlay(false, "GAME OVER", "Menabrak rintangan!"); if (o.y > 240) { obstacles.splice(i, 1); score++; document.getElementById('gameScoreDisplay').innerText = `Target: ${score}/10`; } });
                 if (score >= 10) awardGameWin('racing');
             }, 30);
         }
 
         function runNokiaSnake(cvs, ctx, lvl) {
             document.getElementById('gameTitleDisplay').innerText = "4. Nokia Snake"; document.getElementById('gameScoreDisplay').innerText = "Target: 0/10";
-            let snake = [{x: 5, y: 5}], dir = {x: 1, y: 0}, food = {x: 12, y: 8}, score = 0;
+            let snake = [{x: 6, y: 6}], dir = {x: 1, y: 0}, food = {x: 15, y: 10}, score = 0;
             
             setupTouchGestures(cvs, (swipe) => {
                 if (swipe === 'UP' && dir.y === 0) dir = {x: 0, y: -1};
@@ -1386,49 +1377,43 @@
 
             activeGameLoop = setInterval(() => {
                 let head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
-                if (head.x < 0 || head.x >= 28 || head.y < 0 || head.y >= 20) { showResultOverlay(false, "GAME OVER", "Menabrak tembok!"); return; }
+                if (head.x < 0 || head.x >= 34 || head.y < 0 || head.y >= 24) { showResultOverlay(false, "GAME OVER", "Menabrak tembok!"); return; }
                 snake.unshift(head);
-                if (head.x === food.x && head.y === food.y) { score++; document.getElementById('gameScoreDisplay').innerText = `Target: ${score}/10`; food = { x: Math.floor(Math.random() * 26), y: Math.floor(Math.random() * 18) }; } else snake.pop();
+                if (head.x === food.x && head.y === food.y) { score++; document.getElementById('gameScoreDisplay').innerText = `Target: ${score}/10`; food = { x: Math.floor(Math.random() * 32), y: Math.floor(Math.random() * 22) }; } else snake.pop();
                 ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, cvs.width, cvs.height); ctx.fillStyle = '#10b981'; snake.forEach(s => ctx.fillRect(s.x * 10, s.y * 10, 9, 9)); ctx.fillStyle = '#ef4444'; ctx.fillRect(food.x * 10, food.y * 10, 9, 9);
                 if (score >= 10) awardGameWin('snake');
             }, Math.max(50, 140 - lvl * 10));
         }
 
         function runTankBattle(cvs, ctx, lvl) {
-            document.getElementById('gameTitleDisplay').innerText = "5. Blok Battle"; 
-            let targetScore = lvl * 4;
-            document.getElementById('gameScoreDisplay').innerText = `Target: 0/${targetScore} Musuh`;
-            let playerX = 120, bullets = [], enemyBullets = [], enemies = [], score = 0;
+            document.getElementById('gameTitleDisplay').innerText = "5. Blok Battle"; let targetScore = lvl * 4; document.getElementById('gameScoreDisplay').innerText = `Target: 0/${targetScore} Musuh`;
+            let playerX = 150, bullets = [], enemyBullets = [], enemies = [], score = 0;
             
-            setupTouchGestures(cvs, null, () => { bullets.push({x: playerX + 10, y: 170}); }, (touchX) => {
-                playerX = Math.max(10, Math.min(250, touchX - 12));
-            });
-            cvs.onclick = () => { bullets.push({x: playerX + 10, y: 170}); };
+            setupTouchGestures(cvs, null, () => { bullets.push({x: playerX + 12, y: 200}); }, (touchX) => { playerX = Math.max(10, Math.min(305, touchX - 15)); });
+            cvs.onclick = () => { bullets.push({x: playerX + 12, y: 200}); };
 
             function spawnEnemyWave() {
-                let count = Math.min(4, 1 + Math.floor(lvl / 2));
-                for(let i=0; i<count; i++) {
-                    enemies.push({ x: 20 + i * 65, y: 15 + Math.random()*20, dirX: 1, speedX: 1.2 + lvl * 0.3, vy: 0.05 + lvl * 0.015 });
-                }
+                let count = Math.min(5, 2 + Math.floor(lvl / 2));
+                for(let i=0; i<count; i++) enemies.push({ x: 20 + i * 60, y: 20 + Math.random()*25, dirX: 1, speedX: 1.3 + lvl * 0.3, vy: 0.05 + lvl * 0.015 });
             }
             spawnEnemyWave();
 
             activeGameLoop = setInterval(() => {
                 ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, cvs.width, cvs.height); 
-                ctx.fillStyle = '#06b6d4'; ctx.fillRect(playerX, 175, 25, 20);
+                ctx.fillStyle = '#06b6d4'; ctx.fillRect(playerX, 210, 30, 22);
 
                 enemies.forEach((e) => {
                     e.x += e.dirX * e.speedX; e.y += e.vy; 
-                    if (e.x > 255 || e.x < 5) e.dirX = -e.dirX;
-                    if (Math.random() < 0.02 + lvl * 0.005) enemyBullets.push({ x: e.x + 10, y: e.y + 15 });
-                    ctx.fillStyle = '#e11d48'; ctx.fillRect(e.x, e.y, 24, 20);
-                    if (e.y > 155) showResultOverlay(false, "GAME OVER", "Musuh mencapai garis pertahanan!");
+                    if (e.x > 310 || e.x < 5) e.dirX = -e.dirX;
+                    if (Math.random() < 0.02 + lvl * 0.005) enemyBullets.push({ x: e.x + 12, y: e.y + 18 });
+                    ctx.fillStyle = '#e11d48'; ctx.fillRect(e.x, e.y, 28, 22);
+                    if (e.y > 185) showResultOverlay(false, "GAME OVER", "Musuh mencapai pertahanan!");
                 });
 
                 bullets.forEach((b, bi) => {
-                    b.y -= 7; ctx.fillStyle = '#f59e0b'; ctx.fillRect(b.x, b.y, 4, 8);
+                    b.y -= 8; ctx.fillStyle = '#f59e0b'; ctx.fillRect(b.x, b.y, 4, 10);
                     enemies.forEach((e, ei) => { 
-                        if (Math.abs(b.x - e.x) < 24 && Math.abs(b.y - e.y) < 20) { 
+                        if (Math.abs(b.x - e.x) < 28 && Math.abs(b.y - e.y) < 22) { 
                             enemies.splice(ei, 1); bullets.splice(bi, 1); score++; 
                             document.getElementById('gameScoreDisplay').innerText = `Target: ${score}/${targetScore} Musuh`; 
                             if(enemies.length === 0) spawnEnemyWave();
@@ -1437,8 +1422,8 @@
                 });
 
                 enemyBullets.forEach((eb) => {
-                    eb.y += 4; ctx.fillStyle = '#ef4444'; ctx.fillRect(eb.x, eb.y, 4, 8);
-                    if (Math.abs(eb.x - (playerX + 12)) < 15 && eb.y > 170 && eb.y < 195) showResultOverlay(false, "GAME OVER", "Tankmu tertembak musuh!");
+                    eb.y += 5; ctx.fillStyle = '#ef4444'; ctx.fillRect(eb.x, eb.y, 4, 10);
+                    if (Math.abs(eb.x - (playerX + 15)) < 18 && eb.y > 200 && eb.y < 235) showResultOverlay(false, "GAME OVER", "Tertembak musuh!");
                 });
 
                 if (score >= targetScore) awardGameWin('tank');
@@ -1446,37 +1431,35 @@
         }
 
         function runFroggerCrossing(cvs, ctx, lvl) {
-            document.getElementById('gameTitleDisplay').innerText = "6. Ball Crossing"; 
-            let targetScore = 5 + lvl * 2;
-            document.getElementById('gameScoreDisplay').innerText = `Target: 0/${targetScore} Seberang`;
-            let ballY = 180, ballX = 130, score = 0;
+            document.getElementById('gameTitleDisplay').innerText = "6. Ball Crossing"; let targetScore = 5 + lvl * 2; document.getElementById('gameScoreDisplay').innerText = `Target: 0/${targetScore} Seberang`;
+            let ballY = 215, ballX = 165, score = 0;
             
             setupTouchGestures(cvs, (swipe) => {
-                if (swipe === 'UP') ballY = Math.max(10, ballY - 20);
-                if (swipe === 'DOWN') ballY = Math.min(185, ballY + 20);
-                if (swipe === 'LEFT') ballX = Math.max(10, ballX - 15);
-                if (swipe === 'RIGHT') ballX = Math.min(270, ballX + 15);
-                if (ballY <= 15) { score++; document.getElementById('gameScoreDisplay').innerText = `Target: ${score}/${targetScore} Seberang`; ballY = 180; }
+                if (swipe === 'UP') ballY = Math.max(15, ballY - 25);
+                if (swipe === 'DOWN') ballY = Math.min(215, ballY + 25);
+                if (swipe === 'LEFT') ballX = Math.max(15, ballX - 20);
+                if (swipe === 'RIGHT') ballX = Math.min(325, ballX + 20);
+                if (ballY <= 20) { score++; document.getElementById('gameScoreDisplay').innerText = `Target: ${score}/${targetScore} Seberang`; ballY = 215; }
             });
-            cvs.onclick = () => { ballY -= 20; if (ballY <= 15) { score++; document.getElementById('gameScoreDisplay').innerText = `Target: ${score}/${targetScore} Seberang`; ballY = 180; } };
+            cvs.onclick = () => { ballY -= 25; if (ballY <= 20) { score++; document.getElementById('gameScoreDisplay').innerText = `Target: ${score}/${targetScore} Seberang`; ballY = 215; } };
 
-            let rowCount = Math.min(6, 2 + Math.floor(lvl / 2)), rows = [];
+            let rowCount = Math.min(6, 3 + Math.floor(lvl / 2)), rows = [];
             for (let i = 0; i < rowCount; i++) {
-                let yPos = 35 + i * 25, blocksInRow = [], countPerLine = 2 + (i % 2);
-                for (let j = 0; j < countPerLine; j++) blocksInRow.push({ x: j * (280 / countPerLine), y: yPos, dir: (i % 2 === 0 ? 1 : -1), speed: (1.5 + lvl * 0.4) + (i * 0.2) });
+                let yPos = 40 + i * 28, blocksInRow = [], countPerLine = 2 + (i % 2);
+                for (let j = 0; j < countPerLine; j++) blocksInRow.push({ x: j * (340 / countPerLine), y: yPos, dir: (i % 2 === 0 ? 1 : -1), speed: (1.8 + lvl * 0.4) + (i * 0.2) });
                 rows.push(blocksInRow);
             }
 
             activeGameLoop = setInterval(() => {
                 ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, cvs.width, cvs.height); 
-                ctx.fillStyle = '#10b981'; ctx.fillRect(0, 10, cvs.width, 5);
-                ctx.fillStyle = '#a3e635'; ctx.beginPath(); ctx.arc(ballX, ballY, 7, 0, Math.PI*2); ctx.fill();
+                ctx.fillStyle = '#10b981'; ctx.fillRect(0, 15, cvs.width, 6);
+                ctx.fillStyle = '#a3e635'; ctx.beginPath(); ctx.arc(ballX, ballY, 8, 0, Math.PI*2); ctx.fill();
 
                 rows.forEach((row) => {
                     row.forEach(b => {
-                        b.x += b.speed * b.dir; if (b.x > 280) b.x = -50; if (b.x < -50) b.x = 280;
-                        ctx.fillStyle = '#f43f5e'; ctx.fillRect(b.x, b.y, 45, 16);
-                        if (Math.abs(ballY - b.y) < 12 && ballX > b.x && ballX < b.x + 45) showResultOverlay(false, "GAME OVER", "Tertabrak rintangan balok!");
+                        b.x += b.speed * b.dir; if (b.x > 340) b.x = -60; if (b.x < -60) b.x = 340;
+                        ctx.fillStyle = '#f43f5e'; ctx.fillRect(b.x, b.y, 55, 18);
+                        if (Math.abs(ballY - b.y) < 14 && ballX > b.x && ballX < b.x + 55) showResultOverlay(false, "GAME OVER", "Tertabrak rintangan!");
                     });
                 });
 
@@ -1486,77 +1469,73 @@
 
         function runBreakout(cvs, ctx, lvl) {
             document.getElementById('gameTitleDisplay').innerText = "7. Breakout Balok"; 
-            let paddleX = 110, ballX = 140, ballY = 140, ballSpeed = 2.5 + lvl * 0.5;
+            let paddleX = 130, ballX = 170, ballY = 170, ballSpeed = 2.8 + lvl * 0.5;
             let dx = ballSpeed * (Math.random() < 0.5 ? 1 : -1), dy = -ballSpeed; 
             
-            setupTouchGestures(cvs, null, null, (touchX) => { paddleX = Math.max(0, Math.min(220, touchX - 30)); });
-            cvs.onclick = (e) => { paddleX = Math.max(0, Math.min(220, e.offsetX - 30)); };
+            setupTouchGestures(cvs, null, null, (touchX) => { paddleX = Math.max(0, Math.min(270, touchX - 35)); });
+            cvs.onclick = (e) => { paddleX = Math.max(0, Math.min(270, e.offsetX - 35)); };
 
-            let brickRows = Math.min(5, 2 + Math.floor(lvl / 2)), brickCols = 6, bricks = []; 
-            for (let r = 0; r < brickRows; r++) for (let c = 0; c < brickCols; c++) bricks.push({ x: c * 42 + 15, y: r * 16 + 15, active: true });
+            let brickRows = Math.min(5, 2 + Math.floor(lvl / 2)), brickCols = 7, bricks = []; 
+            for (let r = 0; r < brickRows; r++) for (let c = 0; c < brickCols; c++) bricks.push({ x: c * 46 + 10, y: r * 18 + 15, active: true });
             let totalBricks = bricks.length; document.getElementById('gameScoreDisplay').innerText = `Sisa: ${totalBricks}/${totalBricks} Balok`;
 
             activeGameLoop = setInterval(() => {
                 ballX += dx; ballY += dy;
-                if (ballX < 5 || ballX > 275) dx = -dx; if (ballY < 5) dy = -dy;
-                if (ballY > 170 && ballY < 182 && ballX > paddleX && ballX < paddleX + 60) dy = -Math.abs(dy);
+                if (ballX < 5 || ballX > 335) dx = -dx; if (ballY < 5) dy = -dy;
+                if (ballY > 210 && ballY < 222 && ballX > paddleX && ballX < paddleX + 70) dy = -Math.abs(dy);
 
                 let activeCount = 0;
                 bricks.forEach(b => { 
                     if (b.active) {
                         activeCount++;
-                        if (ballX > b.x && ballX < b.x + 38 && ballY > b.y && ballY < b.y + 12) { b.active = false; dy = -dy; }
+                        if (ballX > b.x && ballX < b.x + 42 && ballY > b.y && ballY < b.y + 14) { b.active = false; dy = -dy; }
                     }
                 });
                 document.getElementById('gameScoreDisplay').innerText = `Sisa: ${activeCount}/${totalBricks} Balok`;
 
                 ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, cvs.width, cvs.height); 
-                ctx.fillStyle = '#eab308'; ctx.fillRect(paddleX, 180, 60, 10); 
-                ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(ballX, ballY, 5, 0, Math.PI*2); ctx.fill();
-                bricks.forEach(b => { if (b.active) { ctx.fillStyle = '#38bdf8'; ctx.fillRect(b.x, b.y, 38, 12); } });
+                ctx.fillStyle = '#eab308'; ctx.fillRect(paddleX, 220, 70, 10); 
+                ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(ballX, ballY, 6, 0, Math.PI*2); ctx.fill();
+                bricks.forEach(b => { if (b.active) { ctx.fillStyle = '#38bdf8'; ctx.fillRect(b.x, b.y, 42, 14); } });
 
-                if (ballY > 200) showResultOverlay(false, "GAME OVER", "Bola jatuh!"); 
+                if (ballY > 240) showResultOverlay(false, "GAME OVER", "Bola jatuh!"); 
                 if (activeCount === 0) awardGameWin('breakout');
             }, 30);
         }
 
         function runSpaceShooter(cvs, ctx, lvl) {
-            document.getElementById('gameTitleDisplay').innerText = "8. Space Alien Shooter"; 
-            let targetScore = 3 + lvl * 3;
-            document.getElementById('gameScoreDisplay').innerText = `Target: 0/${targetScore} Alien`;
-            let shipX = 120, bullets = [], enemyBullets = [], aliens = [], score = 0;
+            document.getElementById('gameTitleDisplay').innerText = "8. Space Alien Shooter"; let targetScore = 3 + lvl * 3; document.getElementById('gameScoreDisplay').innerText = `Target: 0/${targetScore} Alien`;
+            let shipX = 150, bullets = [], enemyBullets = [], aliens = [], score = 0;
             
-            setupTouchGestures(cvs, null, () => { bullets.push({x: shipX + 8, y: 170}); }, (touchX) => {
-                shipX = Math.max(10, Math.min(250, touchX - 10));
-            });
-            cvs.onclick = () => { bullets.push({x: shipX + 8, y: 170}); };
+            setupTouchGestures(cvs, null, () => { bullets.push({x: shipX + 10, y: 200}); }, (touchX) => { shipX = Math.max(10, Math.min(310, touchX - 12)); });
+            cvs.onclick = () => { bullets.push({x: shipX + 10, y: 200}); };
 
             function spawnAlienWave() {
                 aliens = [];
-                let count = Math.min(6, 3 + Math.floor(lvl / 2));
-                for (let i = 0; i < count; i++) aliens.push({ x: 25 + i * 40, y: 20 + (i % 2) * 18, dir: 1, speed: 1.0 + lvl * 0.3 });
+                let count = Math.min(7, 4 + Math.floor(lvl / 2));
+                for (let i = 0; i < count; i++) aliens.push({ x: 20 + i * 44, y: 20 + (i % 2) * 20, dir: 1, speed: 1.1 + lvl * 0.3 });
             }
             spawnAlienWave();
 
             activeGameLoop = setInterval(() => {
                 ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, cvs.width, cvs.height); 
-                ctx.fillStyle = '#a855f7'; ctx.fillRect(shipX, 175, 20, 15);
-                ctx.fillStyle = '#38bdf8'; ctx.fillRect(shipX + 8, 170, 4, 6);
+                ctx.fillStyle = '#a855f7'; ctx.fillRect(shipX, 210, 24, 18);
+                ctx.fillStyle = '#38bdf8'; ctx.fillRect(shipX + 10, 204, 4, 8);
 
-                if (Math.random() < 0.1) bullets.push({x: shipX + 8, y: 170}); // Auto-fire untuk kenyamanan mobile
+                if (Math.random() < 0.12) bullets.push({x: shipX + 10, y: 204});
 
                 aliens.forEach((a) => {
                     a.x += a.speed * a.dir;
-                    if (a.x > 255 || a.x < 10) { a.dir = -a.dir; a.y += 8; }
-                    if (Math.random() < 0.015 + lvl * 0.005) enemyBullets.push({ x: a.x + 8, y: a.y + 15 });
-                    ctx.fillStyle = '#f43f5e'; ctx.fillRect(a.x, a.y, 18, 14);
-                    if (a.y > 155) showResultOverlay(false, "GAME OVER", "Invasi alien mencapai bumi!");
+                    if (a.x > 310 || a.x < 10) { a.dir = -a.dir; a.y += 10; }
+                    if (Math.random() < 0.015 + lvl * 0.005) enemyBullets.push({ x: a.x + 10, y: a.y + 18 });
+                    ctx.fillStyle = '#f43f5e'; ctx.fillRect(a.x, a.y, 22, 16);
+                    if (a.y > 185) showResultOverlay(false, "GAME OVER", "Invasi alien tembus!");
                 });
 
                 bullets.forEach((b, bi) => {
-                    b.y -= 8; ctx.fillStyle = '#38bdf8'; ctx.fillRect(b.x, b.y, 3, 8);
+                    b.y -= 9; ctx.fillStyle = '#38bdf8'; ctx.fillRect(b.x, b.y, 4, 10);
                     aliens.forEach((a, ai) => { 
-                        if (Math.abs(b.x - a.x) < 18 && Math.abs(b.y - a.y) < 14) { 
+                        if (Math.abs(b.x - a.x) < 22 && Math.abs(b.y - a.y) < 16) { 
                             aliens.splice(ai, 1); bullets.splice(bi, 1); score++; 
                             document.getElementById('gameScoreDisplay').innerText = `Target: ${score}/${targetScore} Alien`; 
                             if (aliens.length === 0) spawnAlienWave();
@@ -1565,8 +1544,8 @@
                 });
 
                 enemyBullets.forEach((eb) => {
-                    eb.y += 5; ctx.fillStyle = '#ef4444'; ctx.fillRect(eb.x, eb.y, 3, 8);
-                    if (Math.abs(eb.x - (shipX + 10)) < 15 && eb.y > 170 && eb.y < 190) showResultOverlay(false, "GAME OVER", "Pesawatmu hancur diserang alien!");
+                    eb.y += 5; ctx.fillStyle = '#ef4444'; ctx.fillRect(eb.x, eb.y, 4, 10);
+                    if (Math.abs(eb.x - (shipX + 12)) < 18 && eb.y > 200 && eb.y < 230) showResultOverlay(false, "GAME OVER", "Pesawatmu hancur!");
                 });
 
                 if (score >= targetScore) awardGameWin('shooter');
@@ -1575,22 +1554,22 @@
 
         function runPingPong(cvs, ctx, lvl) {
             document.getElementById('gameTitleDisplay').innerText = "9. Ping Pong vs AI"; let targetGoals = lvl; document.getElementById('gameScoreDisplay').innerText = `Gol: 0/${targetGoals}`;
-            let pX = 110, aiX = 110, bX = 140, bY = 100, ballSpeed = 3.5 + lvl * 0.6, dx = ballSpeed * (Math.random() < 0.5 ? 1 : -1), dy = ballSpeed, playerGoals = 0;
+            let pX = 140, aiX = 140, bX = 170, bY = 120, ballSpeed = 3.8 + lvl * 0.6, dx = ballSpeed * (Math.random() < 0.5 ? 1 : -1), dy = ballSpeed, playerGoals = 0;
             
-            setupTouchGestures(cvs, null, null, (touchX) => { pX = Math.max(0, Math.min(230, touchX - 25)); });
-            cvs.onclick = (e) => { pX = Math.max(0, Math.min(230, e.offsetX - 25)); };
+            setupTouchGestures(cvs, null, null, (touchX) => { pX = Math.max(0, Math.min(280, touchX - 30)); });
+            cvs.onclick = (e) => { pX = Math.max(0, Math.min(280, e.offsetX - 30)); };
 
             activeGameLoop = setInterval(() => {
                 bX += dx; bY += dy;
-                let aiAgility = Math.min(0.98, 0.15 + lvl * 0.08); aiX += (bX - (aiX + 25)) * aiAgility; aiX = Math.max(0, Math.min(230, aiX));
-                if (bX < 5 || bX > 275) dx = -dx;
-                if (bY < 20 && bY > 10 && bX > aiX - 5 && bX < aiX + 55) { dy = Math.abs(dy); dx = ((bX - (aiX + 25)) / 25) * (ballSpeed + 1); }
-                if (bY > 170 && bY < 180 && bX > pX - 5 && bX < pX + 55) { dy = -Math.abs(dy); dx = ((bX - (pX + 25)) / 25) * (ballSpeed + 1); }
-                ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, cvs.width, cvs.height); ctx.fillStyle = '#ec4899'; ctx.fillRect(pX, 180, 50, 8); ctx.fillStyle = '#ef4444'; ctx.fillRect(aiX, 10, 50, 8); ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(bX, bY, 5, 0, Math.PI*2); ctx.fill();
-                if (bY > 200) { showResultOverlay(false, "GAME OVER", "Pemain Kebobolan Gol!"); }
+                let aiAgility = Math.min(0.98, 0.15 + lvl * 0.08); aiX += (bX - (aiX + 30)) * aiAgility; aiX = Math.max(0, Math.min(280, aiX));
+                if (bX < 5 || bX > 335) dx = -dx;
+                if (bY < 20 && bY > 10 && bX > aiX - 5 && bX < aiX + 65) { dy = Math.abs(dy); dx = ((bX - (aiX + 30)) / 30) * (ballSpeed + 1); }
+                if (bY > 210 && bY < 220 && bX > pX - 5 && bX < pX + 65) { dy = -Math.abs(dy); dx = ((bX - (pX + 30)) / 30) * (ballSpeed + 1); }
+                ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, cvs.width, cvs.height); ctx.fillStyle = '#ec4899'; ctx.fillRect(pX, 222, 60, 10); ctx.fillStyle = '#ef4444'; ctx.fillRect(aiX, 10, 60, 10); ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(bX, bY, 6, 0, Math.PI*2); ctx.fill();
+                if (bY > 240) { showResultOverlay(false, "GAME OVER", "Pemain Kebobolan Gol!"); }
                 if (bY < 0) {
                     playerGoals++; document.getElementById('gameScoreDisplay').innerText = `Gol: ${playerGoals}/${targetGoals}`;
-                    if (playerGoals >= targetGoals) { awardGameWin('pong'); } else { bX = 140; bY = 100; dy = ballSpeed; dx = ballSpeed * (Math.random() < 0.5 ? 1 : -1); }
+                    if (playerGoals >= targetGoals) { awardGameWin('pong'); } else { bX = 170; bY = 120; dy = ballSpeed; dx = ballSpeed * (Math.random() < 0.5 ? 1 : -1); }
                 }
             }, 30);
         }
@@ -1598,7 +1577,7 @@
         function runMatch3Color(cvs, ctx, lvl) {
             document.getElementById('gameTitleDisplay').innerText = "10. Color Tetris Match-5"; document.getElementById('gameScoreDisplay').innerText = "Target: 0/10";
             let score = 0, speed = Math.max(70, 320 - lvl * 25);
-            const cols = 10, rows = 14, size = 12, offsetX = 80; let grid = Array(rows).fill().map(() => Array(cols).fill(null));
+            const cols = 10, rows = 14, size = 15, offsetX = 95; let grid = Array(rows).fill().map(() => Array(cols).fill(null));
             const colorShapes = [ { shape: [[1,1,1,1]], color: '#06b6d4' }, { shape: [[1,1],[1,1]], color: '#eab308' }, { shape: [[0,1,0],[1,1,1]], color: '#a855f7' } ];
             let piece = spawnColorPiece(); function spawnColorPiece() { const p = colorShapes[Math.floor(Math.random() * colorShapes.length)]; return { x: 3, y: 0, shape: p.shape, color: p.color }; }
             function checkCollision(px, py, shape) { for (let r = 0; r < shape.length; r++) { for (let c = 0; c < shape[r].length; c++) { if (shape[r][c]) { let newX = px + c, newY = py + r; if (newX < 0 || newX >= cols || newY >= rows || (newY >= 0 && grid[newY][newX])) return true; } } } return false; }
@@ -1634,9 +1613,9 @@
                     for (let r = 0; r < piece.shape.length; r++) { for (let c = 0; c < piece.shape[r].length; c++) { if (piece.shape[r][c] && piece.y + r >= 0) grid[piece.y + r][piece.x + c] = piece.color; } }
                     checkMatch5Color(); piece = spawnColorPiece(); if (checkCollision(piece.x, piece.y, piece.shape)) showResultOverlay(false, "GAME OVER", "Arena Penuh!");
                 }
-                ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, cvs.width, cvs.height); ctx.strokeStyle = '#1e293b'; ctx.strokeRect(offsetX, 10, cols * size, rows * size);
-                for (let r = 0; r < rows; r++) { for (let c = 0; c < cols; c++) { if (grid[r][c]) { ctx.fillStyle = grid[r][c]; ctx.fillRect(offsetX + c * size, 10 + r * size, size - 1, size - 1); } } }
-                ctx.fillStyle = piece.color; for (let r = 0; r < piece.shape.length; r++) { for (let c = 0; c < piece.shape[r].length; c++) { if (piece.shape[r][c]) ctx.fillRect(offsetX + (piece.x + c) * size, 10 + (piece.y + r) * size, size - 1, size - 1); } }
+                ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, cvs.width, cvs.height); ctx.strokeStyle = '#1e293b'; ctx.strokeRect(offsetX, 15, cols * size, rows * size);
+                for (let r = 0; r < rows; r++) { for (let c = 0; c < cols; c++) { if (grid[r][c]) { ctx.fillStyle = grid[r][c]; ctx.fillRect(offsetX + c * size, 15 + r * size, size - 1, size - 1); } } }
+                ctx.fillStyle = piece.color; for (let r = 0; r < piece.shape.length; r++) { for (let c = 0; c < piece.shape[r].length; c++) { if (piece.shape[r][c]) ctx.fillRect(offsetX + (piece.x + c) * size, 15 + (piece.y + r) * size, size - 1, size - 1); } }
                 if (score >= 10) awardGameWin('match3');
             }, speed);
         }

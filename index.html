@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Rupiah Miner Indonesia v8.9 - Leaderboard & Big Screen Edition</title>
+    <title>Rupiah Miner Indonesia v10.0 - Cross-Platform Controls Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -54,7 +54,7 @@
                         <h1 class="font-extrabold text-lg text-red-500 tracking-wide leading-none">Rupiah Miner</h1>
                         <span id="playerBadge" class="bg-amber-500/20 text-amber-400 border border-amber-500/50 text-[10px] font-bold px-2 py-0.5 rounded-full">Penambang MH/s</span>
                     </div>
-                    <span class="text-[11px] text-gray-400">Engine v8.9 Big Screen</span>
+                    <span class="text-[11px] text-gray-400">Engine v10.0 PC & Mobile</span>
                 </div>
             </div>
 
@@ -89,7 +89,6 @@
                     <span id="coinBalance" class="font-mono font-bold text-yellow-400 text-sm sm:text-base">Rp 0.00000</span>
                 </div>
 
-                <!-- Menggantikan Tombol Tarik Saldo dengan Leaderboard & Hadiah -->
                 <button onclick="playSound('click'); openLeaderboardModal()" class="px-3.5 py-2 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 active:scale-95 text-slate-950 font-black text-xs rounded-xl shadow-lg shadow-amber-900/40 transition flex items-center gap-1.5 glow-gold">
                     <i class="fa-solid fa-trophy"></i> Leaderboard & Hadiah
                 </button>
@@ -157,7 +156,6 @@
                         <h2 class="font-bold text-gray-200 flex items-center gap-2">
                             <i class="fa-solid fa-server text-red-500"></i> Ruang Server Nusantara
                         </h2>
-                        <!-- Free Hashrate via TikTok Channel -->
                         <button id="claimFreeHashBtn" onclick="playSound('click'); tryClaimFreeHashTikTok()" class="text-xs bg-emerald-950 hover:bg-emerald-900 text-emerald-300 px-3 py-1.5 rounded-full border border-emerald-800 font-mono font-bold transition shadow flex items-center gap-1.5">
                             <i class="fa-brands fa-tiktok text-pink-400"></i> <span id="freeHashBtnText">TikTok RupiahMiner: 05:00</span>
                         </button>
@@ -188,14 +186,14 @@
                         <button onclick="resetGameProgress()" class="text-[10px] text-red-400 hover:text-red-300 underline">Reset Data</button>
                     </div>
                     <div id="activityLog" class="text-xs font-mono space-y-1.5 max-h-36 overflow-y-auto text-gray-400">
-                        <p class="text-gray-500">[Sistem] Engine v8.9 Big Screen Ready!</p>
+                        <p class="text-gray-500">[Sistem] Engine v10.0 Cross-Platform Controls Ready!</p>
                     </div>
                 </div>
             </div>
 
             <!-- Kolom 2: Game & Toko (Kanan) -->
             <div class="space-y-6">
-                <!-- Arcade Hub & Screen Resizer -->
+                <!-- Arcade Hub -->
                 <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-xl">
                     <div class="flex justify-between items-center mb-3">
                         <h2 class="font-bold text-gray-200 flex items-center gap-2 text-sm"><i class="fa-solid fa-gamepad text-emerald-400"></i> 10 Arcade Mini-Games</h2>
@@ -203,25 +201,24 @@
                     </div>
 
                     <div id="gameMenuList" class="space-y-1.5 max-h-[380px] overflow-y-auto pr-1 text-xs">
-                        <button onclick="playSound('click'); startArcadeGame('flappy')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-circle-dot text-amber-400 text-base"></i><div><h4 class="font-bold text-gray-200">1. Flappy Ball</h4><p class="text-[9px] text-gray-400">Sentuh Layar (+100 MH/s)</p></div></div><span id="lvl_flappy" class="text-[10px] font-bold text-amber-400 bg-amber-950/60 border border-amber-800 px-2 py-0.5 rounded">Lvl 1</span></button>
-                        <button onclick="playSound('click'); startArcadeGame('tetris')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-cubes-stacked text-indigo-400 text-base"></i><div><h4 class="font-bold text-gray-200">2. Classic Tetris</h4><p class="text-[9px] text-gray-400">Usap / Tap Layar (+200 MH/s)</p></div></div><span id="lvl_tetris" class="text-[10px] font-bold text-indigo-400 bg-indigo-950/60 border border-indigo-800 px-2 py-0.5 rounded">Lvl 1</span></button>
-                        <button onclick="playSound('click'); startArcadeGame('racing')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-car-burst text-rose-400 text-base"></i><div><h4 class="font-bold text-gray-200">3. Balap Blok</h4><p class="text-[9px] text-gray-400">Usap Kiri/Kanan (+300 MH/s)</p></div></div><span id="lvl_racing" class="text-[10px] font-bold text-rose-400 bg-rose-950/60 border border-rose-800 px-2 py-0.5 rounded">Lvl 1</span></button>
-                        <button onclick="playSound('click'); startArcadeGame('snake')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-staff-snake text-emerald-400 text-base"></i><div><h4 class="font-bold text-gray-200">4. Nokia Snake</h4><p class="text-[9px] text-gray-400">Usap 4 Arah (+1.000 MH/s)</p></div></div><span id="lvl_snake" class="text-[10px] font-bold text-emerald-400 bg-emerald-950/60 border border-emerald-800 px-2 py-0.5 rounded">Lvl 1</span></button>
-                        <button onclick="playSound('click'); startArcadeGame('tank')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-shield-halved text-cyan-400 text-base"></i><div><h4 class="font-bold text-gray-200">5. Blok Battle</h4><p class="text-[9px] text-gray-400">Sentuh & Geser (+2.000 MH/s)</p></div></div><span id="lvl_tank" class="text-[10px] font-bold text-cyan-400 bg-cyan-950/60 border border-cyan-800 px-2 py-0.5 rounded">Lvl 1</span></button>
-                        <button onclick="playSound('click'); startArcadeGame('frogger')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-frog text-lime-400 text-base"></i><div><h4 class="font-bold text-gray-200">6. Ball Crossing</h4><p class="text-[9px] text-gray-400">Usap Maju/Mundur (+3.000 MH/s)</p></div></div><span id="lvl_frogger" class="text-[10px] font-bold text-lime-400 bg-lime-950/60 border border-lime-800 px-2 py-0.5 rounded">Lvl 1</span></button>
-                        <button onclick="playSound('click'); startArcadeGame('breakout')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-table-cells text-yellow-400 text-base"></i><div><h4 class="font-bold text-gray-200">7. Breakout Balok</h4><p class="text-[9px] text-gray-400">Geser Jari di Layar (+4.000 MH/s)</p></div></div><span id="lvl_breakout" class="text-[10px] font-bold text-yellow-400 bg-yellow-950/60 border border-yellow-800 px-2 py-0.5 rounded">Lvl 1</span></button>
-                        <button onclick="playSound('click'); startArcadeGame('shooter')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-jet-fighter text-purple-400 text-base"></i><div><h4 class="font-bold text-gray-200">8. Space Alien Shooter</h4><p class="text-[9px] text-gray-400">Geser Jari / Auto Fire (+1 TH/s)</p></div></div><span id="lvl_shooter" class="text-[10px] font-bold text-purple-400 bg-purple-950/60 border border-purple-800 px-2 py-0.5 rounded">Lvl 1</span></button>
-                        <button onclick="playSound('click'); startArcadeGame('pong')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-table-tennis-paddle-ball text-pink-400 text-base"></i><div><h4 class="font-bold text-gray-200">9. Ping Pong vs AI</h4><p class="text-[9px] text-gray-400">Geser Jari di Layar (+2 TH/s)</p></div></div><span id="lvl_pong" class="text-[10px] font-bold text-pink-400 bg-pink-950/60 border border-pink-800 px-2 py-0.5 rounded">Lvl 1</span></button>
-                        <button onclick="playSound('click'); startArcadeGame('match3')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-border-all text-teal-400 text-base"></i><div><h4 class="font-bold text-gray-200">10. Color Tetris Match-5</h4><p class="text-[9px] text-gray-400">Usap / Tap Layar (+5 TH/s)</p></div></div><span id="lvl_match3" class="text-[10px] font-bold text-teal-400 bg-teal-950/60 border border-teal-800 px-2 py-0.5 rounded">Lvl 1</span></button>
+                        <button onclick="playSound('click'); startArcadeGame('flappy')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-circle-dot text-amber-400 text-base"></i><div><h4 class="font-bold text-gray-200">1. Flappy Ball</h4><p class="text-[9px] text-gray-400">Spasi / Klik / Sentuh (+100 MH/s)</p></div></div><span id="lvl_flappy" class="text-[10px] font-bold text-amber-400 bg-amber-950/60 border border-amber-800 px-2 py-0.5 rounded">Lvl 1</span></button>
+                        <button onclick="playSound('click'); startArcadeGame('tetris')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-cubes-stacked text-indigo-400 text-base"></i><div><h4 class="font-bold text-gray-200">2. Classic Tetris</h4><p class="text-[9px] text-gray-400">Panah Keyboard / WASD (+200 MH/s)</p></div></div><span id="lvl_tetris" class="text-[10px] font-bold text-indigo-400 bg-indigo-950/60 border border-indigo-800 px-2 py-0.5 rounded">Lvl 1</span></button>
+                        <button onclick="playSound('click'); startArcadeGame('racing')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-car-burst text-rose-400 text-base"></i><div><h4 class="font-bold text-gray-200">3. Balap Blok</h4><p class="text-[9px] text-gray-400">Panah Kiri/Kanan / A/D (+300 MH/s)</p></div></div><span id="lvl_racing" class="text-[10px] font-bold text-rose-400 bg-rose-950/60 border border-rose-800 px-2 py-0.5 rounded">Lvl 1</span></button>
+                        <button onclick="playSound('click'); startArcadeGame('snake')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-staff-snake text-emerald-400 text-base"></i><div><h4 class="font-bold text-gray-200">4. Nokia Snake</h4><p class="text-[9px] text-gray-400">Panah Keyboard / WASD (+1.000 MH/s)</p></div></div><span id="lvl_snake" class="text-[10px] font-bold text-emerald-400 bg-emerald-950/60 border border-emerald-800 px-2 py-0.5 rounded">Lvl 1</span></button>
+                        <button onclick="playSound('click'); startArcadeGame('tank')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-shield-halved text-cyan-400 text-base"></i><div><h4 class="font-bold text-gray-200">5. Blok Battle</h4><p class="text-[9px] text-gray-400">Kiri/Kanan + Spasi (+2.000 MH/s)</p></div></div><span id="lvl_tank" class="text-[10px] font-bold text-cyan-400 bg-cyan-950/60 border border-cyan-800 px-2 py-0.5 rounded">Lvl 1</span></button>
+                        <button onclick="playSound('click'); startArcadeGame('frogger')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-frog text-lime-400 text-base"></i><div><h4 class="font-bold text-gray-200">6. Ball Crossing</h4><p class="text-[9px] text-gray-400">Panah Keyboard / WASD (+3.000 MH/s)</p></div></div><span id="lvl_frogger" class="text-[10px] font-bold text-lime-400 bg-lime-950/60 border border-lime-800 px-2 py-0.5 rounded">Lvl 1</span></button>
+                        <button onclick="playSound('click'); startArcadeGame('breakout')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-table-cells text-yellow-400 text-base"></i><div><h4 class="font-bold text-gray-200">7. Breakout Balok</h4><p class="text-[9px] text-gray-400">Panah / Mouse / Sentuh (+4.000 MH/s)</p></div></div><span id="lvl_breakout" class="text-[10px] font-bold text-yellow-400 bg-yellow-950/60 border border-yellow-800 px-2 py-0.5 rounded">Lvl 1</span></button>
+                        <button onclick="playSound('click'); startArcadeGame('shooter')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-jet-fighter text-purple-400 text-base"></i><div><h4 class="font-bold text-gray-200">8. Space Alien Shooter</h4><p class="text-[9px] text-gray-400">Kiri/Kanan + Spasi (+1 TH/s)</p></div></div><span id="lvl_shooter" class="text-[10px] font-bold text-purple-400 bg-purple-950/60 border border-purple-800 px-2 py-0.5 rounded">Lvl 1</span></button>
+                        <button onclick="playSound('click'); startArcadeGame('pong')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-table-tennis-paddle-ball text-pink-400 text-base"></i><div><h4 class="font-bold text-gray-200">9. Ping Pong vs AI</h4><p class="text-[9px] text-gray-400">Panah / Mouse / Sentuh (+2 TH/s)</p></div></div><span id="lvl_pong" class="text-[10px] font-bold text-pink-400 bg-pink-950/60 border border-pink-800 px-2 py-0.5 rounded">Lvl 1</span></button>
+                        <button onclick="playSound('click'); startArcadeGame('match3')" class="w-full p-2.5 bg-slate-950 hover:bg-slate-800 border border-slate-800 rounded-xl flex items-center justify-between text-left transition"><div class="flex items-center space-x-2.5"><i class="fa-solid fa-border-all text-teal-400 text-base"></i><div><h4 class="font-bold text-gray-200">10. Color Tetris Match-5</h4><p class="text-[9px] text-gray-400">Panah Keyboard / WASD (+5 TH/s)</p></div></div><span id="lvl_match3" class="text-[10px] font-bold text-teal-400 bg-teal-950/60 border border-teal-800 px-2 py-0.5 rounded">Lvl 1</span></button>
                     </div>
 
-                    <!-- Active Game Area (Layar Diperbesar) -->
+                    <!-- Active Game Area -->
                     <div id="activeGameArea" class="hidden text-center space-y-3 pt-2 relative">
                         <div class="flex justify-between items-center text-xs bg-slate-950 p-2.5 rounded-xl border border-slate-800">
                             <span id="gameTitleDisplay" class="font-bold text-yellow-400">Judul Game</span>
                             <span id="gameScoreDisplay" class="font-mono text-emerald-400 font-bold">Target: 0/10</span>
                             
-                            <!-- Tombol Toggle Fullscreen / Perbesar Layar -->
                             <button onclick="toggleGameFullscreen()" class="px-2.5 py-1 bg-cyan-950 hover:bg-cyan-900 border border-cyan-700 text-cyan-300 rounded-lg text-[10px] font-bold transition flex items-center gap-1">
                                 <i class="fa-solid fa-expand"></i> <span id="fullscreenBtnText">Layar Penuh</span>
                             </button>
@@ -240,8 +237,9 @@
                             </div>
                         </div>
 
-                        <div id="touchGuideNotice" class="text-[10px] text-cyan-400 font-bold bg-slate-950 p-2 rounded-xl border border-cyan-900/50">
-                            💡 Usap (Swipe) / Sentuh Layar Game untuk Mengontrol
+                        <div id="touchGuideNotice" class="text-[10px] text-cyan-300 font-bold bg-slate-950 p-2 rounded-xl border border-cyan-900/50 flex flex-col sm:flex-row items-center justify-between gap-1 text-center">
+                            <span>💻 <b>Laptop/PC:</b> Tombol Panah (↑ ↓ ← →) / WASD / Spasi / Mouse</span>
+                            <span>📱 <b>HP:</b> Usap / Sentuh Layar</span>
                         </div>
                     </div>
                 </div>
@@ -296,7 +294,7 @@
                         <div class="bg-slate-950 p-2.5 rounded-xl border border-yellow-500/60 flex items-center justify-between glow-gold">
                             <div class="flex items-center space-x-3">
                                 <div class="w-14 h-14 flex-shrink-0">
-                                    <svg class="w-full h-full drop-shadow" viewBox="0 0 100 100"><polygon points="50,5 95,25 95,75 50,95 5,25" fill="#1c1917" stroke="#fbbf24" stroke-width="3"/><polygon points="50,15 80,30 80,70 50,85 20,70 20,30" fill="#422006"/><circle cx="50" cy="50" r="15" fill="#f59e0b" class="animate-pulse"/><circle cx="50" cy="50" r="8" fill="#fffbeb"/><rect x="10" y="80" width="80" height="12" rx="3" fill="#fbbf24"/><text x="50" y="89" font-size="7" fill="#1c1917" font-family="monospace" font-weight="900" text-anchor="middle">RAKYAT SEJAHTERA</text></svg>
+                                    <svg class="w-full h-full drop-shadow" viewBox="0 0 100 100"><polygon points="50,5 95,25 95,75 50,95 5,75 5,25" fill="#1c1917" stroke="#fbbf24" stroke-width="3"/><polygon points="50,15 80,30 80,70 50,85 20,70 20,30" fill="#422006"/><circle cx="50" cy="50" r="15" fill="#f59e0b" class="animate-pulse"/><circle cx="50" cy="50" r="8" fill="#fffbeb"/><rect x="10" y="80" width="80" height="12" rx="3" fill="#fbbf24"/><text x="50" y="89" font-size="7" fill="#1c1917" font-family="monospace" font-weight="900" text-anchor="middle">RAKYAT SEJAHTERA</text></svg>
                                 </div>
                                 <div><h4 class="font-bold text-xs text-yellow-300">Rig RAKYAT SEJAHTERA</h4><p class="text-[9px] text-gray-300">+10.000 MH/s (10 GH/s)</p><p class="text-xs text-emerald-300 font-bold mt-0.5">Rp 50.000</p></div>
                             </div>
@@ -326,7 +324,6 @@
                 </div>
             </div>
 
-            <!-- Pengumuman Penukaran Koin -->
             <div class="bg-amber-950/40 border border-amber-500/50 p-3 rounded-xl text-xs space-y-1">
                 <div class="flex items-center gap-1.5 text-amber-300 font-bold">
                     <i class="fa-solid fa-circle-info"></i> INFO PENUKARAN KOIN RUPIAH
@@ -336,7 +333,6 @@
                 </p>
             </div>
 
-            <!-- Posisi Peringkat Pemain Saat Ini -->
             <div id="myRankBox" class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex justify-between items-center text-xs">
                 <div>
                     <span class="text-gray-400 block text-[10px]">Posisi Kamu Saat Ini:</span>
@@ -344,11 +340,10 @@
                 </div>
                 <div class="text-right font-mono">
                     <span id="myRankPowerDisplay" class="text-emerald-400 font-bold block">0 MH/s</span>
-                    <span id="myRankCoinDisplay" class="text-yellow-400 text-[11px]">Rp 0.000</span>
+                    <span id="myRankCoinDisplay" class="text-yellow-400 text-[11px]">Koin Rupiah: Rp 0.000</span>
                 </div>
             </div>
 
-            <!-- Daftar Hadiah ShopeePay -->
             <div class="space-y-2">
                 <h4 class="font-bold text-xs text-gray-300 flex items-center gap-1.5"><i class="fa-solid fa-gift text-pink-400"></i> Skema Hadiah ShopeePay Top 20:</h4>
                 <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-[11px] font-mono">
@@ -361,7 +356,6 @@
                 </div>
             </div>
 
-            <!-- Tabel Peringkat Top 1 s/d 20 -->
             <div class="flex-1 overflow-y-auto pr-1">
                 <h4 class="font-bold text-xs text-gray-300 mb-2"><i class="fa-solid fa-ranking-star text-yellow-400 mr-1"></i> Peringkat 1 - 20 Teratas:</h4>
                 <div id="fullLeaderboardList" class="space-y-1.5 text-xs"></div>
@@ -502,7 +496,7 @@
     </div>
 
 
-    <!-- FULL JAVASCRIPT ENGINE v8.9 -->
+    <!-- FULL JAVASCRIPT ENGINE v10.0 CROSS-PLATFORM -->
     <script>
         let audioCtx = null;
         function playSound(type) {
@@ -576,7 +570,7 @@
             'Rig MPR': `<svg class="w-full h-full drop-shadow" viewBox="0 0 100 100"><rect x="10" y="10" width="80" height="80" rx="5" fill="#172554" stroke="#3b82f6" stroke-width="2"/><rect x="15" y="15" width="70" height="15" rx="2" fill="#1e3a8a"/><rect x="15" y="35" width="70" height="15" rx="2" fill="#1e3a8a"/><rect x="15" y="55" width="70" height="15" rx="2" fill="#1e3a8a"/><circle cx="22" cy="22.5" r="2" fill="#60a5fa" class="animate-ping"/><circle cx="22" cy="42.5" r="2" fill="#60a5fa" class="animate-pulse"/><circle cx="22" cy="62.5" r="2" fill="#60a5fa" class="animate-ping"/><rect x="15" y="75" width="70" height="12" rx="2" fill="#3b82f6"/><text x="50" y="84" font-size="8" fill="#172554" font-family="monospace" font-weight="900" text-anchor="middle">RIG MPR</text></svg>`,
             'Rig GARUDA': `<svg class="w-full h-full drop-shadow" viewBox="0 0 100 100"><path d="M10 50 Q 5 30 25 15 Q 15 35 30 40 Z" fill="#d97706"/><path d="M90 50 Q 95 30 75 15 Q 85 35 70 40 Z" fill="#d97706"/><rect x="25" y="20" width="50" height="70" rx="6" fill="#451a03" stroke="#f59e0b" stroke-width="2"/><rect x="30" y="25" width="40" height="25" rx="3" fill="#78350f"/><circle cx="50" cy="37" r="9" fill="#451a03" stroke="#fbbf24" stroke-width="2"/><path d="M50 28 L50 46 M41 37 L59 37 M44 31 L56 43 M44 43 L56 31" stroke="#fef3c7" stroke-width="1" class="spin-slow" style="transform-origin: 50px 37px;"/><rect x="15" y="65" width="70" height="15" rx="4" fill="#f59e0b"/><text x="50" y="75" font-size="8" fill="#451a03" font-family="monospace" font-weight="900" text-anchor="middle">RIG GARUDA</text></svg>`,
             'Rig MERAH PUTIH': `<svg class="w-full h-full drop-shadow" viewBox="0 0 100 100"><rect x="15" y="10" width="70" height="80" rx="8" fill="#0f172a" stroke="#cbd5e1" stroke-width="2"/><rect x="20" y="15" width="60" height="30" rx="4" fill="#991b1b" stroke="#ef4444" stroke-width="1"/><rect x="20" y="50" width="60" height="30" rx="4" fill="#e2e8f0" stroke="#ffffff" stroke-width="1"/><circle cx="50" cy="30" r="10" fill="#450a0a" class="animate-spin" style="transform-origin: 50px 30px; stroke-dasharray: 4 4; stroke: #ef4444;"/><circle cx="50" cy="65" r="10" fill="#94a3b8" class="animate-spin" style="transform-origin: 50px 65px; stroke-dasharray: 4 4; stroke: #94a3b8; animation-direction: reverse;"/><rect x="10" y="44" width="80" height="12" rx="3" fill="#f8fafc" stroke="#dc2626" stroke-width="2"/><text x="50" y="52" font-size="7.5" fill="#dc2626" font-family="monospace" font-weight="900" text-anchor="middle">MERAH PUTIH</text></svg>`,
-            'Rig RAKYAT SEJAHTERA': `<svg class="w-full h-full drop-shadow" viewBox="0 0 100 100"><polygon points="50,5 95,25 95,75 50,95 5,25" fill="#1c1917" stroke="#fbbf24" stroke-width="3"/><polygon points="50,15 80,30 80,70 50,85 20,70 20,30" fill="#422006"/><circle cx="50" cy="50" r="15" fill="#f59e0b" class="animate-pulse"/><circle cx="50" cy="50" r="8" fill="#fffbeb"/><rect x="10" y="80" width="80" height="12" rx="3" fill="#fbbf24"/><text x="50" y="89" font-size="7" fill="#1c1917" font-family="monospace" font-weight="900" text-anchor="middle">RAKYAT SEJAHTERA</text></svg>`
+            'Rig RAKYAT SEJAHTERA': `<svg class="w-full h-full drop-shadow" viewBox="0 0 100 100"><polygon points="50,5 95,25 95,75 50,95 5,75 5,25" fill="#1c1917" stroke="#fbbf24" stroke-width="3"/><polygon points="50,15 80,30 80,70 50,85 20,70 20,30" fill="#422006"/><circle cx="50" cy="50" r="15" fill="#f59e0b" class="animate-pulse"/><circle cx="50" cy="50" r="8" fill="#fffbeb"/><rect x="10" y="80" width="80" height="12" rx="3" fill="#fbbf24"/><text x="50" y="89" font-size="7" fill="#1c1917" font-family="monospace" font-weight="900" text-anchor="middle">RAKYAT SEJAHTERA</text></svg>`
         };
 
         function getRigPowerTotal() { return minersPurchased.reduce((sum, m) => sum + m.powerBonus, 0); }
@@ -620,11 +614,11 @@
                 minersPurchased, gameLevels, electricityLevel, 
                 solarPanelLevel, batteryEfficiencyLevel, achievements, gamesWonCount 
             };
-            localStorage.setItem('RupiahMinerProgress_v89', JSON.stringify(dataToSave));
+            localStorage.setItem('RupiahMinerProgress_v100', JSON.stringify(dataToSave));
         }
 
         function loadGameData() {
-            const savedData = localStorage.getItem('RupiahMinerProgress_v89');
+            const savedData = localStorage.getItem('RupiahMinerProgress_v100') || localStorage.getItem('RupiahMinerProgress_v90');
             if (savedData) {
                 try {
                     const parsed = JSON.parse(savedData);
@@ -642,7 +636,7 @@
                     gamesWonCount = parsed.gamesWonCount || 0;
 
                     if (!userData.myRefCode) userData.myRefCode = "CUAN-" + Math.floor(1000 + Math.random() * 9000);
-                    if (userData.isRegistered) {
+                    if (userData.isRegistered && document.getElementById('userNameDisplay')) {
                         document.getElementById('userNameDisplay').innerText = userData.name;
                     }
 
@@ -663,7 +657,7 @@
                         
                         showOfflineEarnings(elapsedSec, offlineCoin);
                     }
-                } catch(e) { console.error(e); }
+                } catch(e) { console.error("Error loading save data:", e); }
             } else {
                 userData.myRefCode = "CUAN-" + Math.floor(1000 + Math.random() * 9000);
                 saveGameData();
@@ -681,7 +675,7 @@
         }
         function closeOfflineModal() { document.getElementById('offlineModal').classList.add('hidden'); }
 
-        function resetGameProgress() { if (confirm("Reset semua data game?")) { localStorage.removeItem('RupiahMinerProgress_v89'); location.reload(); } }
+        function resetGameProgress() { if (confirm("Reset semua data game?")) { localStorage.removeItem('RupiahMinerProgress_v100'); localStorage.removeItem('RupiahMinerProgress_v90'); location.reload(); } }
         function addLog(msg) {
             const logBox = document.getElementById('activityLog');
             const p = document.createElement('p'); p.innerText = `[${new Date().toLocaleTimeString('id-ID')}] ${msg}`;
@@ -728,13 +722,11 @@
             }, 1000);
         }
 
-        // FREE HASHRATE VIA TIKTOK CHANNEL
         function tryClaimFreeHashTikTok() {
             if (freeHashTimerSec > 0) {
                 alert(`Tunggu ${Math.floor(freeHashTimerSec/60)}m ${freeHashTimerSec%60}s lagi untuk klaim Free Hashrate berikutnya!`);
                 return;
             }
-            // Buka TikTok di Tab Baru
             window.open("https://www.tiktok.com/@iciti.id/video/7677897224197541138?is_from_webapp=1&sender_device=pc", "_blank");
             
             const freeBonus = 150;
@@ -770,83 +762,43 @@
             else { badge.innerText = "Penambang MH/s"; badge.className = "bg-red-500/20 text-red-400 border border-red-500/50 text-[10px] font-bold px-2 py-0.5 rounded-full"; }
         }
 
-        // LEADERBOARD MODAL FUNCTIONALITY (TOP 1 s/d 20)
-        function openLeaderboardModal() {
-            renderFullLeaderboard();
-            document.getElementById('leaderboardModal').classList.remove('hidden');
-        }
-        function closeLeaderboardModal() {
-            document.getElementById('leaderboardModal').classList.add('hidden');
-        }
+        // LEADERBOARD MODAL
+        function openLeaderboardModal() { renderFullLeaderboard(); document.getElementById('leaderboardModal').classList.remove('hidden'); }
+        function closeLeaderboardModal() { document.getElementById('leaderboardModal').classList.add('hidden'); }
 
         function renderFullLeaderboard() {
-            const myPower = getTotalPower();
-            const myCoin = coinBalance;
-            const myName = userData.name || "Kamu (Pemain)";
-
-            // Data simulasi penambang lain di server
+            const myPower = getTotalPower(), myCoin = coinBalance, myName = userData.name || "Kamu (Pemain)";
             let mockPlayers = [
-                { name: "Sultan_Jakarta", power: 1250000, coin: 45000 },
-                { name: "RajaCuan_Bali", power: 980000, coin: 38200 },
-                { name: "Miner_Bandung", power: 750000, coin: 29000 },
-                { name: "Gamer_Surabaya", power: 520000, coin: 21500 },
-                { name: "NusantaraRig99", power: 340000, coin: 18000 },
-                { name: "KryptoMedan", power: 280000, coin: 14200 },
-                { name: "CuanLokal_Jogja", power: 210000, coin: 11000 },
-                { name: "SultanMakassar", power: 180000, coin: 9500 },
-                { name: "BorneoMiner", power: 140000, coin: 7800 },
-                { name: "PenambangDepok", power: 110000, coin: 6200 },
-                { name: "BatamCrypto_Pro", power: 95000, coin: 5100 },
-                { name: "SemarangRig", power: 80000, coin: 4200 },
-                { name: "Sultra_Miner", power: 65000, coin: 3500 },
-                { name: "PalembangCuan", power: 50000, coin: 2800 },
-                { name: "SoloPlayer88", power: 42000, coin: 2100 },
-                { name: "LombokCrypto", power: 35000, coin: 1700 },
-                { name: "SultanAceh", power: 28000, coin: 1300 },
-                { name: "PapuaRigMaster", power: 20000, coin: 950 },
+                { name: "Sultan_Jakarta", power: 1250000, coin: 45000 }, { name: "RajaCuan_Bali", power: 980000, coin: 38200 },
+                { name: "Miner_Bandung", power: 750000, coin: 29000 }, { name: "Gamer_Surabaya", power: 520000, coin: 21500 },
+                { name: "NusantaraRig99", power: 340000, coin: 18000 }, { name: "KryptoMedan", power: 280000, coin: 14200 },
+                { name: "CuanLokal_Jogja", power: 210000, coin: 11000 }, { name: "SultanMakassar", power: 180000, coin: 9500 },
+                { name: "BorneoMiner", power: 140000, coin: 7800 }, { name: "PenambangDepok", power: 110000, coin: 6200 },
+                { name: "BatamCrypto_Pro", power: 95000, coin: 5100 }, { name: "SemarangRig", power: 80000, coin: 4200 },
+                { name: "Sultra_Miner", power: 65000, coin: 3500 }, { name: "PalembangCuan", power: 50000, coin: 2800 },
+                { name: "SoloPlayer88", power: 42000, coin: 2100 }, { name: "LombokCrypto", power: 35000, coin: 1700 },
+                { name: "SultanAceh", power: 28000, coin: 1300 }, { name: "PapuaRigMaster", power: 20000, coin: 950 },
                 { name: "ManadoCuan", power: 15000, coin: 700 }
             ];
 
-            // Masukkan data pemain asli ke dalam daftar
             let allPlayers = [...mockPlayers, { name: myName, power: myPower, coin: myCoin, isMe: true }];
-            
-            // Urutkan berdasarkan total Hashrate tertinggi
             allPlayers.sort((a, b) => b.power - a.power);
 
-            // Cari posisi peringkat pemain asli
             const myRankIndex = allPlayers.findIndex(p => p.isMe === true) + 1;
             document.getElementById('myRankNumberDisplay').innerText = `Peringkat #${myRankIndex} dari ${allPlayers.length} Penambang`;
             document.getElementById('myRankPowerDisplay').innerText = formatHashrate(myPower);
-            document.getElementById('myRankCoinDisplay').innerText = `Rp ${myCoin.toFixed(2)}`;
+            document.getElementById('myRankCoinDisplay').innerText = `Koin Rupiah: Rp ${myCoin.toFixed(2)}`;
 
-            // Tampilkan Top 20
-            const listContainer = document.getElementById('fullLeaderboardList');
-            listContainer.innerHTML = "";
-
+            const listContainer = document.getElementById('fullLeaderboardList'); listContainer.innerHTML = "";
             const top20 = allPlayers.slice(0, 20);
             top20.forEach((player, idx) => {
                 const rankNum = idx + 1;
                 let badgeIcon = `#${rankNum}`;
-                if (rankNum === 1) badgeIcon = "🥇";
-                if (rankNum === 2) badgeIcon = "🥈";
-                if (rankNum === 3) badgeIcon = "🥉";
-
+                if (rankNum === 1) badgeIcon = "🥇"; if (rankNum === 2) badgeIcon = "🥈"; if (rankNum === 3) badgeIcon = "🥉";
                 let rowBg = player.isMe ? "bg-amber-950/60 border-amber-500/80 glow-gold" : "bg-slate-950 border-slate-800";
-
                 const row = document.createElement('div');
                 row.className = `p-2.5 rounded-xl border flex justify-between items-center ${rowBg}`;
-                row.innerHTML = `
-                    <div class="flex items-center space-x-3">
-                        <span class="font-bold text-xs ${rankNum <= 3 ? 'text-amber-400 text-sm' : 'text-gray-400'} w-6 text-center">${badgeIcon}</span>
-                        <div>
-                            <span class="font-bold ${player.isMe ? 'text-amber-300 font-black' : 'text-gray-200'}">${player.name} ${player.isMe ? '(Kamu)' : ''}</span>
-                            <span class="text-[10px] text-gray-400 block font-mono">Saldo: Rp ${player.coin.toLocaleString('id-ID', {minimumFractionDigits: 2})}</span>
-                        </div>
-                    </div>
-                    <div class="text-right font-mono">
-                        <span class="font-bold text-emerald-400 text-xs">${formatHashrate(player.power)}</span>
-                    </div>
-                `;
+                row.innerHTML = `<div class="flex items-center space-x-3"><span class="font-bold text-xs ${rankNum <= 3 ? 'text-amber-400 text-sm' : 'text-gray-400'} w-6 text-center">${badgeIcon}</span><div><span class="font-bold ${player.isMe ? 'text-amber-300 font-black' : 'text-gray-200'}">${player.name} ${player.isMe ? '(Kamu)' : ''}</span><span class="text-[10px] text-gray-400 block font-mono">Koin Rupiah: Rp ${player.coin.toLocaleString('id-ID', {minimumFractionDigits: 2})}</span></div></div><div class="text-right font-mono"><span class="font-bold text-emerald-400 text-xs">${formatHashrate(player.power)}</span></div>`;
                 listContainer.appendChild(row);
             });
         }
@@ -854,34 +806,27 @@
         function buyMiner(name, price, powerBonus) {
             if (coinBalance < price) { alert("Saldo tidak cukup!"); return; }
             coinBalance -= price; minersPurchased.push({ name, powerBonus });
-            playSound('win');
-            updateUI(); renderMiners(); saveGameData();
+            playSound('win'); updateUI(); renderMiners(); saveGameData();
             addLog(`Membeli Rig Fisik ${name} (+${formatHashrate(powerBonus)})`);
         }
 
         function renderMiners() {
-            const grid = document.getElementById('minersGrid'), notice = document.getElementById('emptyRoomNotice');
-            grid.innerHTML = '';
+            const grid = document.getElementById('minersGrid'), notice = document.getElementById('emptyRoomNotice'); grid.innerHTML = '';
             if (minersPurchased.length > 0) {
                 notice.classList.add('hidden');
                 minersPurchased.forEach(miner => {
-                    const card = document.createElement('div');
-                    card.className = "bg-slate-900 border border-slate-800 p-2.5 rounded-xl text-center shadow-lg flex flex-col justify-between items-center h-28 relative";
+                    const card = document.createElement('div'); card.className = "bg-slate-900 border border-slate-800 p-2.5 rounded-xl text-center shadow-lg flex flex-col justify-between items-center h-28 relative";
                     card.innerHTML = `<div class="h-14 w-14 flex items-center justify-center my-auto">${minerIconTemplates[miner.name]}</div><div><span class="text-[9px] text-emerald-400 font-mono">+${formatHashrate(miner.powerBonus)}</span></div>`;
                     grid.appendChild(card);
                 });
-            } else {
-                notice.classList.remove('hidden');
-            }
+            } else { notice.classList.remove('hidden'); }
         }
 
         function updatePowerUpgradesUI() {
             const solarCost = (solarPanelLevel + 1) * 10000;
             const drainCost = batteryEfficiencyLevel >= 3 ? "MAX" : `Rp ${(batteryEfficiencyLevel * 15000).toLocaleString('id-ID')}`;
-            
             document.getElementById('solarLevelText').innerText = `Panel Surya Otomatis (Lvl ${solarPanelLevel})`;
             document.getElementById('solarUpgradeBtn').innerText = solarPanelLevel >= 5 ? "MAX" : `Rp ${solarCost.toLocaleString('id-ID')}`;
-            
             document.getElementById('drainLevelText').innerText = `Efisiensi Kapasitor (Lvl ${batteryEfficiencyLevel})`;
             document.getElementById('drainUpgradeBtn').innerText = drainCost;
         }
@@ -890,9 +835,7 @@
             const cost = (solarPanelLevel + 1) * 10000;
             if (solarPanelLevel >= 5) { alert("Panel Surya sudah level maksimal!"); return; }
             if (coinBalance < cost) { alert("Saldo tidak cukup untuk upgrade Panel Surya!"); return; }
-            coinBalance -= cost; solarPanelLevel++;
-            playSound('win');
-            updatePowerUpgradesUI(); saveGameData();
+            coinBalance -= cost; solarPanelLevel++; playSound('win'); updatePowerUpgradesUI(); saveGameData();
             alert(`Berhasil upgrade Panel Surya ke Level ${solarPanelLevel}! (Permanen)`);
             addLog(`[UPGRADE] Panel Surya Lvl ${solarPanelLevel} permanen dibeli.`);
         }
@@ -901,9 +844,7 @@
             const cost = batteryEfficiencyLevel * 15000;
             if (batteryEfficiencyLevel >= 3) { alert("Efisiensi Kapasitor sudah level maksimal!"); return; }
             if (coinBalance < cost) { alert("Saldo tidak cukup untuk upgrade Kapasitor!"); return; }
-            coinBalance -= cost; batteryEfficiencyLevel++;
-            playSound('win');
-            updatePowerUpgradesUI(); saveGameData();
+            coinBalance -= cost; batteryEfficiencyLevel++; playSound('win'); updatePowerUpgradesUI(); saveGameData();
             alert(`Berhasil upgrade Efisiensi Kapasitor ke Level ${batteryEfficiencyLevel}! (Permanen)`);
             addLog(`[UPGRADE] Efisiensi Kapasitor Lvl ${batteryEfficiencyLevel} permanen dibeli.`);
         }
@@ -912,8 +853,7 @@
         function closeAchievementModal() { document.getElementById('achievementModal').classList.add('hidden'); }
 
         function renderAchievementsList() {
-            const list = document.getElementById('achievementsList');
-            list.innerHTML = "";
+            const list = document.getElementById('achievementsList'); list.innerHTML = "";
             achievements.forEach(ach => {
                 let currentVal = 0;
                 if (ach.type === 'hash') currentVal = getTotalPower();
@@ -924,47 +864,27 @@
                 const isCompleted = currentVal >= ach.target;
                 const progressPct = Math.min(100, Math.floor((currentVal / ach.target) * 100));
 
-                const item = document.createElement('div');
-                item.className = "bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2";
+                const item = document.createElement('div'); item.className = "bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2";
                 item.innerHTML = `
                     <div class="flex justify-between items-start">
-                        <div>
-                            <h4 class="font-bold text-white">${ach.title}</h4>
-                            <p class="text-[10px] text-gray-400">${ach.desc}</p>
-                        </div>
-                        <span class="text-[10px] font-mono px-2 py-0.5 rounded ${ach.claimed ? 'bg-emerald-950 text-emerald-400' : isCompleted ? 'bg-amber-500 text-slate-950 font-bold' : 'bg-slate-800 text-gray-400'}">
-                            ${ach.claimed ? 'KLAIM' : isCompleted ? 'SIAP KLAIM' : `${progressPct}%`}
-                        </span>
+                        <div><h4 class="font-bold text-white">${ach.title}</h4><p class="text-[10px] text-gray-400">${ach.desc}</p></div>
+                        <span class="text-[10px] font-mono px-2 py-0.5 rounded ${ach.claimed ? 'bg-emerald-950 text-emerald-400' : isCompleted ? 'bg-amber-500 text-slate-950 font-bold' : 'bg-slate-800 text-gray-400'}">${ach.claimed ? 'KLAIM' : isCompleted ? 'SIAP KLAIM' : `${progressPct}%`}</span>
                     </div>
-                    <div class="w-full bg-slate-900 rounded-full h-1.5 overflow-hidden">
-                        <div class="bg-emerald-500 h-full" style="width: ${progressPct}%"></div>
-                    </div>
-                    <div class="flex justify-between items-center pt-1">
-                        <span class="text-[9px] text-emerald-400 font-bold">Reward (Permanen): Rp ${ach.rewardVal.toLocaleString()}</span>
-                        ${!ach.claimed && isCompleted ? `<button onclick="claimAchievement('${ach.id}')" class="px-3 py-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-[10px] rounded-lg transition">Klaim</button>` : ''}
-                    </div>
+                    <div class="w-full bg-slate-900 rounded-full h-1.5 overflow-hidden"><div class="bg-emerald-500 h-full" style="width: ${progressPct}%"></div></div>
+                    <div class="flex justify-between items-center pt-1"><span class="text-[9px] text-emerald-400 font-bold">Reward (Permanen): Rp ${ach.rewardVal.toLocaleString()}</span>${!ach.claimed && isCompleted ? `<button onclick="claimAchievement('${ach.id}')" class="px-3 py-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-[10px] rounded-lg transition">Klaim</button>` : ''}</div>
                 `;
                 list.appendChild(item);
             });
         }
 
         function claimAchievement(id) {
-            const ach = achievements.find(a => a.id === id);
-            if (!ach || ach.claimed) return;
-            ach.claimed = true;
-            coinBalance += ach.rewardVal;
-
-            playSound('win');
-            updateUI(); saveGameData(); renderAchievementsList();
+            const ach = achievements.find(a => a.id === id); if (!ach || ach.claimed) return;
+            ach.claimed = true; coinBalance += ach.rewardVal; playSound('win'); updateUI(); saveGameData(); renderAchievementsList();
             alert(`Pencapaian "${ach.title}" berhasil diklaim! +Rp ${ach.rewardVal.toLocaleString()}`);
             addLog(`[ACHIEVEMENT] Klaim misi ${ach.title} (+Rp ${ach.rewardVal}).`);
         }
 
-        function openReferralModal() { 
-            document.getElementById('referralModal').classList.remove('hidden'); 
-            document.getElementById('myRefCodeDisplay').innerText = userData.myRefCode;
-            renderInvitedFriends();
-        }
+        function openReferralModal() { document.getElementById('referralModal').classList.remove('hidden'); document.getElementById('myRefCodeDisplay').innerText = userData.myRefCode; renderInvitedFriends(); }
         function closeReferralModal() { document.getElementById('referralModal').classList.add('hidden'); }
         function copyRefCode() { navigator.clipboard.writeText(userData.myRefCode); alert("Kode referral disalin!"); }
         
@@ -973,44 +893,28 @@
             const code = document.getElementById('inputFriendRef').value.trim().toUpperCase();
             if (code === userData.myRefCode) { alert("Tidak bisa klaim kode sendiri!"); return; }
             if (code.length < 5) { alert("Kode referral tidak valid!"); return; }
-
-            userData.claimedRef = true;
-            addFreePower(100); 
-            coinBalance += 1000; 
-            invitedFriends.push({ username: `Teman_${code.replace('CUAN-', '')}`, date: new Date().toLocaleDateString('id-ID') });
-
-            playSound('win');
-            updateUI(); saveGameData(); renderInvitedFriends();
+            userData.claimedRef = true; addFreePower(100); coinBalance += 1000; invitedFriends.push({ username: `Teman_${code.replace('CUAN-', '')}`, date: new Date().toLocaleDateString('id-ID') });
+            playSound('win'); updateUI(); saveGameData(); renderInvitedFriends();
             alert("Berhasil! Mendapat +Rp 1.000 Koin Rupiah + 100 MH/s Free!");
             addLog(`[REFERRAL] Berhasil klaim kode ${code}.`);
         }
 
         function renderInvitedFriends() {
-            const list = document.getElementById('invitedFriendsList');
-            document.getElementById('totalInvitedCount').innerText = `${invitedFriends.length} Orang`;
-            if (invitedFriends.length === 0) {
-                list.innerHTML = `<p class="text-gray-500 text-center py-2 text-[11px]">Belum ada teman yang terundang.</p>`;
-                return;
-            }
+            const list = document.getElementById('invitedFriendsList'); document.getElementById('totalInvitedCount').innerText = `${invitedFriends.length} Orang`;
+            if (invitedFriends.length === 0) { list.innerHTML = `<p class="text-gray-500 text-center py-2 text-[11px]">Belum ada teman yang terundang.</p>`; return; }
             list.innerHTML = "";
             invitedFriends.forEach((friend) => {
-                const row = document.createElement('div');
-                row.className = "p-2 bg-slate-950 rounded-lg border border-slate-800 flex justify-between items-center";
+                const row = document.createElement('div'); row.className = "p-2 bg-slate-950 rounded-lg border border-slate-800 flex justify-between items-center";
                 row.innerHTML = `<div class="flex items-center gap-2"><i class="fa-solid fa-user-check text-emerald-400"></i><span class="font-bold text-gray-200">${friend.username}</span></div><div class="text-[10px] text-emerald-300 font-mono">+Rp 1.000 | ${friend.date}</div>`;
                 list.appendChild(row);
             });
         }
 
-        function openPowerModal() { 
-            updatePowerUpgradesUI();
-            document.getElementById('powerModal').classList.remove('hidden'); 
-        }
+        function openPowerModal() { updatePowerUpgradesUI(); document.getElementById('powerModal').classList.remove('hidden'); }
         function closePowerModal() { document.getElementById('powerModal').classList.add('hidden'); }
         
         function claimStationBattery() {
-            electricityLevel = 100;
-            playSound('win');
-            updateUI(); saveGameData(); closePowerModal();
+            electricityLevel = 100; playSound('win'); updateUI(); saveGameData(); closePowerModal();
             alert("Baterai berhasil diklaim dan terisi penuh (100%) di Stasiun Baterai!");
             addLog("[STASIUN BATERAI] Baterai diklaim penuh 100%.");
         }
@@ -1018,9 +922,7 @@
         function buyElectricity(type, price, boostAmount) {
             if (coinBalance < price) { alert("Saldo tidak cukup!"); return; }
             coinBalance -= price; electricityLevel = Math.min(100, electricityLevel + boostAmount); 
-            playSound('win');
-            addLog(`Membeli token baterai +${boostAmount}%.`);
-            updateUI(); saveGameData(); closePowerModal();
+            playSound('win'); addLog(`Membeli token baterai +${boostAmount}%.`); updateUI(); saveGameData(); closePowerModal();
         }
 
         function checkAttendanceStreakReset() {
@@ -1041,8 +943,7 @@
                 let borderClass = "border-slate-800 bg-slate-950/80";
                 if (isClaimedDay) borderClass = "border-emerald-500/80 bg-emerald-950/40 text-emerald-400";
                 if (isCurrentActiveDay) borderClass = "border-amber-400 bg-amber-950/60 text-amber-300 animate-pulse glow-gold";
-                let dayCard = document.createElement('div');
-                dayCard.className = `p-2 rounded-xl border text-center flex flex-col justify-between items-center h-20 ${borderClass}`;
+                let dayCard = document.createElement('div'); dayCard.className = `p-2 rounded-xl border text-center flex flex-col justify-between items-center h-20 ${borderClass}`;
                 dayCard.innerHTML = `<span class="text-[9px] font-bold uppercase text-gray-400">Hari ${i + 1}</span><div class="my-auto font-mono text-[10px] font-black">${reward.label}</div><span class="text-[8px] text-gray-500 font-mono">${reward.type === 'battery' ? 'Baterai' : 'Free Hash'}</span>`;
                 grid.appendChild(dayCard);
             }
@@ -1055,17 +956,11 @@
         }
 
         function claimDailyAttendance() {
-            const today = new Date().toDateString();
-            if (userData.lastAttendanceDate === today) return;
+            const today = new Date().toDateString(); if (userData.lastAttendanceDate === today) return;
             const reward = attendanceRewards[userData.attendanceStreak % 7];
-            
-            if (reward.type === 'hash') { addFreePower(reward.val); } 
-            else if (reward.type === 'battery') { electricityLevel = Math.min(100, electricityLevel + reward.val); }
-            
+            if (reward.type === 'hash') { addFreePower(reward.val); } else if (reward.type === 'battery') { electricityLevel = Math.min(100, electricityLevel + reward.val); }
             userData.attendanceStreak = (userData.attendanceStreak + 1) % 7; userData.lastAttendanceDate = today;
-            playSound('win');
-            updateUI(); saveGameData(); renderAttendanceGrid(); checkDailyStatus();
-            closeAttendanceModal();
+            playSound('win'); updateUI(); saveGameData(); renderAttendanceGrid(); checkDailyStatus(); closeAttendanceModal();
             alert(`Absen Berhasil! Reward: ${reward.label}.`);
             addLog(`[ABSEN HARIAN] Hari ${userData.attendanceStreak}! Reward: ${reward.label}.`);
         }
@@ -1086,14 +981,10 @@
 
         // LUCKY SPIN WHEEL
         const wheelSectors = [ 
-            { label: "+100 MH/s", type: 'hash', val: 100, color: "#9333ea" }, 
-            { label: "Baterai 25%", type: 'battery', val: 25, color: "#2563eb" }, 
-            { label: "+250 MH/s", type: 'hash', val: 250, color: "#059669" }, 
-            { label: "Baterai 50%", type: 'battery', val: 50, color: "#d97706" }, 
-            { label: "+500 MH/s", type: 'hash', val: 500, color: "#dc2626" }, 
-            { label: "Baterai 100%", type: 'battery', val: 100, color: "#0284c7" }, 
-            { label: "+150 MH/s", type: 'hash', val: 150, color: "#7c3aed" }, 
-            { label: "Baterai 35%", type: 'battery', val: 35, color: "#16a34a" } 
+            { label: "+100 MH/s", type: 'hash', val: 100, color: "#9333ea" }, { label: "Baterai 25%", type: 'battery', val: 25, color: "#2563eb" }, 
+            { label: "+250 MH/s", type: 'hash', val: 250, color: "#059669" }, { label: "Baterai 50%", type: 'battery', val: 50, color: "#d97706" }, 
+            { label: "+500 MH/s", type: 'hash', val: 500, color: "#dc2626" }, { label: "Baterai 100%", type: 'battery', val: 100, color: "#0284c7" }, 
+            { label: "+150 MH/s", type: 'hash', val: 150, color: "#7c3aed" }, { label: "Baterai 35%", type: 'battery', val: 35, color: "#16a34a" } 
         ];
         let currentWheelAngle = 0, isSpinning = false;
         
@@ -1115,14 +1006,9 @@
         }
 
         function startWheelSpinAnimation() {
-            const today = new Date().toDateString();
-            if (userData.lastSpinDate === today) { alert("Sudah memutar spin hari ini!"); return; }
+            const today = new Date().toDateString(); if (userData.lastSpinDate === today) { alert("Sudah memutar spin hari ini!"); return; }
             if (isSpinning) return;
-            
-            isSpinning = true; 
-            document.getElementById('spinActionBtn').disabled = true; 
-            document.getElementById('spinResultText').innerText = "Memutar Roda...";
-            
+            isSpinning = true; document.getElementById('spinActionBtn').disabled = true; document.getElementById('spinResultText').innerText = "Memutar Roda...";
             const targetSectorIdx = Math.floor(Math.random() * wheelSectors.length), arc = (Math.PI * 2) / wheelSectors.length, targetAngle = (Math.PI * 3 / 2) - (targetSectorIdx * arc + arc / 2) + (Math.PI * 2 * 5);
             let startTimestamp = null, duration = 4000;
             
@@ -1134,37 +1020,43 @@
                 else {
                     isSpinning = false; userData.lastSpinDate = today;
                     const winningSector = wheelSectors[targetSectorIdx]; 
-                    
                     let rewardMsg = "";
-                    if (winningSector.type === 'hash') {
-                        addFreePower(winningSector.val);
-                        rewardMsg = `+${winningSector.val} MH/s (Free Hash)`;
-                    } else if (winningSector.type === 'battery') {
+                    if (winningSector.type === 'hash') { addFreePower(winningSector.val); rewardMsg = `+${winningSector.val} MH/s (Free Hash)`; } 
+                    else if (winningSector.type === 'battery') {
                         const spaceLeft = 100 - electricityLevel;
-                        if (spaceLeft >= winningSector.val) {
-                            electricityLevel += winningSector.val;
-                            rewardMsg = `Daya Baterai +${winningSector.val}%`;
-                        } else {
-                            electricityLevel = 100;
-                            const excessBattery = winningSector.val - spaceLeft;
-                            const convertedHash = excessBattery * 10;
-                            addFreePower(convertedHash);
-                            rewardMsg = `Baterai Penuh + Konversi Sisa ${excessBattery}% jadi +${convertedHash} MH/s!`;
-                        }
+                        if (spaceLeft >= winningSector.val) { electricityLevel += winningSector.val; rewardMsg = `Daya Baterai +${winningSector.val}%`; } 
+                        else { electricityLevel = 100; const excessBattery = winningSector.val - spaceLeft; const convertedHash = excessBattery * 10; addFreePower(convertedHash); rewardMsg = `Baterai Penuh + Konversi Sisa ${excessBattery}% jadi +${convertedHash} MH/s!`; }
                     }
-                    
-                    document.getElementById('spinResultText').innerText = `SELAMAT! ${rewardMsg}`; 
-                    document.getElementById('spinActionBtn').innerText = "SUDAH KLAIM HARI INI";
-                    playSound('win');
-                    updateUI(); saveGameData(); 
-                    alert(`Lucky Spin Berhasil! ${rewardMsg}`);
-                    addLog(`[LUCKY SPIN] ${rewardMsg}.`);
+                    document.getElementById('spinResultText').innerText = `SELAMAT! ${rewardMsg}`; document.getElementById('spinActionBtn').innerText = "SUDAH KLAIM HARI INI";
+                    playSound('win'); updateUI(); saveGameData();
+                    alert(`Lucky Spin Berhasil! ${rewardMsg}`); addLog(`[LUCKY SPIN] ${rewardMsg}.`);
                 }
             }
             requestAnimationFrame(animateSpin);
         }
 
-        // ARCADE MINI GAMES SYSTEM & TOUCH GESTURE ENGINE v8.9
+        // ARCADE MINI GAMES SYSTEM v10.0 (CROSS-PLATFORM INPUT ENGINE)
+        let keysPressed = {};
+        let activeDiscreteKeyHandler = null;
+        let activeMouseMoveHandler = null;
+
+        window.onkeydown = (e) => {
+            if (!currentArcadeKey) return;
+            if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Space", "KeyW", "KeyA", "KeyS", "KeyD"].includes(e.code)) {
+                if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Space"].includes(e.code)) {
+                    e.preventDefault(); // Mencegah layar laptop ke-scroll naik turun
+                }
+            }
+            if (!keysPressed[e.code]) {
+                if (activeDiscreteKeyHandler) activeDiscreteKeyHandler(e.code);
+            }
+            keysPressed[e.code] = true;
+        };
+
+        window.onkeyup = (e) => {
+            keysPressed[e.code] = false;
+        };
+
         function checkMidnightGameReset() {
             const today = new Date().toDateString();
             if (userData.lastDailyResetDate !== today) {
@@ -1183,65 +1075,55 @@
             return { amount: basePower, durationMs: durationHours * 60 * 60 * 1000, hours: durationHours };
         }
 
-        // TOGGLE FULLSCREEN / PERBESAR LAYAR GAME
         let isGameFullscreen = false;
         function toggleGameFullscreen() {
-            const wrapper = document.getElementById('activeGameArea');
-            const btnText = document.getElementById('fullscreenBtnText');
-            if (!isGameFullscreen) {
-                wrapper.classList.add('game-fullscreen');
-                btnText.innerText = "Kecilkan Layar";
-                isGameFullscreen = true;
-            } else {
-                wrapper.classList.remove('game-fullscreen');
-                btnText.innerText = "Layar Penuh";
-                isGameFullscreen = false;
-            }
+            const wrapper = document.getElementById('activeGameArea'), btnText = document.getElementById('fullscreenBtnText');
+            if (!isGameFullscreen) { wrapper.classList.add('game-fullscreen'); btnText.innerText = "Kecilkan Layar"; isGameFullscreen = true; } 
+            else { wrapper.classList.remove('game-fullscreen'); btnText.innerText = "Layar Penuh"; isGameFullscreen = false; }
         }
 
-        // UNIVERSAL TOUCH / SWIPE CONTROLLER FOR CANVAS
         let touchStartX = 0, touchStartY = 0;
-        function setupTouchGestures(canvas, onSwipeCallback, onTapCallback, onDragMoveCallback) {
+        function setupTouchAndMouseEvents(canvas, onSwipeCallback, onTapCallback, onDragMoveCallback) {
             canvas.ontouchstart = (e) => {
-                e.preventDefault();
-                touchStartX = e.touches[0].clientX;
-                touchStartY = e.touches[0].clientY;
+                e.preventDefault(); touchStartX = e.touches[0].clientX; touchStartY = e.touches[0].clientY;
                 if (onTapCallback) onTapCallback(touchStartX, touchStartY);
             };
             canvas.ontouchmove = (e) => {
                 e.preventDefault();
-                if (onDragMoveCallback) {
-                    const rect = canvas.getBoundingClientRect();
-                    const touchX = e.touches[0].clientX - rect.left;
-                    onDragMoveCallback(touchX);
-                }
+                if (onDragMoveCallback) { const rect = canvas.getBoundingClientRect(); onDragMoveCallback(e.touches[0].clientX - rect.left); }
             };
             canvas.ontouchend = (e) => {
-                e.preventDefault();
-                if (!onSwipeCallback) return;
-                const touchEndX = e.changedTouches[0].clientX;
-                const touchEndY = e.changedTouches[0].clientY;
-                const dx = touchEndX - touchStartX;
-                const dy = touchEndY - touchStartY;
-                
+                e.preventDefault(); if (!onSwipeCallback) return;
+                const dx = e.changedTouches[0].clientX - touchStartX, dy = e.changedTouches[0].clientY - touchStartY;
                 if (Math.abs(dx) > 20 || Math.abs(dy) > 20) {
-                    if (Math.abs(dx) > Math.abs(dy)) {
-                        if (dx > 0) onSwipeCallback('RIGHT'); else onSwipeCallback('LEFT');
-                    } else {
-                        if (dy > 0) onSwipeCallback('DOWN'); else onSwipeCallback('UP');
-                    }
+                    if (Math.abs(dx) > Math.abs(dy)) { onSwipeCallback(dx > 0 ? 'RIGHT' : 'LEFT'); }
+                    else { onSwipeCallback(dy > 0 ? 'DOWN' : 'UP'); }
                 }
             };
+            canvas.onmousemove = (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const mouseX = e.clientX - rect.left;
+                if (activeMouseMoveHandler) activeMouseMoveHandler(mouseX);
+            };
         }
-        
+
         function startArcadeGame(gameKey) {
             currentArcadeKey = gameKey;
-            document.getElementById('gameMenuList').classList.add('hidden'); document.getElementById('activeGameArea').classList.remove('hidden'); document.getElementById('backToMenuBtn').classList.remove('hidden'); document.getElementById('gameOverlay').classList.add('hidden');
-            const lvl = gameLevels[gameKey] || 1; document.getElementById('gameMessageDisplay').innerText = "Gim Dimulai!";
-            if (activeGameLoop) clearInterval(activeGameLoop);
-            const cvs = document.getElementById('mainGameCanvas'), ctx = cvs.getContext('2d');
+            keysPressed = {}; activeDiscreteKeyHandler = null; activeMouseMoveHandler = null;
             
-            cvs.ontouchstart = null; cvs.ontouchmove = null; cvs.ontouchend = null; cvs.onclick = null;
+            document.getElementById('gameMenuList').classList.add('hidden'); 
+            document.getElementById('activeGameArea').classList.remove('hidden'); 
+            document.getElementById('backToMenuBtn').classList.remove('hidden'); 
+            document.getElementById('gameOverlay').classList.add('hidden');
+            
+            const lvl = gameLevels[gameKey] || 1; 
+            if (activeGameLoop) clearInterval(activeGameLoop);
+            
+            const cvs = document.getElementById('mainGameCanvas'); 
+            cvs.width = 340; cvs.height = 240;
+            const ctx = cvs.getContext('2d');
+            
+            cvs.ontouchstart = null; cvs.ontouchmove = null; cvs.ontouchend = null; cvs.onclick = null; cvs.onmousemove = null;
 
             if (gameKey === 'flappy') runFlappyBall(cvs, ctx, lvl);
             if (gameKey === 'tetris') runClassicTetris(cvs, ctx, lvl);
@@ -1258,7 +1140,7 @@
         function closeActiveGame() { 
             if (activeGameLoop) clearInterval(activeGameLoop); 
             if (isGameFullscreen) toggleGameFullscreen();
-            document.getElementById('mainGameCanvas').onclick = null; 
+            currentArcadeKey = null; keysPressed = {}; activeDiscreteKeyHandler = null; activeMouseMoveHandler = null;
             document.getElementById('gameOverlay').classList.add('hidden'); 
             document.getElementById('activeGameArea').classList.add('hidden'); 
             document.getElementById('backToMenuBtn').classList.add('hidden'); 
@@ -1281,37 +1163,40 @@
             addGamePower(reward.amount, reward.durationMs);
             
             if (gameLevels[gameKey] < 10) gameLevels[gameKey]++;
-            playSound('win');
-            updateUI(); updateLevelBadges(); saveGameData(); 
+            playSound('win'); updateUI(); updateLevelBadges(); saveGameData(); 
             showResultOverlay(true, "LEVEL COMPLETE!", `Bonus Game +${formatHashrate(reward.amount)} aktif ${reward.hours / 24} Hari.`); 
             addLog(`[GAME WIN] ${gameKey.toUpperCase()} Lvl ${lvl}! +${formatHashrate(reward.amount)}.`);
         }
 
-        // MINI GAMES ENGINE
+        // 1. FLAPPY BALL
         function runFlappyBall(cvs, ctx, lvl) {
             document.getElementById('gameTitleDisplay').innerText = "1. Flappy Ball"; document.getElementById('gameScoreDisplay').innerText = "Target: 0/10";
             let ballY = 120, vel = 0, pipes = [], score = 0, speed = 2 + lvl * 0.35; pipes.push({ x: 340, top: 60, bottom: 70 });
             
             const jumpAction = () => { vel = -4.8; };
-            cvs.onclick = jumpAction; cvs.ontouchstart = (e) => { e.preventDefault(); jumpAction(); };
+            cvs.onclick = jumpAction;
+            activeDiscreteKeyHandler = (code) => { if (['Space', 'ArrowUp', 'KeyW'].includes(code)) jumpAction(); };
+            setupTouchAndMouseEvents(cvs, null, jumpAction, null);
 
             activeGameLoop = setInterval(() => {
                 vel += 0.32; ballY += vel;
                 ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, cvs.width, cvs.height);
                 ctx.fillStyle = '#f59e0b'; ctx.beginPath(); ctx.arc(50, ballY, 9, 0, Math.PI * 2); ctx.fill();
-                pipes.forEach(p => {
-                    p.x -= speed;
+                
+                for (let i = pipes.length - 1; i >= 0; i--) {
+                    let p = pipes[i]; p.x -= speed;
                     ctx.fillStyle = '#10b981'; ctx.fillRect(p.x, 0, 26, p.top); ctx.fillRect(p.x, cvs.height - p.bottom, 26, p.bottom);
                     if (Math.abs(p.x - 50) < speed / 2) { score++; document.getElementById('gameScoreDisplay').innerText = `Target: ${score}/10`; }
-                    if (p.x < 59 && p.x + 26 > 41 && (ballY - 9 < p.top || ballY + 9 > cvs.height - p.bottom)) showResultOverlay(false, "GAME OVER", "Menabrak pipa!");
-                });
-                if (pipes.length > 0 && pipes[0].x < -26) pipes.shift();
+                    if (p.x < 59 && p.x + 26 > 41 && (ballY - 9 < p.top || ballY + 9 > cvs.height - p.bottom)) { showResultOverlay(false, "GAME OVER", "Menabrak pipa!"); return; }
+                    if (p.x < -30) pipes.splice(i, 1);
+                }
                 if (pipes.length === 0 || pipes[pipes.length - 1].x < 170) { let topH = Math.floor(Math.random() * 80) + 20; pipes.push({ x: 340, top: topH, bottom: cvs.height - topH - 65 }); }
                 if (ballY > cvs.height || ballY < 0) showResultOverlay(false, "GAME OVER", "Bola keluar arena!");
                 if (score >= 10) awardGameWin('flappy');
             }, 30);
         }
 
+        // 2. CLASSIC TETRIS
         function runClassicTetris(cvs, ctx, lvl) {
             document.getElementById('gameTitleDisplay').innerText = "2. Classic Tetris"; document.getElementById('gameScoreDisplay').innerText = "Target: 0/10";
             let score = 0, speed = Math.max(80, 350 - lvl * 25);
@@ -1320,14 +1205,23 @@
             let piece = spawnPiece(); function spawnPiece() { return { x: 3, y: 0, shape: shapes[Math.floor(Math.random() * shapes.length)] }; }
             function checkCollision(px, py, shape) { for (let r = 0; r < shape.length; r++) { for (let c = 0; c < shape[r].length; c++) { if (shape[r][c]) { let newX = px + c, newY = py + r; if (newX < 0 || newX >= cols || newY >= rows || (newY >= 0 && grid[newY][newX])) return true; } } } return false; }
             
-            setupTouchGestures(cvs, (dir) => {
+            const handleRotate = () => {
+                const rotated = piece.shape[0].map((_, i) => piece.shape.map(row => row[i]).reverse());
+                if (!checkCollision(piece.x, piece.y, rotated)) piece.shape = rotated;
+            };
+
+            activeDiscreteKeyHandler = (code) => {
+                if ((code === 'ArrowLeft' || code === 'KeyA') && !checkCollision(piece.x - 1, piece.y, piece.shape)) piece.x--;
+                if ((code === 'ArrowRight' || code === 'KeyD') && !checkCollision(piece.x + 1, piece.y, piece.shape)) piece.x++;
+                if ((code === 'ArrowDown' || code === 'KeyS') && !checkCollision(piece.x, piece.y + 1, piece.shape)) piece.y++;
+                if (code === 'ArrowUp' || code === 'KeyW' || code === 'Space') handleRotate();
+            };
+
+            setupTouchAndMouseEvents(cvs, (dir) => {
                 if (dir === 'LEFT' && !checkCollision(piece.x - 1, piece.y, piece.shape)) piece.x--;
                 if (dir === 'RIGHT' && !checkCollision(piece.x + 1, piece.y, piece.shape)) piece.x++;
                 if (dir === 'DOWN' && !checkCollision(piece.x, piece.y + 1, piece.shape)) piece.y++;
-            }, () => {
-                const rotated = piece.shape[0].map((_, i) => piece.shape.map(row => row[i]).reverse());
-                if (!checkCollision(piece.x, piece.y, rotated)) piece.shape = rotated;
-            });
+            }, handleRotate, null);
 
             activeGameLoop = setInterval(() => {
                 if (!checkCollision(piece.x, piece.y + 1, piece.shape)) { piece.y++; } else {
@@ -1342,38 +1236,59 @@
             }, speed);
         }
 
+        // 3. BALAP BLOK
         function runCarRacing(cvs, ctx, lvl) {
             document.getElementById('gameTitleDisplay').innerText = "3. Balap Blok"; document.getElementById('gameScoreDisplay').innerText = "Target: 0/10";
             let carX = 1, obstacles = [], score = 0, speed = 3.0 + lvl * 0.7; let laneX = [70, 155, 240];
             
-            setupTouchGestures(cvs, (dir) => {
-                if (dir === 'LEFT') carX = Math.max(0, carX - 1);
-                if (dir === 'RIGHT') carX = Math.min(2, carX + 1);
-            }, (tx) => {
-                const rect = cvs.getBoundingClientRect();
-                const relX = tx - rect.left;
-                if (relX < 110) carX = 0; else if (relX < 220) carX = 1; else carX = 2;
+            activeDiscreteKeyHandler = (code) => {
+                if ((code === 'ArrowLeft' || code === 'KeyA') && carX > 0) carX--;
+                if ((code === 'ArrowRight' || code === 'KeyD') && carX < 2) carX++;
+            };
+
+            setupTouchAndMouseEvents(cvs, (dir) => {
+                if (dir === 'LEFT' && carX > 0) carX--;
+                if (dir === 'RIGHT' && carX < 2) carX++;
+            }, null, (tx) => {
+                if (tx < 110) carX = 0; else if (tx < 220) carX = 1; else carX = 2;
             });
 
             activeGameLoop = setInterval(() => {
                 ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, cvs.width, cvs.height); ctx.fillStyle = '#334155'; ctx.fillRect(50, 0, 8, 240); ctx.fillRect(282, 0, 8, 240);
                 ctx.fillStyle = '#38bdf8'; ctx.fillRect(laneX[carX], 180, 35, 42);
+                
                 if (Math.random() < (0.04 + lvl * 0.012) && (obstacles.length === 0 || obstacles[obstacles.length - 1].y > 60)) { obstacles.push({ lane: Math.floor(Math.random() * 3), y: -40 }); }
-                obstacles.forEach((o, i) => { o.y += speed; ctx.fillStyle = '#f43f5e'; ctx.fillRect(laneX[o.lane], o.y, 35, 35); if (o.y > 145 && o.y < 220 && o.lane === carX) showResultOverlay(false, "GAME OVER", "Menabrak rintangan!"); if (o.y > 240) { obstacles.splice(i, 1); score++; document.getElementById('gameScoreDisplay').innerText = `Target: ${score}/10`; } });
+                
+                for (let i = obstacles.length - 1; i >= 0; i--) {
+                    let o = obstacles[i]; o.y += speed; 
+                    ctx.fillStyle = '#f43f5e'; ctx.fillRect(laneX[o.lane], o.y, 35, 35); 
+                    if (o.y > 145 && o.y < 220 && o.lane === carX) { showResultOverlay(false, "GAME OVER", "Menabrak rintangan!"); return; }
+                    if (o.y > 240) { obstacles.splice(i, 1); score++; document.getElementById('gameScoreDisplay').innerText = `Target: ${score}/10`; }
+                }
                 if (score >= 10) awardGameWin('racing');
             }, 30);
         }
 
+        // 4. NOKIA SNAKE
         function runNokiaSnake(cvs, ctx, lvl) {
             document.getElementById('gameTitleDisplay').innerText = "4. Nokia Snake"; document.getElementById('gameScoreDisplay').innerText = "Target: 0/10";
             let snake = [{x: 6, y: 6}], dir = {x: 1, y: 0}, food = {x: 15, y: 10}, score = 0;
             
-            setupTouchGestures(cvs, (swipe) => {
-                if (swipe === 'UP' && dir.y === 0) dir = {x: 0, y: -1};
-                if (swipe === 'DOWN' && dir.y === 0) dir = {x: 0, y: 1};
-                if (swipe === 'LEFT' && dir.x === 0) dir = {x: -1, y: 0};
-                if (swipe === 'RIGHT' && dir.x === 0) dir = {x: 1, y: 0};
-            });
+            const changeDir = (newDir) => {
+                if (newDir === 'UP' && dir.y === 0) dir = {x: 0, y: -1};
+                if (newDir === 'DOWN' && dir.y === 0) dir = {x: 0, y: 1};
+                if (newDir === 'LEFT' && dir.x === 0) dir = {x: -1, y: 0};
+                if (newDir === 'RIGHT' && dir.x === 0) dir = {x: 1, y: 0};
+            };
+
+            activeDiscreteKeyHandler = (code) => {
+                if (code === 'ArrowUp' || code === 'KeyW') changeDir('UP');
+                if (code === 'ArrowDown' || code === 'KeyS') changeDir('DOWN');
+                if (code === 'ArrowLeft' || code === 'KeyA') changeDir('LEFT');
+                if (code === 'ArrowRight' || code === 'KeyD') changeDir('RIGHT');
+            };
+
+            setupTouchAndMouseEvents(cvs, (swipe) => changeDir(swipe), null, null);
 
             activeGameLoop = setInterval(() => {
                 let head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
@@ -1385,12 +1300,16 @@
             }, Math.max(50, 140 - lvl * 10));
         }
 
+        // 5. BLOK BATTLE
         function runTankBattle(cvs, ctx, lvl) {
             document.getElementById('gameTitleDisplay').innerText = "5. Blok Battle"; let targetScore = lvl * 4; document.getElementById('gameScoreDisplay').innerText = `Target: 0/${targetScore} Musuh`;
             let playerX = 150, bullets = [], enemyBullets = [], enemies = [], score = 0;
             
-            setupTouchGestures(cvs, null, () => { bullets.push({x: playerX + 12, y: 200}); }, (touchX) => { playerX = Math.max(10, Math.min(305, touchX - 15)); });
-            cvs.onclick = () => { bullets.push({x: playerX + 12, y: 200}); };
+            const shootAction = () => { bullets.push({x: playerX + 12, y: 200}); };
+            activeDiscreteKeyHandler = (code) => { if (['Space', 'ArrowUp', 'KeyW'].includes(code)) shootAction(); };
+            activeMouseMoveHandler = (mx) => { playerX = Math.max(10, Math.min(305, mx - 15)); };
+            cvs.onclick = shootAction;
+            setupTouchAndMouseEvents(cvs, null, shootAction, (tx) => { playerX = Math.max(10, Math.min(305, tx - 15)); });
 
             function spawnEnemyWave() {
                 let count = Math.min(5, 2 + Math.floor(lvl / 2));
@@ -1399,6 +1318,9 @@
             spawnEnemyWave();
 
             activeGameLoop = setInterval(() => {
+                if (keysPressed['ArrowLeft'] || keysPressed['KeyA']) playerX = Math.max(10, playerX - 5);
+                if (keysPressed['ArrowRight'] || keysPressed['KeyD']) playerX = Math.min(305, playerX + 5);
+
                 ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, cvs.width, cvs.height); 
                 ctx.fillStyle = '#06b6d4'; ctx.fillRect(playerX, 210, 30, 22);
 
@@ -1410,38 +1332,52 @@
                     if (e.y > 185) showResultOverlay(false, "GAME OVER", "Musuh mencapai pertahanan!");
                 });
 
-                bullets.forEach((b, bi) => {
-                    b.y -= 8; ctx.fillStyle = '#f59e0b'; ctx.fillRect(b.x, b.y, 4, 10);
-                    enemies.forEach((e, ei) => { 
-                        if (Math.abs(b.x - e.x) < 28 && Math.abs(b.y - e.y) < 22) { 
-                            enemies.splice(ei, 1); bullets.splice(bi, 1); score++; 
-                            document.getElementById('gameScoreDisplay').innerText = `Target: ${score}/${targetScore} Musuh`; 
-                            if(enemies.length === 0) spawnEnemyWave();
-                        } 
-                    });
-                });
+                for (let bi = bullets.length - 1; bi >= 0; bi--) {
+                    let b = bullets[bi]; b.y -= 8; 
+                    ctx.fillStyle = '#f59e0b'; ctx.fillRect(b.x, b.y, 4, 10);
+                    for (let ei = enemies.length - 1; ei >= 0; ei--) {
+                        let e = enemies[ei];
+                        if (Math.abs(b.x - e.x) < 28 && Math.abs(b.y - e.y) < 22) {
+                            enemies.splice(ei, 1); bullets.splice(bi, 1); score++;
+                            document.getElementById('gameScoreDisplay').innerText = `Target: ${score}/${targetScore} Musuh`;
+                            if (enemies.length === 0) spawnEnemyWave();
+                            break;
+                        }
+                    }
+                }
 
-                enemyBullets.forEach((eb) => {
-                    eb.y += 5; ctx.fillStyle = '#ef4444'; ctx.fillRect(eb.x, eb.y, 4, 10);
-                    if (Math.abs(eb.x - (playerX + 15)) < 18 && eb.y > 200 && eb.y < 235) showResultOverlay(false, "GAME OVER", "Tertembak musuh!");
-                });
+                for (let ebi = enemyBullets.length - 1; ebi >= 0; ebi--) {
+                    let eb = enemyBullets[ebi]; eb.y += 5; 
+                    ctx.fillStyle = '#ef4444'; ctx.fillRect(eb.x, eb.y, 4, 10);
+                    if (Math.abs(eb.x - (playerX + 15)) < 18 && eb.y > 200 && eb.y < 235) { showResultOverlay(false, "GAME OVER", "Tertembak musuh!"); return; }
+                }
 
                 if (score >= targetScore) awardGameWin('tank');
             }, 30);
         }
 
+        // 6. BALL CROSSING
         function runFroggerCrossing(cvs, ctx, lvl) {
             document.getElementById('gameTitleDisplay').innerText = "6. Ball Crossing"; let targetScore = 5 + lvl * 2; document.getElementById('gameScoreDisplay').innerText = `Target: 0/${targetScore} Seberang`;
             let ballY = 215, ballX = 165, score = 0;
             
-            setupTouchGestures(cvs, (swipe) => {
-                if (swipe === 'UP') ballY = Math.max(15, ballY - 25);
-                if (swipe === 'DOWN') ballY = Math.min(215, ballY + 25);
-                if (swipe === 'LEFT') ballX = Math.max(15, ballX - 20);
-                if (swipe === 'RIGHT') ballX = Math.min(325, ballX + 20);
+            const moveBall = (dir) => {
+                if (dir === 'UP') ballY = Math.max(15, ballY - 25);
+                if (dir === 'DOWN') ballY = Math.min(215, ballY + 25);
+                if (dir === 'LEFT') ballX = Math.max(15, ballX - 20);
+                if (dir === 'RIGHT') ballX = Math.min(325, ballX + 20);
                 if (ballY <= 20) { score++; document.getElementById('gameScoreDisplay').innerText = `Target: ${score}/${targetScore} Seberang`; ballY = 215; }
-            });
-            cvs.onclick = () => { ballY -= 25; if (ballY <= 20) { score++; document.getElementById('gameScoreDisplay').innerText = `Target: ${score}/${targetScore} Seberang`; ballY = 215; } };
+            };
+
+            activeDiscreteKeyHandler = (code) => {
+                if (code === 'ArrowUp' || code === 'KeyW' || code === 'Space') moveBall('UP');
+                if (code === 'ArrowDown' || code === 'KeyS') moveBall('DOWN');
+                if (code === 'ArrowLeft' || code === 'KeyA') moveBall('LEFT');
+                if (code === 'ArrowRight' || code === 'KeyD') moveBall('RIGHT');
+            };
+
+            setupTouchAndMouseEvents(cvs, (swipe) => moveBall(swipe), () => moveBall('UP'), null);
+            cvs.onclick = () => moveBall('UP');
 
             let rowCount = Math.min(6, 3 + Math.floor(lvl / 2)), rows = [];
             for (let i = 0; i < rowCount; i++) {
@@ -1467,19 +1403,23 @@
             }, 30);
         }
 
+        // 7. BREAKOUT BALOK
         function runBreakout(cvs, ctx, lvl) {
             document.getElementById('gameTitleDisplay').innerText = "7. Breakout Balok"; 
             let paddleX = 130, ballX = 170, ballY = 170, ballSpeed = 2.8 + lvl * 0.5;
             let dx = ballSpeed * (Math.random() < 0.5 ? 1 : -1), dy = -ballSpeed; 
             
-            setupTouchGestures(cvs, null, null, (touchX) => { paddleX = Math.max(0, Math.min(270, touchX - 35)); });
-            cvs.onclick = (e) => { paddleX = Math.max(0, Math.min(270, e.offsetX - 35)); };
+            activeMouseMoveHandler = (mx) => { paddleX = Math.max(0, Math.min(270, mx - 35)); };
+            setupTouchAndMouseEvents(cvs, null, null, (tx) => { paddleX = Math.max(0, Math.min(270, tx - 35)); });
 
             let brickRows = Math.min(5, 2 + Math.floor(lvl / 2)), brickCols = 7, bricks = []; 
             for (let r = 0; r < brickRows; r++) for (let c = 0; c < brickCols; c++) bricks.push({ x: c * 46 + 10, y: r * 18 + 15, active: true });
             let totalBricks = bricks.length; document.getElementById('gameScoreDisplay').innerText = `Sisa: ${totalBricks}/${totalBricks} Balok`;
 
             activeGameLoop = setInterval(() => {
+                if (keysPressed['ArrowLeft'] || keysPressed['KeyA']) paddleX = Math.max(0, paddleX - 6);
+                if (keysPressed['ArrowRight'] || keysPressed['KeyD']) paddleX = Math.min(270, paddleX + 6);
+
                 ballX += dx; ballY += dy;
                 if (ballX < 5 || ballX > 335) dx = -dx; if (ballY < 5) dy = -dy;
                 if (ballY > 210 && ballY < 222 && ballX > paddleX && ballX < paddleX + 70) dy = -Math.abs(dy);
@@ -1503,12 +1443,16 @@
             }, 30);
         }
 
+        // 8. SPACE ALIEN SHOOTER
         function runSpaceShooter(cvs, ctx, lvl) {
             document.getElementById('gameTitleDisplay').innerText = "8. Space Alien Shooter"; let targetScore = 3 + lvl * 3; document.getElementById('gameScoreDisplay').innerText = `Target: 0/${targetScore} Alien`;
             let shipX = 150, bullets = [], enemyBullets = [], aliens = [], score = 0;
             
-            setupTouchGestures(cvs, null, () => { bullets.push({x: shipX + 10, y: 200}); }, (touchX) => { shipX = Math.max(10, Math.min(310, touchX - 12)); });
-            cvs.onclick = () => { bullets.push({x: shipX + 10, y: 200}); };
+            const shootAction = () => { bullets.push({x: shipX + 10, y: 200}); };
+            activeDiscreteKeyHandler = (code) => { if (['Space', 'ArrowUp', 'KeyW'].includes(code)) shootAction(); };
+            activeMouseMoveHandler = (mx) => { shipX = Math.max(10, Math.min(310, mx - 12)); };
+            cvs.onclick = shootAction;
+            setupTouchAndMouseEvents(cvs, null, shootAction, (tx) => { shipX = Math.max(10, Math.min(310, tx - 12)); });
 
             function spawnAlienWave() {
                 aliens = [];
@@ -1518,6 +1462,9 @@
             spawnAlienWave();
 
             activeGameLoop = setInterval(() => {
+                if (keysPressed['ArrowLeft'] || keysPressed['KeyA']) shipX = Math.max(10, shipX - 5);
+                if (keysPressed['ArrowRight'] || keysPressed['KeyD']) shipX = Math.min(310, shipX + 5);
+
                 ctx.fillStyle = '#0f172a'; ctx.fillRect(0, 0, cvs.width, cvs.height); 
                 ctx.fillStyle = '#a855f7'; ctx.fillRect(shipX, 210, 24, 18);
                 ctx.fillStyle = '#38bdf8'; ctx.fillRect(shipX + 10, 204, 4, 8);
@@ -1532,34 +1479,42 @@
                     if (a.y > 185) showResultOverlay(false, "GAME OVER", "Invasi alien tembus!");
                 });
 
-                bullets.forEach((b, bi) => {
-                    b.y -= 9; ctx.fillStyle = '#38bdf8'; ctx.fillRect(b.x, b.y, 4, 10);
-                    aliens.forEach((a, ai) => { 
-                        if (Math.abs(b.x - a.x) < 22 && Math.abs(b.y - a.y) < 16) { 
-                            aliens.splice(ai, 1); bullets.splice(bi, 1); score++; 
-                            document.getElementById('gameScoreDisplay').innerText = `Target: ${score}/${targetScore} Alien`; 
+                for (let bi = bullets.length - 1; bi >= 0; bi--) {
+                    let b = bullets[bi]; b.y -= 9; 
+                    ctx.fillStyle = '#38bdf8'; ctx.fillRect(b.x, b.y, 4, 10);
+                    for (let ai = aliens.length - 1; ai >= 0; ai--) {
+                        let a = aliens[ai];
+                        if (Math.abs(b.x - a.x) < 22 && Math.abs(b.y - a.y) < 16) {
+                            aliens.splice(ai, 1); bullets.splice(bi, 1); score++;
+                            document.getElementById('gameScoreDisplay').innerText = `Target: ${score}/${targetScore} Alien`;
                             if (aliens.length === 0) spawnAlienWave();
-                        } 
-                    });
-                });
+                            break;
+                        }
+                    }
+                }
 
-                enemyBullets.forEach((eb) => {
-                    eb.y += 5; ctx.fillStyle = '#ef4444'; ctx.fillRect(eb.x, eb.y, 4, 10);
-                    if (Math.abs(eb.x - (shipX + 12)) < 18 && eb.y > 200 && eb.y < 230) showResultOverlay(false, "GAME OVER", "Pesawatmu hancur!");
-                });
+                for (let ebi = enemyBullets.length - 1; ebi >= 0; ebi--) {
+                    let eb = enemyBullets[ebi]; eb.y += 5; 
+                    ctx.fillStyle = '#ef4444'; ctx.fillRect(eb.x, eb.y, 4, 10);
+                    if (Math.abs(eb.x - (shipX + 12)) < 18 && eb.y > 200 && eb.y < 230) { showResultOverlay(false, "GAME OVER", "Pesawatmu hancur!"); return; }
+                }
 
                 if (score >= targetScore) awardGameWin('shooter');
             }, 30);
         }
 
+        // 9. PING PONG VS AI
         function runPingPong(cvs, ctx, lvl) {
             document.getElementById('gameTitleDisplay').innerText = "9. Ping Pong vs AI"; let targetGoals = lvl; document.getElementById('gameScoreDisplay').innerText = `Gol: 0/${targetGoals}`;
             let pX = 140, aiX = 140, bX = 170, bY = 120, ballSpeed = 3.8 + lvl * 0.6, dx = ballSpeed * (Math.random() < 0.5 ? 1 : -1), dy = ballSpeed, playerGoals = 0;
             
-            setupTouchGestures(cvs, null, null, (touchX) => { pX = Math.max(0, Math.min(280, touchX - 30)); });
-            cvs.onclick = (e) => { pX = Math.max(0, Math.min(280, e.offsetX - 30)); };
+            activeMouseMoveHandler = (mx) => { pX = Math.max(0, Math.min(280, mx - 30)); };
+            setupTouchAndMouseEvents(cvs, null, null, (tx) => { pX = Math.max(0, Math.min(280, tx - 30)); });
 
             activeGameLoop = setInterval(() => {
+                if (keysPressed['ArrowLeft'] || keysPressed['KeyA']) pX = Math.max(0, pX - 6);
+                if (keysPressed['ArrowRight'] || keysPressed['KeyD']) pX = Math.min(280, pX + 6);
+
                 bX += dx; bY += dy;
                 let aiAgility = Math.min(0.98, 0.15 + lvl * 0.08); aiX += (bX - (aiX + 30)) * aiAgility; aiX = Math.max(0, Math.min(280, aiX));
                 if (bX < 5 || bX > 335) dx = -dx;
@@ -1574,6 +1529,7 @@
             }, 30);
         }
 
+        // 10. COLOR TETRIS MATCH-5
         function runMatch3Color(cvs, ctx, lvl) {
             document.getElementById('gameTitleDisplay').innerText = "10. Color Tetris Match-5"; document.getElementById('gameScoreDisplay').innerText = "Target: 0/10";
             let score = 0, speed = Math.max(70, 320 - lvl * 25);
@@ -1582,14 +1538,23 @@
             let piece = spawnColorPiece(); function spawnColorPiece() { const p = colorShapes[Math.floor(Math.random() * colorShapes.length)]; return { x: 3, y: 0, shape: p.shape, color: p.color }; }
             function checkCollision(px, py, shape) { for (let r = 0; r < shape.length; r++) { for (let c = 0; c < shape[r].length; c++) { if (shape[r][c]) { let newX = px + c, newY = py + r; if (newX < 0 || newX >= cols || newY >= rows || (newY >= 0 && grid[newY][newX])) return true; } } } return false; }
             
-            setupTouchGestures(cvs, (dir) => {
+            const handleRotate = () => {
+                const rotated = piece.shape[0].map((_, i) => piece.shape.map(row => row[i]).reverse());
+                if (!checkCollision(piece.x, piece.y, rotated)) piece.shape = rotated;
+            };
+
+            activeDiscreteKeyHandler = (code) => {
+                if ((code === 'ArrowLeft' || code === 'KeyA') && !checkCollision(piece.x - 1, piece.y, piece.shape)) piece.x--;
+                if ((code === 'ArrowRight' || code === 'KeyD') && !checkCollision(piece.x + 1, piece.y, piece.shape)) piece.x++;
+                if ((code === 'ArrowDown' || code === 'KeyS') && !checkCollision(piece.x, piece.y + 1, piece.shape)) piece.y++;
+                if (code === 'ArrowUp' || code === 'KeyW' || code === 'Space') handleRotate();
+            };
+
+            setupTouchAndMouseEvents(cvs, (dir) => {
                 if (dir === 'LEFT' && !checkCollision(piece.x - 1, piece.y, piece.shape)) piece.x--;
                 if (dir === 'RIGHT' && !checkCollision(piece.x + 1, piece.y, piece.shape)) piece.x++;
                 if (dir === 'DOWN' && !checkCollision(piece.x, piece.y + 1, piece.shape)) piece.y++;
-            }, () => {
-                const rotated = piece.shape[0].map((_, i) => piece.shape.map(row => row[i]).reverse());
-                if (!checkCollision(piece.x, piece.y, rotated)) piece.shape = rotated;
-            });
+            }, handleRotate, null);
 
             function checkMatch5Color() {
                 let matchesFound = false;
